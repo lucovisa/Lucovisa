@@ -4,6 +4,9 @@ Developer focused on automation, web tools and game development.
 
 **Level:** Middle+
 
+**Native language:** Russian
+**Also understand:** English, French, German
+
 ---
 
 ## Skills
