@@ -1,16 +1,5 @@
 const THEMES = ['dark', 'light'];
 
-function updateThemeColorMeta(theme) {
-  const metas = document.querySelectorAll('meta[name="theme-color"]');
-  metas.forEach(m => {
-    if (theme === 'light') {
-      m.setAttribute('content', '#d4d0c8');
-    } else {
-      m.setAttribute('content', '#1b2838');
-    }
-  });
-}
-
 function applyTheme(theme) {
   if (THEMES.indexOf(theme) === -1) theme = 'dark';
 
@@ -20,7 +9,10 @@ function applyTheme(theme) {
     btn.classList.toggle('is-active', btn.dataset.theme === theme);
   });
 
-  updateThemeColorMeta(theme);
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', theme === 'light' ? '#EAF1F8' : '#171A21');
+  }
 
   try { localStorage.setItem('theme', theme); } catch (e) {}
 

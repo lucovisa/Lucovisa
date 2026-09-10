@@ -29,6 +29,14 @@ All current projects are listed at https://lucovisa.github.io/Lucovisa/
 
 ---
 
+## Contacts
+
+- X (Twitter): https://x.com/Lukovica467771/
+- Steam: https://steamcommunity.com/id/Lucovisa/
+- Email: lucovisa24@gmail.com
+
+---
+
 ## Donate ❤️
 
 ETH/USDT (ERC-20)

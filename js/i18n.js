@@ -2,70 +2,132 @@ const I18N = {
   en: {
     "page.title": "Lucovisa Visit card",
     "page.description": "This is my visit card site for viewing my projects - frontend, game dev and web tools by Lucovisa.",
-    "window.title": "Lucovisa Visit card",
 
-    "hero.tag": "main",
-    "hero.title": "LucConverter",
-    "hero.text": "Files, units, currencies, links, media - all in one converter.",
+    "taskbar.start": "Start",
+    "app.portfolio": "Portfolio",
+    "app.about": "About me",
+    "app.hacker": "hacker.exe",
+    "app.map": "Map",
+    "app.contact": "Contact",
+    "app.comments": "Comments",
 
-    "catdigger": "Cat Digger",
+    "portfolio.github": "GitHub",
+    "portfolio.site": "Site",
 
-    "converter.title": "LucConverter",
-    "converter.text": "Convert anything",
-    "sql.title": "SQL-in-image",
-    "sql.text": "Hide code in pictures",
-    "cursor.title": "LucCursor",
-    "cursor.text": "Custom cursors",
-    "font.title": "LucFont",
-    "font.text": "Draw your own fonts",
+    "contact.x": "X (Twitter)",
+    "contact.steam": "Steam",
+    "contact.email": "Email",
+    "contact.open": "Open",
+    "contact.copy": "Copy",
+    "contact.copied": "Copied!",
 
-    "profile.tag": "profile",
-    "profile.title": "Lucovisa",
-    "profile.text": "About the developer",
-
-    "ip.title": "IP-check",
-    "ip.text": "IP & speed test",
-
-    "comments.title": "Comments",
     "comments.login": "Sign in with GitHub",
     "comments.hint": "GitHub account required. Be respectful - comments are moderated.",
 
-    "footer.version": "v1.0.0"
+    "about.title": "About me",
+    "about.text1": "Developer focused on automation, web tools and game development.",
+    "about.level": "Level",
+    "about.levelValue": "Middle+",
+    "about.native": "Native language",
+    "about.nativeValue": "Russian",
+    "about.also": "Also understand",
+    "about.alsoValue": "English, French, German",
+    "about.skills": "Skills",
+    "about.mainFocus": "Main focus",
+    "about.mainFocusValue": "automation and web tooling",
+    "about.learning": "Learning",
+    "about.learningValue": "self-taught",
+    "about.projects": "Projects",
+    "about.projectsText": "All current projects are listed at ",
+
+    "map.title": "Project map",
+
+    "hacker.helpHint": "type 'help' to see commands",
+    "hacker.welcome": "Welcome to hacker.exe",
+    "hacker.helpLines": [
+      "Available commands:",
+      "  help        - show this help",
+      "  clear       - clear terminal",
+      "  projects    - list all projects",
+      "  about       - print about info",
+      "  snake       - play Snake",
+      "  tetris      - play Tetris",
+      "  exit        - close this window"
+    ],
+    "hacker.projectsTitle": "Projects:",
+    "hacker.unknown": "Unknown command: ",
+    "hacker.snakeHint": "Arrows to move. Press Q to quit.",
+    "hacker.tetrisHint": "Arrows to move, Up to rotate. Press Q to quit.",
+    "hacker.gameOver": "Game over. Press Q to quit."
   },
   ru: {
     "page.title": "Lucovisa - визитная карточка",
     "page.description": "Сайт-визитка Lucovisa: фронтенд, разработка игр и веб-инструменты.",
-    "window.title": "Lucovisa - визитка",
 
-    "hero.tag": "главный",
-    "hero.title": "LucConverter",
-    "hero.text": "Файлы, единицы, валюты, ссылки, медиа - всё в одном конвертере.",
+    "taskbar.start": "Пуск",
+    "app.portfolio": "Портфолио",
+    "app.about": "Обо мне",
+    "app.hacker": "hacker.exe",
+    "app.map": "Карта",
+    "app.contact": "Связь",
+    "app.comments": "Комментарии",
 
-    "catdigger": "Cat Digger",
+    "portfolio.github": "GitHub",
+    "portfolio.site": "Сайт",
 
-    "converter.title": "LucConverter",
-    "converter.text": "Конвертер всего",
-    "sql.title": "SQL-in-image",
-    "sql.text": "Прячем код в картинках",
-    "cursor.title": "LucCursor",
-    "cursor.text": "Свои курсоры",
-    "font.title": "LucFont",
-    "font.text": "Рисуй свои шрифты",
+    "contact.x": "X (Twitter)",
+    "contact.steam": "Steam",
+    "contact.email": "Почта",
+    "contact.open": "Открыть",
+    "contact.copy": "Скопировать",
+    "contact.copied": "Скопировано!",
 
-    "profile.tag": "профиль",
-    "profile.title": "Lucovisa",
-    "profile.text": "О разработчике",
-
-    "ip.title": "IP-check",
-    "ip.text": "Проверка IP и скорости",
-
-    "comments.title": "Комментарии",
     "comments.login": "Войти через GitHub",
     "comments.hint": "Нужен GitHub-аккаунт. Будьте вежливы - комментарии модерируются.",
 
-    "footer.version": "v1.0.0"
+    "about.title": "Обо мне",
+    "about.text1": "Разработчик, сфокусированный на автоматизации, веб-инструментах и разработке игр.",
+    "about.level": "Уровень",
+    "about.levelValue": "Middle+",
+    "about.native": "Родной язык",
+    "about.nativeValue": "Русский",
+    "about.also": "Также понимаю",
+    "about.alsoValue": "Английский, французский, немецкий",
+    "about.skills": "Навыки",
+    "about.mainFocus": "Основной фокус",
+    "about.mainFocusValue": "автоматизация и веб-инструменты",
+    "about.learning": "Обучение",
+    "about.learningValue": "самоучка",
+    "about.projects": "Проекты",
+    "about.projectsText": "Все актуальные проекты указаны на ",
+
+    "map.title": "Карта проектов",
+
+    "hacker.helpHint": "введи 'help' чтобы увидеть команды",
+    "hacker.welcome": "Добро пожаловать в hacker.exe",
+    "hacker.helpLines": [
+      "Доступные команды:",
+      "  help        - показать справку",
+      "  clear       - очистить терминал",
+      "  projects    - список проектов",
+      "  about       - информация обо мне",
+      "  snake       - играть в Змейку",
+      "  tetris      - играть в Тетрис",
+      "  exit        - закрыть окно"
+    ],
+    "hacker.projectsTitle": "Проекты:",
+    "hacker.unknown": "Неизвестная команда: ",
+    "hacker.snakeHint": "Стрелки - движение. Q - выход.",
+    "hacker.tetrisHint": "Стрелки - движение, Вверх - поворот. Q - выход.",
+    "hacker.gameOver": "Игра окончена. Q - выход."
   }
 };
+
+function t(key) {
+  const lang = document.documentElement.lang || 'en';
+  const dict = I18N[lang] || I18N.en;
+  return dict[key] !== undefined ? dict[key] : (I18N.en[key] || key);
+}
 
 function applyLang(lang) {
   if (!I18N[lang]) lang = 'en';
@@ -74,45 +136,18 @@ function applyLang(lang) {
   document.title = I18N[lang]["page.title"];
 
   const metaDesc = document.querySelector('meta[name="description"]');
-  if (metaDesc && I18N[lang]["page.description"]) {
-    metaDesc.setAttribute('content', I18N[lang]["page.description"]);
-  }
+  if (metaDesc) metaDesc.setAttribute('content', I18N[lang]["page.description"]);
 
   const ogTitle = document.querySelector('meta[property="og:title"]');
   if (ogTitle) ogTitle.setAttribute('content', I18N[lang]["page.title"]);
 
   const ogDesc = document.querySelector('meta[property="og:description"]');
-  if (ogDesc && I18N[lang]["page.description"]) {
-    ogDesc.setAttribute('content', I18N[lang]["page.description"]);
-  }
-
-  const ogLocale = document.querySelector('meta[property="og:locale"]');
-  if (ogLocale) ogLocale.setAttribute('content', lang === 'ru' ? 'ru_RU' : 'en_US');
-
-  const ogLocaleAlt = document.querySelector('meta[property="og:locale:alternate"]');
-  if (ogLocaleAlt) ogLocaleAlt.setAttribute('content', lang === 'ru' ? 'en_US' : 'ru_RU');
-
-  const twTitle = document.querySelector('meta[name="twitter:title"]');
-  if (twTitle) twTitle.setAttribute('content', I18N[lang]["page.title"]);
-
-  const twDesc = document.querySelector('meta[name="twitter:description"]');
-  if (twDesc && I18N[lang]["page.description"]) {
-    twDesc.setAttribute('content', I18N[lang]["page.description"]);
-  }
-
-  const appleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
-  if (appleTitle) appleTitle.setAttribute('content', I18N[lang]["window.title"]);
+  if (ogDesc) ogDesc.setAttribute('content', I18N[lang]["page.description"]);
 
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     const value = I18N[lang][key];
-    if (value !== undefined) el.textContent = value;
-  });
-
-  document.querySelectorAll('[data-i18n-html]').forEach(el => {
-    const key = el.dataset.i18nHtml;
-    const value = I18N[lang][key];
-    if (value !== undefined) el.innerHTML = value;
+    if (value !== undefined && typeof value === 'string') el.textContent = value;
   });
 
   document.querySelectorAll('.lang-toggle [data-lang]').forEach(btn => {
@@ -122,4 +157,5 @@ function applyLang(lang) {
   try { localStorage.setItem('lang', lang); } catch (e) {}
 
   if (typeof updateGiscusLang === 'function') updateGiscusLang(lang);
+  if (typeof rerenderOpenWindows === 'function') rerenderOpenWindows();
 }

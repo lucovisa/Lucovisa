@@ -1,18 +1,18 @@
 const GISCUS_CONFIG = {
-  repo: 'lucovisa/lucovisa.github.io',
-  repoId: 'ВСТАВЬ_REPO_ID',
+  repo: 'lucovisa/Lucovisa',
+  repoId: 'R_kgDOUUzolw',
   category: 'Comments',
-  categoryId: 'ВСТАВЬ_CATEGORY_ID',
+  categoryId: 'DIC_kwDOUUzol84DFVwM',
   mapping: 'pathname',
   strict: '0',
   reactionsEnabled: '1',
   emitMetadata: '0',
-  inputPosition: 'top',
+  inputPosition: 'bottom',
   loading: 'lazy'
 };
 
-function loadGiscus() {
-  const container = document.getElementById('giscus-container');
+function loadGiscusIn(scope) {
+  const container = scope.querySelector('#giscus-container');
   if (!container || container.dataset.loaded) return;
 
   const theme = document.documentElement.getAttribute('data-theme') === 'light'
@@ -40,19 +40,9 @@ function loadGiscus() {
   container.appendChild(script);
   container.dataset.loaded = '1';
 
-  const auth = document.getElementById('comments-auth');
+  const auth = scope.querySelector('#comments-auth');
   if (auth) auth.style.display = 'none';
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('comments-login');
-  if (btn) btn.addEventListener('click', loadGiscus);
-});
-
-window.addEventListener('message', (event) => {
-  if (event.origin !== 'https://giscus.app') return;
-  if (!event.data || typeof event.data !== 'object') return;
-});
 
 function updateGiscusTheme(theme) {
   const iframe = document.querySelector('iframe.giscus-frame');
