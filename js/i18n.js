@@ -49,6 +49,9 @@ const I18N = {
     "arcade.snake3d": "Snake 3D",
     "arcade.snake2d": "Snake 2D",
     "arcade.tetris": "Tetris",
+    "arcade.2048": "2048",
+    "arcade.flappy": "Flappy Bird",
+    "arcade.sudoku": "Sudoku",
     "arcade.solitaire": "Solitaire",
     "arcade.minesweeper": "Minesweeper",
     "arcade.clicker": "Clicker Cat",
@@ -74,6 +77,7 @@ const I18N = {
     "arcade.pressQ": "Q - exit",
     "arcade.controls": "WASD / Arrows",
     "arcade.tetrisRotate": "W or Up - rotate",
+    "arcade.flappyControls": "Space or Up - jump",
     "arcade.win": "You win!",
     "arcade.lose": "You lose!",
     "arcade.clickCat": "Click the cat!",
@@ -89,6 +93,11 @@ const I18N = {
     "arcade.solitaireClickMode": "Click mode",
     "arcade.solitaireDragMode": "Drag mode",
     "arcade.solitaireNewDeal": "New deal",
+    "arcade.sudokuCheck": "Check",
+    "arcade.sudokuSolve": "Solve",
+    "arcade.sudokuNew": "New game",
+    "arcade.sudokuCorrect": "Solved!",
+    "arcade.sudokuErrors": "Errors",
 
     "shortcut.title": "Create shortcut",
     "shortcut.name": "Shortcut name",
@@ -212,6 +221,7 @@ const I18N = {
     "about.projects": "Projects",
     "about.projectsText": "All current projects are listed at ",
     "about.seePortfolio": "See the Portfolio app in site for more details.",
+    "about.contact": "Contact me",
 
     "map.title": "Project map",
     "map.hint": "Drag nodes to move them.",
@@ -349,7 +359,15 @@ const I18N = {
 
     "ach.solitaire.title": "Solitaire",
     "ach.solitaire.desc": "Win Solitaire",
-    "ach.solitaire.comment": "Klondike champion"
+    "ach.solitaire.comment": "Klondike champion",
+
+    "ach.2048.title": "2048 Master",
+    "ach.2048.desc": "Reach 2048 tile",
+    "ach.2048.comment": "Numbers are your friends",
+
+    "ach.sudoku.title": "Sudoku Master",
+    "ach.sudoku.desc": "Solve a Sudoku",
+    "ach.sudoku.comment": "9x9 is not a problem"
   },
   ru: {
     "page.title": "Lucovisa Визитная Карточка",
@@ -401,6 +419,9 @@ const I18N = {
     "arcade.snake3d": "Змейка 3D",
     "arcade.snake2d": "Змейка 2D",
     "arcade.tetris": "Тетрис",
+    "arcade.2048": "2048",
+    "arcade.flappy": "Flappy Bird",
+    "arcade.sudoku": "Судоку",
     "arcade.solitaire": "Косынка",
     "arcade.minesweeper": "Сапёр",
     "arcade.clicker": "Кликер-Кот",
@@ -426,6 +447,7 @@ const I18N = {
     "arcade.pressQ": "Q - выход",
     "arcade.controls": "WASD / стрелки",
     "arcade.tetrisRotate": "W или ↑ - поворот",
+    "arcade.flappyControls": "Пробел или ↑ - прыжок",
     "arcade.win": "Ты победил!",
     "arcade.lose": "Ты проиграл!",
     "arcade.clickCat": "Кликай по коту!",
@@ -441,6 +463,11 @@ const I18N = {
     "arcade.solitaireClickMode": "Клик",
     "arcade.solitaireDragMode": "Перетаскивание",
     "arcade.solitaireNewDeal": "Новая раздача",
+    "arcade.sudokuCheck": "Проверить",
+    "arcade.sudokuSolve": "Решить",
+    "arcade.sudokuNew": "Новая игра",
+    "arcade.sudokuCorrect": "Решено!",
+    "arcade.sudokuErrors": "Ошибок",
 
     "shortcut.title": "Создать ярлык",
     "shortcut.name": "Имя ярлыка",
@@ -564,6 +591,7 @@ const I18N = {
     "about.projects": "Проекты",
     "about.projectsText": "Все актуальные проекты указаны на ",
     "about.seePortfolio": "Подробности в приложении Портфолио на сайте.",
+    "about.contact": "Связаться со мной",
 
     "map.title": "Карта проектов",
     "map.hint": "Перетаскивай узлы мышью.",
@@ -701,7 +729,15 @@ const I18N = {
 
     "ach.solitaire.title": "Косынка",
     "ach.solitaire.desc": "Победи в Косынке",
-    "ach.solitaire.comment": "Чемпион Клондайка"
+    "ach.solitaire.comment": "Чемпион Клондайка",
+
+    "ach.2048.title": "Мастер 2048",
+    "ach.2048.desc": "Собери плитку 2048",
+    "ach.2048.comment": "Цифры твои друзья",
+
+    "ach.sudoku.title": "Мастер Судоку",
+    "ach.sudoku.desc": "Реши Судоку",
+    "ach.sudoku.comment": "9x9 не проблема"
   }
 };
 

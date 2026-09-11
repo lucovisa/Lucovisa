@@ -11,37 +11,6 @@
   applyLang(savedLang);
   renderIcons(document);
 
-  function runBoot() {
-    const boot = document.getElementById('boot-screen');
-    if (!boot) return;
-    let shown = false;
-    try { shown = localStorage.getItem('boot_shown') === '1'; } catch (e) {}
-    if (shown) {
-      boot.remove();
-      return;
-    }
-    document.body.style.overflow = 'hidden';
-    let progress = 0;
-    const fill = document.getElementById('boot-fill');
-    const welcome = document.getElementById('boot-welcome');
-    const tick = setInterval(() => {
-      progress += Math.random() * 18 + 4;
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(tick);
-        const name = getUsername();
-        if (welcome) welcome.textContent = t('boot.welcome') + name + '!';
-        setTimeout(() => {
-          boot.classList.add('boot-screen--out');
-          document.body.style.overflow = '';
-          try { localStorage.setItem('boot_shown', '1'); } catch (e) {}
-          setTimeout(() => boot.remove(), 600);
-        }, 900);
-      }
-      if (fill) fill.style.width = progress + '%';
-    }, 180);
-  }
-
   document.querySelectorAll('.lang-toggle [data-lang]').forEach(btn => {
     btn.addEventListener('click', () => applyLang(btn.dataset.lang));
   });
@@ -376,6 +345,52 @@
     try { localStorage.setItem(ICON_SIZE_KEY, size); } catch (e) {}
     if (desktopIcons) desktopIcons.setAttribute('data-size', size);
     relayoutIcons();
+  }
+
+  function runBoot() {
+    const boot = document.getElementById('boot-screen');
+    if (!boot) return;
+
+    let shown = false;
+    try { shown = localStorage.getItem('boot_shown') === '1'; } catch (e) {}
+
+    if (shown) {
+      boot.remove();
+      return;
+    }
+
+    document.body.style.overflow = 'hidden';
+
+    const fill = document.getElementById('boot-fill');
+    const welcome = document.getElementById('boot-welcome');
+    const logo = boot.querySelector('.boot-screen__logo');
+    const text = boot.querySelector('.boot-screen__text');
+
+    if (fill) fill.style.width = '0%';
+    if (welcome) welcome.textContent = '';
+
+    let progress = 0;
+    const tickId = setInterval(() => {
+      progress += Math.random() * 14 + 6;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(tickId);
+
+        if (fill) fill.style.width = '100%';
+
+        const name = getUsername();
+        if (welcome) welcome.textContent = t('boot.welcome') + name + '!';
+
+        setTimeout(() => {
+          boot.classList.add('boot-screen--out');
+          document.body.style.overflow = '';
+          try { localStorage.setItem('boot_shown', '1'); } catch (e) {}
+          setTimeout(() => boot.remove(), 600);
+        }, 1200);
+      } else {
+        if (fill) fill.style.width = progress + '%';
+      }
+    }, 160);
   }
 
   window.resetProfile = resetProfile;
@@ -1013,6 +1028,7 @@
 
   window.openApp = openApp;
   window.closeWindowByApp = closeWindowByApp;
+  window.updateTaskbar = updateTaskbar;
   window.rerenderOpenWindows = function () {
     Object.keys(openWindows).forEach(id => {
       const w = openWindows[id];
@@ -1020,7 +1036,6 @@
       if (!app) return;
       const titleEl = w.el.querySelector('.window__title');
       if (titleEl) titleEl.textContent = getAppTitle(id, app);
-      app.render(w.body);
     });
     updateTaskbar();
   };
@@ -1036,4 +1051,6 @@
   if (typeof checkStyleAchievement === 'function') {
     setTimeout(() => checkStyleAchievement(), 500);
   }
+
+  runBoot();
 })();

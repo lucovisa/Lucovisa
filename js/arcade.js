@@ -50,6 +50,69 @@
     return l === 'ru' ? WORDS_RU : WORDS_EN;
   }
 
+  const SUDOKU_BASE = [
+    [5,3,4,6,7,8,9,1,2],
+    [6,7,2,1,9,5,3,4,8],
+    [1,9,8,3,4,2,5,6,7],
+    [8,5,9,7,6,1,4,2,3],
+    [4,2,6,8,5,3,7,9,1],
+    [7,1,3,9,2,4,8,5,6],
+    [9,6,1,5,3,7,2,8,4],
+    [2,8,7,4,1,9,6,3,5],
+    [3,4,5,2,8,6,1,7,9]
+  ];
+
+  function shuffleSudoku(base) {
+    const grid = base.map(r => r.slice());
+    const rows = [[0,1,2],[3,4,5],[6,7,8]];
+    const cols = [[0,1,2],[3,4,5],[6,7,8]];
+    const digits = [1,2,3,4,5,6,7,8,9];
+
+    for (let i = digits.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [digits[i], digits[j]] = [digits[j], digits[i]];
+    }
+
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        grid[r][c] = digits[grid[r][c] - 1];
+      }
+    }
+
+    for (let i = 0; i < 3; i++) {
+      const bandOrder = [0,1,2];
+      for (let j = bandOrder.length - 1; j > 0; j--) {
+        const k = Math.floor(Math.random() * (j + 1));
+        [bandOrder[j], bandOrder[k]] = [bandOrder[k], bandOrder[j]];
+      }
+      const newRows = [];
+      bandOrder.forEach(b => newRows.push(grid[rows[i][b]]));
+      rows[i].forEach((_, idx) => { grid[rows[i][idx]] = newRows[idx]; });
+    }
+
+    for (let i = 0; i < 3; i++) {
+      const colOrder = [0,1,2];
+      for (let j = colOrder.length - 1; j > 0; j--) {
+        const k = Math.floor(Math.random() * (j + 1));
+        [colOrder[j], colOrder[k]] = [colOrder[k], colOrder[j]];
+      }
+      const newGrid = grid.map(r => r.slice());
+      for (let r = 0; r < 9; r++) {
+        colOrder.forEach((co, idx) => {
+          newGrid[r][cols[i][idx]] = grid[r][cols[i][co]];
+        });
+      }
+      for (let r = 0; r < 9; r++) grid[r] = newGrid[r];
+    }
+
+    if (Math.random() < 0.5) {
+      const transposed = grid[0].map((_, i) => grid.map(r => r[i]));
+      for (let r = 0; r < 9; r++) grid[r] = transposed[r];
+    }
+
+    return grid;
+  }
+
   function renderArcade(body) {
     let cleanup = null;
 
@@ -70,6 +133,18 @@
             '<button class="arcade__item" data-game="tetris">' +
               '<span class="app-icon__svg arcade__item-icon" data-svg="joystick"></span>' +
               '<span>' + t('arcade.tetris') + '</span>' +
+            '</button>' +
+            '<button class="arcade__item" data-game="2048">' +
+              '<span class="app-icon__svg arcade__item-icon" data-svg="grid"></span>' +
+              '<span>' + t('arcade.2048') + '</span>' +
+            '</button>' +
+            '<button class="arcade__item" data-game="flappy">' +
+              '<span class="app-icon__svg arcade__item-icon" data-svg="bird"></span>' +
+              '<span>' + t('arcade.flappy') + '</span>' +
+            '</button>' +
+            '<button class="arcade__item" data-game="sudoku">' +
+              '<span class="app-icon__svg arcade__item-icon" data-svg="grid"></span>' +
+              '<span>' + t('arcade.sudoku') + '</span>' +
             '</button>' +
             '<button class="arcade__item" data-game="guess">' +
               '<span class="app-icon__svg arcade__item-icon" data-svg="info"></span>' +
@@ -98,6 +173,9 @@
           if (game === 'snake3d') startSnake3D();
           else if (game === 'snake2d') startSnake2D();
           else if (game === 'tetris') startTetrisArcade();
+          else if (game === '2048') start2048();
+          else if (game === 'flappy') startFlappy();
+          else if (game === 'sudoku') startSudoku();
           else if (game === 'guess') startGuess();
           else if (game === 'solitaire') startSolitaire();
           else if (game === 'minesweeper') startMinesweeper();
@@ -550,6 +628,405 @@
         drop();
         draw();
       }, 500);
+
+      cleanup = stop;
+    }
+
+    function start2048() {
+      const { stage, scoreBar } = prepareGame();
+      const wrap = document.createElement('div');
+      wrap.className = 'g2048';
+      stage.appendChild(wrap);
+      stage.appendChild(makeHint(t('arcade.controls') + ' · ' + t('arcade.pressR') + ' · ' + t('arcade.pressQ')));
+
+      const SIZE = 4;
+      let grid, score, alive, won;
+
+      function emptyCells() {
+        const cells = [];
+        for (let r = 0; r < SIZE; r++)
+          for (let c = 0; c < SIZE; c++)
+            if (!grid[r][c]) cells.push({ r, c });
+        return cells;
+      }
+
+      function addTile() {
+        const cells = emptyCells();
+        if (cells.length === 0) return;
+        const cell = cells[Math.floor(Math.random() * cells.length)];
+        grid[cell.r][cell.c] = Math.random() < 0.9 ? 2 : 4;
+      }
+
+      function reset() {
+        grid = Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
+        score = 0;
+        alive = true;
+        won = false;
+        addTile();
+        addTile();
+        updateScore(scoreBar, score);
+        render();
+      }
+
+      function slideRow(row) {
+        const filtered = row.filter(v => v);
+        const result = [];
+        let i = 0;
+        while (i < filtered.length) {
+          if (i + 1 < filtered.length && filtered[i] === filtered[i + 1]) {
+            const merged = filtered[i] * 2;
+            result.push(merged);
+            score += merged;
+            if (merged === 2048 && !won) {
+              won = true;
+              if (typeof unlockAchievement === 'function') unlockAchievement('2048');
+            }
+            i += 2;
+          } else {
+            result.push(filtered[i]);
+            i++;
+          }
+        }
+        while (result.length < SIZE) result.push(0);
+        return result;
+      }
+
+      function move(dir) {
+        if (!alive) return;
+        const before = JSON.stringify(grid);
+
+        if (dir === 'left') {
+          for (let r = 0; r < SIZE; r++) grid[r] = slideRow(grid[r]);
+        } else if (dir === 'right') {
+          for (let r = 0; r < SIZE; r++) grid[r] = slideRow(grid[r].slice().reverse()).reverse();
+        } else if (dir === 'up') {
+          for (let c = 0; c < SIZE; c++) {
+            const col = grid.map(row => row[c]);
+            const newCol = slideRow(col);
+            for (let r = 0; r < SIZE; r++) grid[r][c] = newCol[r];
+          }
+        } else if (dir === 'down') {
+          for (let c = 0; c < SIZE; c++) {
+            const col = grid.map(row => row[c]).reverse();
+            const newCol = slideRow(col).reverse();
+            for (let r = 0; r < SIZE; r++) grid[r][c] = newCol[r];
+          }
+        }
+
+        if (JSON.stringify(grid) !== before) {
+          addTile();
+          updateScore(scoreBar, score);
+          render();
+          checkGameOver();
+        }
+      }
+
+      function checkGameOver() {
+        if (emptyCells().length > 0) return;
+        for (let r = 0; r < SIZE; r++) {
+          for (let c = 0; c < SIZE; c++) {
+            if (c + 1 < SIZE && grid[r][c] === grid[r][c + 1]) return;
+            if (r + 1 < SIZE && grid[r][c] === grid[r + 1][c]) return;
+          }
+        }
+        alive = false;
+        const go = document.createElement('div');
+        go.className = 'arcade-gameover';
+        go.textContent = t('arcade.gameOver') + ' · ' + t('arcade.pressR');
+        stage.appendChild(go);
+      }
+
+      function render() {
+        let html = '<div class="g2048-grid">';
+        for (let r = 0; r < SIZE; r++) {
+          for (let c = 0; c < SIZE; c++) {
+            const v = grid[r][c];
+            const cls = v ? 'g2048-tile g2048-tile--' + Math.min(v, 2048) : 'g2048-tile g2048-tile--empty';
+            html += '<div class="' + cls + '">' + (v || '') + '</div>';
+          }
+        }
+        html += '</div>';
+        wrap.innerHTML = html;
+      }
+
+      function onKey(e) {
+        const k = e.key.toLowerCase();
+        if (k === 'q' || k === 'й') { stop(); return; }
+        if (k === 'r' || k === 'к') { reset(); return; }
+        if (!alive) return;
+        if (e.key === 'ArrowLeft' || k === 'a' || k === 'ф') { e.preventDefault(); move('left'); }
+        else if (e.key === 'ArrowRight' || k === 'd' || k === 'в') { e.preventDefault(); move('right'); }
+        else if (e.key === 'ArrowUp' || k === 'w' || k === 'ц') { e.preventDefault(); move('up'); }
+        else if (e.key === 'ArrowDown' || k === 's' || k === 'ы') { e.preventDefault(); move('down'); }
+      }
+
+      function stop() {
+        window.removeEventListener('keydown', onKey);
+      }
+
+      window.addEventListener('keydown', onKey);
+      reset();
+
+      cleanup = stop;
+    }
+
+    function startFlappy() {
+      const { stage, scoreBar } = prepareGame();
+      const canvas = document.createElement('canvas');
+      canvas.className = 'arcade-canvas';
+      canvas.width = 400;
+      canvas.height = 500;
+      stage.appendChild(canvas);
+      stage.appendChild(makeHint(t('arcade.flappyControls') + ' · ' + t('arcade.pressR') + ' · ' + t('arcade.pressQ')));
+
+      const ctx = canvas.getContext('2d');
+      const GRAVITY = 0.5;
+      const JUMP = -8;
+      const PIPE_W = 60;
+      const GAP = 140;
+      const PIPE_SPEED = 2.4;
+
+      let bird, pipes, score, alive, loop, spawnTimer;
+
+      function reset() {
+        bird = { x: 80, y: 250, vy: 0, r: 14 };
+        pipes = [];
+        score = 0;
+        alive = true;
+        spawnTimer = 0;
+        updateScore(scoreBar, score);
+        draw();
+      }
+
+      function spawnPipe() {
+        const minTop = 60;
+        const maxTop = canvas.height - GAP - 60;
+        const topH = minTop + Math.random() * (maxTop - minTop);
+        pipes.push({ x: canvas.width, top: topH, passed: false });
+      }
+
+      function draw() {
+        clearCanvas(canvas);
+
+        ctx.fillStyle = '#1a2332';
+        for (let i = 0; i < 20; i++) {
+          ctx.fillRect(i * 20, canvas.height - 40, 20, 40);
+        }
+
+        pipes.forEach(p => {
+          ctx.fillStyle = '#2DA44E';
+          ctx.fillRect(p.x, 0, PIPE_W, p.top);
+          ctx.fillRect(p.x, p.top + GAP, PIPE_W, canvas.height - p.top - GAP);
+          ctx.fillStyle = '#143D1E';
+          ctx.fillRect(p.x - 4, p.top - 18, PIPE_W + 8, 18);
+          ctx.fillRect(p.x - 4, p.top + GAP, PIPE_W + 8, 18);
+        });
+
+        ctx.fillStyle = '#FFD166';
+        ctx.beginPath();
+        ctx.arc(bird.x, bird.y, bird.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#7A5600';
+        ctx.beginPath();
+        ctx.arc(bird.x + 5, bird.y - 4, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#E0A200';
+        ctx.beginPath();
+        ctx.moveTo(bird.x + bird.r - 2, bird.y);
+        ctx.lineTo(bird.x + bird.r + 8, bird.y + 3);
+        ctx.lineTo(bird.x + bird.r - 2, bird.y + 6);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#7CFC98';
+        ctx.font = '18px monospace';
+        ctx.fillText(t('arcade.score') + ': ' + score, 12, 26);
+      }
+
+      function tick() {
+        if (!alive) return;
+
+        bird.vy += GRAVITY;
+        bird.y += bird.vy;
+
+        if (bird.y + bird.r >= canvas.height - 40) {
+          bird.y = canvas.height - 40 - bird.r;
+          alive = false;
+          gameOver();
+          return;
+        }
+        if (bird.y - bird.r <= 0) {
+          bird.y = bird.r;
+          bird.vy = 0;
+        }
+
+        spawnTimer++;
+        if (spawnTimer > 90) {
+          spawnPipe();
+          spawnTimer = 0;
+        }
+
+        pipes.forEach(p => { p.x -= PIPE_SPEED; });
+        pipes = pipes.filter(p => p.x + PIPE_W > -10);
+
+        pipes.forEach(p => {
+          if (!p.passed && p.x + PIPE_W < bird.x) {
+            p.passed = true;
+            score++;
+            updateScore(scoreBar, score);
+          }
+          if (bird.x + bird.r > p.x && bird.x - bird.r < p.x + PIPE_W) {
+            if (bird.y - bird.r < p.top || bird.y + bird.r > p.top + GAP) {
+              alive = false;
+              gameOver();
+            }
+          }
+        });
+
+        draw();
+      }
+
+      function gameOver() {
+        clearInterval(loop);
+        const go = document.createElement('div');
+        go.className = 'arcade-gameover';
+        go.textContent = t('arcade.gameOver') + ' · ' + t('arcade.pressR');
+        stage.appendChild(go);
+      }
+
+      function onKey(e) {
+        const k = e.key.toLowerCase();
+        if (k === 'q' || k === 'й') { stop(); return; }
+        if (k === 'r' || k === 'к') { stop(); reset(); loop = setInterval(tick, 20); return; }
+        if (!alive) return;
+        if (e.key === ' ' || e.key === 'ArrowUp' || k === 'w' || k === 'ц') {
+          e.preventDefault();
+          bird.vy = JUMP;
+        }
+      }
+
+      function stop() {
+        window.removeEventListener('keydown', onKey);
+        clearInterval(loop);
+      }
+
+      window.addEventListener('keydown', onKey);
+      reset();
+      loop = setInterval(tick, 20);
+
+      cleanup = stop;
+    }
+
+    function startSudoku() {
+      const { stage } = prepareGame();
+      const wrap = document.createElement('div');
+      wrap.className = 'sudoku';
+      stage.appendChild(wrap);
+
+      const solution = shuffleSudoku(SUDOKU_BASE);
+      const puzzle = solution.map(r => r.slice());
+      const cells = [];
+      for (let r = 0; r < 9; r++)
+        for (let c = 0; c < 9; c++)
+          cells.push({ r, c });
+      for (let i = cells.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cells[i], cells[j]] = [cells[j], cells[i]];
+      }
+      const hideCount = 45;
+      for (let i = 0; i < hideCount; i++) {
+        puzzle[cells[i].r][cells[i].c] = 0;
+      }
+
+      let current = puzzle.map(r => r.slice());
+      let selected = null;
+      let errors = 0;
+
+      function render() {
+        let html = '<div class="sudoku-grid">';
+        for (let r = 0; r < 9; r++) {
+          for (let c = 0; c < 9; c++) {
+            const v = current[r][c];
+            const fixed = puzzle[r][c] !== 0;
+            const isError = v !== 0 && v !== solution[r][c];
+            const isSelected = selected && selected.r === r && selected.c === c;
+            let cls = 'sudoku-cell';
+            if (fixed) cls += ' sudoku-cell--fixed';
+            if (isError) cls += ' sudoku-cell--error';
+            if (isSelected) cls += ' sudoku-cell--selected';
+            if (c === 2 || c === 5) cls += ' sudoku-cell--right';
+            if (r === 2 || r === 5) cls += ' sudoku-cell--bottom';
+            html += '<div class="' + cls + '" data-r="' + r + '" data-c="' + c + '">' + (v || '') + '</div>';
+          }
+        }
+        html += '</div>';
+
+        html += '<div class="sudoku-actions">';
+        html += '<button class="pill pill--ghost" id="sudoku-check">' + t('arcade.sudokuCheck') + '</button>';
+        html += '<button class="pill pill--ghost" id="sudoku-solve">' + t('arcade.sudokuSolve') + '</button>';
+        html += '<button class="pill" id="sudoku-new">' + t('arcade.sudokuNew') + '</button>';
+        html += '</div>';
+
+        html += '<div class="sudoku-numpad">';
+        for (let i = 1; i <= 9; i++) {
+          html += '<button class="sudoku-num" data-num="' + i + '">' + i + '</button>';
+        }
+        html += '<button class="sudoku-num sudoku-num--clear" data-num="0">×</button>';
+        html += '</div>';
+
+        wrap.innerHTML = html;
+
+        wrap.querySelectorAll('.sudoku-cell').forEach(cell => {
+          cell.addEventListener('click', () => {
+            if (cell.classList.contains('sudoku-cell--fixed')) return;
+            selected = { r: parseInt(cell.dataset.r), c: parseInt(cell.dataset.c) };
+            render();
+          });
+        });
+
+        wrap.querySelectorAll('.sudoku-num').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (!selected) return;
+            const num = parseInt(btn.dataset.num);
+            current[selected.r][selected.c] = num;
+            render();
+          });
+        });
+
+        wrap.querySelector('#sudoku-check').addEventListener('click', () => {
+          let err = 0;
+          for (let r = 0; r < 9; r++)
+            for (let c = 0; c < 9; c++)
+              if (current[r][c] !== 0 && current[r][c] !== solution[r][c]) err++;
+          if (err === 0) {
+            toast(t('arcade.sudokuCorrect'));
+            if (typeof unlockAchievement === 'function') unlockAchievement('sudoku');
+          } else {
+            toast(t('arcade.sudokuErrors') + ': ' + err);
+          }
+        });
+
+        wrap.querySelector('#sudoku-solve').addEventListener('click', () => {
+          current = solution.map(r => r.slice());
+          render();
+        });
+
+        wrap.querySelector('#sudoku-new').addEventListener('click', () => {
+          startSudoku();
+        });
+      }
+
+      function onKey(e) {
+        const k = e.key.toLowerCase();
+        if (k === 'q' || k === 'й') { stop(); return; }
+      }
+
+      function stop() {
+        window.removeEventListener('keydown', onKey);
+      }
+
+      window.addEventListener('keydown', onKey);
+      render();
 
       cleanup = stop;
     }

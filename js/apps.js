@@ -102,7 +102,7 @@ const DONATE_WALLETS = [
 
 const APPS = {
   portfolio:       { title: 'Portfolio',       icon: 'folder',     width: 760, height: 660, render: renderPortfolio },
-  about:           { title: 'About me',        icon: 'info',       width: 560, height: 580, render: renderAbout },
+  about:           { title: 'About me',        icon: 'info',       width: 560, height: 620, render: renderAbout },
   hacker:          { title: 'hacker.exe',      icon: 'terminal',   width: 680, height: 500, render: renderHacker },
   map:             { title: 'Map',             icon: 'web',        width: 800, height: 620, render: renderMap },
   contact:         { title: 'Contact',         icon: 'mail',       width: 560, height: 420, render: renderContact },
@@ -629,6 +629,19 @@ function renderWork(body) {
   const l = lang();
   let activeTab = 'timeline';
 
+  const TECH_STACK = [
+    { name: 'JavaScript', icon: 'js' },
+    { name: 'C++', icon: 'cpp' },
+    { name: 'C#', icon: 'csharp' },
+    { name: 'Python', icon: 'python' },
+    { name: 'C', icon: 'c' },
+    { name: 'gdscript', icon: 'gdscript' },
+    { name: 'Git', icon: 'git' },
+    { name: 'HTML', icon: 'html' },
+    { name: 'CSS', icon: 'css' },
+    { name: 'SEO', icon: 'seo' }
+  ];
+
   function renderTabs() {
     let html = '<div class="work-tabs">';
     ['timeline', 'tech', 'reviews'].forEach(key => {
@@ -642,7 +655,14 @@ function renderWork(body) {
     html += '</div>';
 
     html += '<div class="work-panel' + (activeTab === 'tech' ? ' is-active' : '') + '" data-panel="tech">';
-    html += renderWorkTech();
+    html += '<div class="work-tech__grid">';
+    TECH_STACK.forEach(tech => {
+      html += '<div class="work-tech__card">' +
+        '<span class="app-icon__svg work-tech__icon" data-svg="' + tech.icon + '"></span>' +
+        '<span class="work-tech__name">' + tech.name + '</span>' +
+      '</div>';
+    });
+    html += '</div>';
     html += '</div>';
 
     html += '<div class="work-panel' + (activeTab === 'reviews' ? ' is-active' : '') + '" data-panel="reviews">';
@@ -679,16 +699,6 @@ function renderWork(body) {
         '</div>';
     });
 
-    html += '</div>';
-    return html;
-  }
-
-  function renderWorkTech() {
-    const techs = ['JavaScript', 'C++', 'C#', 'Python', 'C', 'gdscript', 'Git', 'HTML', 'CSS', 'SEO'];
-    let html = '<div class="work-tech__grid">';
-    techs.forEach(tech => {
-      html += '<span class="work-tech__item">' + tech + '</span>';
-    });
     html += '</div>';
     return html;
   }
@@ -853,7 +863,20 @@ function renderAbout(body) {
         '<a href="https://lucovisa.github.io/Lucovisa/" target="_blank" rel="noopener">lucovisa.github.io/Lucovisa</a>' +
       '</p>' +
       '<p>' + t('about.seePortfolio') + '</p>' +
+      '<button class="pill app-about__contact" id="about-contact">' +
+        '<span class="app-icon__svg app-icon__svg--sm" data-svg="mail2"></span>' +
+        '<span>' + t('about.contact') + '</span>' +
+      '</button>' +
     '</div>';
+
+  renderIcons(body);
+
+  const contactBtn = body.querySelector('#about-contact');
+  if (contactBtn) {
+    contactBtn.addEventListener('click', () => {
+      if (typeof openApp === 'function') openApp('contact');
+    });
+  }
 }
 
 function renderMap(body) {
