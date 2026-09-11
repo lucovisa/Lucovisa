@@ -3,10 +3,14 @@
 Developer focused on automation, web tools and game development.
 
 **Level:** Middle+
+
 **Experience:** 3 years
+
 **Timezone:** UTC+10
 
+
 **Native language:** Russian
+
 **Also understand:** English, French, German
 
 ---
