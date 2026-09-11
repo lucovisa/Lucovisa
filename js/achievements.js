@@ -7,10 +7,15 @@
     { id: 'secret',            titleKey: 'ach.secret.title',            descKey: 'ach.secret.desc',            commentKey: 'ach.secret.comment',            icon: 'star', hidden: true },
     { id: 'style',             titleKey: 'ach.style.title',             descKey: 'ach.style.desc',             commentKey: 'ach.style.comment',             icon: 'settings' },
     { id: 'snake1000',         titleKey: 'ach.snake1000.title',         descKey: 'ach.snake1000.desc',         commentKey: 'ach.snake1000.comment',         icon: 'joystick' },
+    { id: 'snake2d1000',       titleKey: 'ach.snake2d1000.title',       descKey: 'ach.snake2d1000.desc',       commentKey: 'ach.snake2d1000.comment',       icon: 'joystick' },
     { id: 'tetris10000',       titleKey: 'ach.tetris10000.title',       descKey: 'ach.tetris10000.desc',       commentKey: 'ach.tetris10000.comment',       icon: 'joystick' },
     { id: 'clicker1000000',    titleKey: 'ach.clicker1000000.title',    descKey: 'ach.clicker1000000.desc',    commentKey: 'ach.clicker1000000.comment',    icon: 'heart' },
     { id: 'minesweeper',       titleKey: 'ach.minesweeper.title',       descKey: 'ach.minesweeper.desc',       commentKey: 'ach.minesweeper.comment',       icon: 'minesweeper' },
-    { id: 'solitaire',         titleKey: 'ach.solitaire.title',         descKey: 'ach.solitaire.desc',         commentKey: 'ach.solitaire.comment',         icon: 'solitaire' }
+    { id: 'solitaire',         titleKey: 'ach.solitaire.title',         descKey: 'ach.solitaire.desc',         commentKey: 'ach.solitaire.comment',         icon: 'solitaire' },
+    { id: '2048_score',        titleKey: 'ach.2048_score.title',        descKey: 'ach.2048_score.desc',        commentKey: 'ach.2048_score.comment',        icon: 'grid' },
+    { id: '2048_record',       titleKey: 'ach.2048_record.title',       descKey: 'ach.2048_record.desc',       commentKey: 'ach.2048_record.comment',       icon: 'grid' },
+    { id: 'guess_win',         titleKey: 'ach.guess_win.title',         descKey: 'ach.guess_win.desc',         commentKey: 'ach.guess_win.comment',         icon: 'info' },
+    { id: 'sudoku',            titleKey: 'ach.sudoku.title',            descKey: 'ach.sudoku.desc',            commentKey: 'ach.sudoku.comment',            icon: 'grid' }
   ];
 
   function getUnlocked() {

@@ -72,6 +72,7 @@ const I18N = {
     "arcade.hangmanLose": "You lost! The word was",
     "arcade.back": "Back to menu",
     "arcade.score": "Score",
+    "arcade.best": "Best",
     "arcade.gameOver": "Game Over",
     "arcade.pressR": "R - restart",
     "arcade.pressQ": "Q - exit",
@@ -345,6 +346,10 @@ const I18N = {
     "ach.snake1000.desc": "Score 1000 in Snake 3D",
     "ach.snake1000.comment": "Are you a snake or a human?",
 
+    "ach.snake2d1000.title": "Snake 2D Master",
+    "ach.snake2d1000.desc": "Score 1000 in Snake 2D",
+    "ach.snake2d1000.comment": "Two snakes, one goal",
+
     "ach.tetris10000.title": "Tetris God",
     "ach.tetris10000.desc": "Score 10000 in Tetris",
     "ach.tetris10000.comment": "T-spin master",
@@ -361,9 +366,17 @@ const I18N = {
     "ach.solitaire.desc": "Win Solitaire",
     "ach.solitaire.comment": "Klondike champion",
 
-    "ach.2048.title": "2048 Master",
-    "ach.2048.desc": "Reach 2048 tile",
-    "ach.2048.comment": "Numbers are your friends",
+    "ach.2048_score.title": "2048 Score",
+    "ach.2048_score.desc": "Get 2048 points in 2048",
+    "ach.2048_score.comment": "Not a tile, but a score",
+
+    "ach.2048_record.title": "New Record",
+    "ach.2048_record.desc": "Beat your own 2048 record",
+    "ach.2048_record.comment": "You are getting better",
+
+    "ach.guess_win.title": "Mastermind",
+    "ach.guess_win.desc": "Win any mode of Guess",
+    "ach.guess_win.comment": "Numbers, words or letters - all yours",
 
     "ach.sudoku.title": "Sudoku Master",
     "ach.sudoku.desc": "Solve a Sudoku",
@@ -442,6 +455,7 @@ const I18N = {
     "arcade.hangmanLose": "Ты проиграл! Слово было",
     "arcade.back": "Назад в меню",
     "arcade.score": "Счёт",
+    "arcade.best": "Рекорд",
     "arcade.gameOver": "Игра окончена",
     "arcade.pressR": "R - рестарт",
     "arcade.pressQ": "Q - выход",
@@ -715,6 +729,10 @@ const I18N = {
     "ach.snake1000.desc": "Набери 1000 очков в Змейке 3D",
     "ach.snake1000.comment": "Ты змей или человек?",
 
+    "ach.snake2d1000.title": "Мастер Змейки 2D",
+    "ach.snake2d1000.desc": "Набери 1000 очков в Змейке 2D",
+    "ach.snake2d1000.comment": "Две змеи, одна цель",
+
     "ach.tetris10000.title": "Бог Тетриса",
     "ach.tetris10000.desc": "Набери 10000 очков в Тетрисе",
     "ach.tetris10000.comment": "Мастер T-спинов",
@@ -731,9 +749,17 @@ const I18N = {
     "ach.solitaire.desc": "Победи в Косынке",
     "ach.solitaire.comment": "Чемпион Клондайка",
 
-    "ach.2048.title": "Мастер 2048",
-    "ach.2048.desc": "Собери плитку 2048",
-    "ach.2048.comment": "Цифры твои друзья",
+    "ach.2048_score.title": "Счёт 2048",
+    "ach.2048_score.desc": "Набери 2048 очков в 2048",
+    "ach.2048_score.comment": "Не плитка, а счёт",
+
+    "ach.2048_record.title": "Новый рекорд",
+    "ach.2048_record.desc": "Побей свой же рекорд в 2048",
+    "ach.2048_record.comment": "Ты становишься лучше",
+
+    "ach.guess_win.title": "Угадайка",
+    "ach.guess_win.desc": "Победи в любом режиме Угадай",
+    "ach.guess_win.comment": "Цифры, слова или буквы - всё твоё",
 
     "ach.sudoku.title": "Мастер Судоку",
     "ach.sudoku.desc": "Реши Судоку",

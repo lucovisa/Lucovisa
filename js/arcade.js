@@ -471,6 +471,7 @@
           go.className = 'arcade-gameover';
           go.textContent = t('arcade.gameOver') + ' · ' + t('arcade.pressR');
           stage.appendChild(go);
+          if (score >= 1000 && typeof unlockAchievement === 'function') unlockAchievement('snake2d1000');
           return;
         }
         snake.unshift(head);
@@ -640,7 +641,11 @@
       stage.appendChild(makeHint(t('arcade.controls') + ' · ' + t('arcade.pressR') + ' · ' + t('arcade.pressQ')));
 
       const SIZE = 4;
-      let grid, score, alive, won;
+      const RECORD_KEY = 'best_2048_score';
+      let grid, score, alive, won, best;
+
+      try { best = parseInt(localStorage.getItem(RECORD_KEY), 10) || 0; } catch (e) { best = 0; }
+      updateScore(scoreBar, 0, t('arcade.best') + ': ' + best);
 
       function emptyCells() {
         const cells = [];
@@ -664,7 +669,7 @@
         won = false;
         addTile();
         addTile();
-        updateScore(scoreBar, score);
+        updateScore(scoreBar, score, t('arcade.best') + ': ' + best);
         render();
       }
 
@@ -677,10 +682,6 @@
             const merged = filtered[i] * 2;
             result.push(merged);
             score += merged;
-            if (merged === 2048 && !won) {
-              won = true;
-              if (typeof unlockAchievement === 'function') unlockAchievement('2048');
-            }
             i += 2;
           } else {
             result.push(filtered[i]);
@@ -689,6 +690,18 @@
         }
         while (result.length < SIZE) result.push(0);
         return result;
+      }
+
+      function checkAchievements() {
+        if (score >= 2048 && typeof unlockAchievement === 'function') unlockAchievement('2048_score');
+        if (score > best && best > 0 && typeof unlockAchievement === 'function') {
+          unlockAchievement('2048_record');
+        }
+        if (score > best) {
+          best = score;
+          try { localStorage.setItem(RECORD_KEY, String(best)); } catch (e) {}
+          updateScore(scoreBar, score, t('arcade.best') + ': ' + best);
+        }
       }
 
       function move(dir) {
@@ -715,7 +728,7 @@
 
         if (JSON.stringify(grid) !== before) {
           addTile();
-          updateScore(scoreBar, score);
+          checkAchievements();
           render();
           checkGameOver();
         }
@@ -940,7 +953,6 @@
 
       let current = puzzle.map(r => r.slice());
       let selected = null;
-      let errors = 0;
 
       function render() {
         let html = '<div class="sudoku-grid">';
@@ -1129,6 +1141,7 @@
               attempts++;
               if (v === secret) {
                 info.innerHTML = '<div class="guess-text">' + t('arcade.guessCorrect') + ' (' + attempts + ')</div>';
+                if (typeof unlockAchievement === 'function') unlockAchievement('guess_win');
                 return;
               }
               const rel = v < secret ? '↑' : '↓';
@@ -1170,6 +1183,7 @@
                 attempts++;
                 if (v === secret) {
                   info.innerHTML = '<div class="guess-text">' + t('arcade.guessCorrect') + ' (' + attempts + ')</div>';
+                  if (typeof unlockAchievement === 'function') unlockAchievement('guess_win');
                   return;
                 }
                 const rel = v < secret ? '↑' : '↓';
@@ -1212,6 +1226,7 @@
                     const allFound = secret.split('').every(c => used.indexOf(c) !== -1);
                     if (allFound) {
                       info.innerHTML = '<div class="guess-text">' + t('arcade.hangmanWin') + ': ' + secret + '</div>';
+                      if (typeof unlockAchievement === 'function') unlockAchievement('guess_win');
                       return;
                     }
                   } else {

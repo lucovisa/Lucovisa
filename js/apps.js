@@ -77,8 +77,8 @@ const LUC_VISA = {
   title: 'Lucovisa',
   desc: { en: 'About the developer and all projects.', ru: 'О разработчике и все проекты.' },
   details: {
-    en: 'My visit card site with information about me and my projects for employers or just interested people.',
-    ru: 'Мой сайт-визитка с информацией обо мне и моих проектах для работодателя или просто заинтересованных людей.'
+    en: '(this site) my portfolio/visit card site for employers and just interested people',
+    ru: '(этот сайт) это мой сайт портфолио/визитная карточка для работодателей и просто заинтересованных людей'
   },
   github: 'https://github.com/lucovisa/Lucovisa',
   site: 'https://lucovisa.github.io/Lucovisa/',
@@ -414,7 +414,7 @@ function renderPersExportImport(el) {
   const importFile = el.querySelector('#pers-import-file');
 
   exportBtn.addEventListener('click', () => {
-    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size', 'clicker_count'];
+    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size', 'clicker_count', 'best_2048_score', 'best_snake2d_score'];
     const data = { version: 1, date: new Date().toISOString() };
     keys.forEach(k => {
       try {
@@ -708,9 +708,13 @@ function renderWork(body) {
       '<div class="work-app">' +
         '<div class="work-app__header">' +
           '<span class="app-icon__svg work-app__icon" data-svg="briefcase"></span>' +
-          '<div>' +
+          '<div class="work-app__info">' +
             '<h2>' + t('work.title') + '</h2>' +
             '<p>' + (typeof WORK_EVENTS !== 'undefined' ? WORK_EVENTS.length : 0) + ' ' + (l === 'ru' ? 'событий' : 'events') + '</p>' +
+          '</div>' +
+          '<div class="work-app__experience">' +
+            '<div class="work-app__experience-label">' + t('about.experience') + '</div>' +
+            '<div class="work-app__experience-value">' + t('about.experienceValue') + '</div>' +
           '</div>' +
         '</div>' +
         renderTabs() +
@@ -767,7 +771,7 @@ function projectCard(p, opts) {
     }
 
     if (p.isSelf) {
-      handleSelfClick(el);
+      showProjectInfo(p);
       return;
     }
 

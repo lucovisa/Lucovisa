@@ -10,6 +10,7 @@ Developer focused on automation, web tools and game development.
 
 
 **Native language:** Russian
+
 **Also understand:** English, French, German
 
 ---
