@@ -18,21 +18,35 @@ const I18N = {
     "app.trash": "Trash",
     "app.personalization": "Personalization",
     "app.achievements": "Achievements",
+    "app.calendar": "Calendar",
     "app.details": "Details",
 
     "portfolio.github": "GitHub",
     "portfolio.site": "Site",
-    "portfolio.details": "Details",
+    "portfolio.seeMore": "See the Portfolio app in site for more details",
 
     "context.refresh": "Refresh",
+    "context.changeWallpaper": "Change wallpaper",
     "context.createShortcut": "Create shortcut",
     "context.personalization": "Personalization",
+
+    "system.about": "About system",
+    "system.restart": "Restart",
+    "system.shutdown": "Shut down",
+    "system.title": "About Lucovisa OS",
+    "system.version": "Version",
+    "system.build": "Build",
+    "system.author": "Author",
+    "system.description": "A visit card site styled as a Windows-like desktop environment.",
+    "system.shutdownConfirm": "Are you sure you want to shut down?",
+    "system.restartConfirm": "Restart the system?",
+    "system.goodbye": "Goodbye!",
 
     "shortcut.title": "Create shortcut",
     "shortcut.name": "Shortcut name",
     "shortcut.namePlaceholder": "My shortcut",
     "shortcut.target": "What to open (URL or file)",
-    "shortcut.targetPlaceholder": "https://example.com or /path/file.pdf",
+    "shortcut.targetPlaceholder": "https://example.com",
     "shortcut.targetFile": "Choose file",
     "shortcut.icon": "Icon (URL or upload)",
     "shortcut.iconPlaceholder": "https://example.com/icon.png",
@@ -50,12 +64,10 @@ const I18N = {
     "shortcut.renamed": "Shortcut renamed",
 
     "trash.title": "Trash",
-    "trash.empty": "Trash is empty",
     "trash.moveConfirm": "Move to Trash?",
     "trash.moveConfirmText": "Are you sure you want to move this item to the trash?",
     "trash.moveYes": "Yes",
     "trash.moveNo": "No",
-    "trash.nothingHere": "Nothing here",
     "trash.errorFile": "error.txt",
     "trash.bugFile": "bug.txt",
     "trash.errorContent": [
@@ -78,6 +90,7 @@ const I18N = {
     "personalization.wallpaper": "Wallpaper",
     "personalization.theme": "Theme",
     "personalization.language": "Language",
+    "personalization.desktop": "Desktop",
     "personalization.achievements": "Achievements",
     "personalization.reset": "Reset",
     "personalization.exportImport": "Export / Import",
@@ -93,6 +106,11 @@ const I18N = {
 
     "personalization.themeDark": "Dark",
     "personalization.themeLight": "Light",
+
+    "personalization.iconSize": "Icon size",
+    "personalization.iconSmall": "Small",
+    "personalization.iconMedium": "Medium",
+    "personalization.iconLarge": "Large",
 
     "personalization.achievementPosition": "Notification position",
     "personalization.achievementTopLeft": "Top left",
@@ -151,7 +169,11 @@ const I18N = {
     "map.title": "Project map",
     "map.hint": "Drag nodes to move them.",
 
-    "hacker.welcome": "npm $",
+    "calendar.title": "Calendar",
+    "calendar.today": "Today",
+    "calendar.months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    "calendar.days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+
     "hacker.hint": "write 'help' to see commands",
     "hacker.helpLines": [
       "Available commands:",
@@ -200,6 +222,7 @@ const I18N = {
     "donate.subtitle": "Your donation helps keep my projects free and anonymous",
     "donate.copy": "Copy",
     "donate.copied": "Copied!",
+    "donate.click24": "What is 24 and 221?",
 
     "modal.cancel": "Cancel",
     "modal.ok": "OK",
@@ -221,6 +244,7 @@ const I18N = {
     "toast.shortcutsReset": "Shortcuts reset",
     "toast.profileReset": "Profile reset",
     "toast.allReset": "Everything reset",
+    "toast.iconSizeChanged": "Icon size changed",
 
     "joke.1": "Seriously?",
     "joke.2": "This is the same site",
@@ -228,10 +252,35 @@ const I18N = {
     "joke.4": "This is not funny",
     "joke.5": "What do you want?",
     "joke.6": "THIS IS THE SAME SITE",
-    "joke.24": "221"
+    "joke.24": "221",
+
+    "achievements.title": "Achievements",
+    "achievements.progress": "Progress",
+    "achievements.unlocked": "Unlocked",
+    "achievements.locked": "Locked",
+    "achievements.hidden": "Hidden achievement",
+    "achievements.hiddenLeft": "Hidden left",
+    "achievements.new": "Achievement unlocked!",
+
+    "ach.first_app.title": "First Steps",
+    "ach.first_app.desc": "Open your first app",
+    "ach.first_app.comment": "Thanks for using the site",
+
+    "ach.donate.title": "Support",
+    "ach.donate.desc": "Open Donate",
+    "ach.donate.comment": "If you donated - thank you",
+
+    "ach.secret.title": "???",
+    "ach.secret.desc": "Click 24 times in Portfolio on Lucovisa card",
+    "ach.secret.comment": "What is 24 and 221?",
+    "ach.secret.revealed": "24/221",
+
+    "ach.style.title": "Exclusive",
+    "ach.style.desc": "Set custom nickname, avatar and wallpaper",
+    "ach.style.comment": "You are original, well done"
   },
   ru: {
-    "page.title": "Визитная Карточка",
+    "page.title": "Lucovisa",
     "page.description": "Сайт-визитка Lucovisa: фронтенд, разработка игр и веб-инструменты.",
 
     "taskbar.start": "Пуск",
@@ -249,21 +298,35 @@ const I18N = {
     "app.trash": "Корзина",
     "app.personalization": "Персонализация",
     "app.achievements": "Достижения",
+    "app.calendar": "Календарь",
     "app.details": "Подробнее",
 
     "portfolio.github": "GitHub",
     "portfolio.site": "Сайт",
-    "portfolio.details": "Подробнее",
+    "portfolio.seeMore": "Подробности в приложении Портфолио на сайте",
 
     "context.refresh": "Обновить",
+    "context.changeWallpaper": "Сменить обои",
     "context.createShortcut": "Создать ярлык",
     "context.personalization": "Персонализация",
+
+    "system.about": "О системе",
+    "system.restart": "Перезагрузить",
+    "system.shutdown": "Выключить",
+    "system.title": "О системе Lucovisa OS",
+    "system.version": "Версия",
+    "system.build": "Сборка",
+    "system.author": "Автор",
+    "system.description": "Сайт-визитка в стиле рабочего стола Windows.",
+    "system.shutdownConfirm": "Вы уверены, что хотите выключить?",
+    "system.restartConfirm": "Перезагрузить систему?",
+    "system.goodbye": "До встречи!",
 
     "shortcut.title": "Создать ярлык",
     "shortcut.name": "Имя ярлыка",
     "shortcut.namePlaceholder": "Мой ярлык",
     "shortcut.target": "Что открывать (URL или файл)",
-    "shortcut.targetPlaceholder": "https://example.com или /путь/файл.pdf",
+    "shortcut.targetPlaceholder": "https://example.com",
     "shortcut.targetFile": "Выбрать файл",
     "shortcut.icon": "Иконка (URL или загрузка)",
     "shortcut.iconPlaceholder": "https://example.com/icon.png",
@@ -281,12 +344,10 @@ const I18N = {
     "shortcut.renamed": "Ярлык переименован",
 
     "trash.title": "Корзина",
-    "trash.empty": "Корзина пуста",
     "trash.moveConfirm": "Переместить в корзину?",
     "trash.moveConfirmText": "Вы уверены, что хотите переместить этот объект в корзину?",
     "trash.moveYes": "Да",
     "trash.moveNo": "Нет",
-    "trash.nothingHere": "Здесь ничего нет",
     "trash.errorFile": "error.txt",
     "trash.bugFile": "bug.txt",
     "trash.errorContent": [
@@ -309,6 +370,7 @@ const I18N = {
     "personalization.wallpaper": "Обои",
     "personalization.theme": "Тема",
     "personalization.language": "Язык",
+    "personalization.desktop": "Рабочий стол",
     "personalization.achievements": "Достижения",
     "personalization.reset": "Сброс",
     "personalization.exportImport": "Экспорт / Импорт",
@@ -324,6 +386,11 @@ const I18N = {
 
     "personalization.themeDark": "Тёмная",
     "personalization.themeLight": "Светлая",
+
+    "personalization.iconSize": "Размер иконок",
+    "personalization.iconSmall": "Маленькие",
+    "personalization.iconMedium": "Средние",
+    "personalization.iconLarge": "Большие",
 
     "personalization.achievementPosition": "Позиция уведомлений",
     "personalization.achievementTopLeft": "Слева сверху",
@@ -382,7 +449,11 @@ const I18N = {
     "map.title": "Карта проектов",
     "map.hint": "Перетаскивай узлы мышью.",
 
-    "hacker.welcome": "npm $",
+    "calendar.title": "Календарь",
+    "calendar.today": "Сегодня",
+    "calendar.months": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+    "calendar.days": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+
     "hacker.hint": "напиши 'help' чтобы увидеть команды",
     "hacker.helpLines": [
       "Доступные команды:",
@@ -431,6 +502,7 @@ const I18N = {
     "donate.subtitle": "Ваш донат помогает моим проектам оставаться бесплатными и анонимными",
     "donate.copy": "Скопировать",
     "donate.copied": "Скопировано!",
+    "donate.click24": "Что такое 24 и 221?",
 
     "modal.cancel": "Отмена",
     "modal.ok": "ОК",
@@ -452,6 +524,7 @@ const I18N = {
     "toast.shortcutsReset": "Ярлыки сброшены",
     "toast.profileReset": "Профиль сброшен",
     "toast.allReset": "Всё сброшено",
+    "toast.iconSizeChanged": "Размер иконок изменён",
 
     "joke.1": "Ты серьезно?",
     "joke.2": "Это этот же сайт",
@@ -459,7 +532,32 @@ const I18N = {
     "joke.4": "Это не смешно",
     "joke.5": "Что ты хочешь?",
     "joke.6": "ЭТО ЭТОТ ЖЕ САЙТ",
-    "joke.24": "221"
+    "joke.24": "221",
+
+    "achievements.title": "Достижения",
+    "achievements.progress": "Прогресс",
+    "achievements.unlocked": "Открыто",
+    "achievements.locked": "Закрыто",
+    "achievements.hidden": "Скрытое достижение",
+    "achievements.hiddenLeft": "Скрытых осталось",
+    "achievements.new": "Достижение открыто!",
+
+    "ach.first_app.title": "First Steps",
+    "ach.first_app.desc": "Открой первое приложение",
+    "ach.first_app.comment": "Спасибо что пользуетесь сайтом",
+
+    "ach.donate.title": "Support",
+    "ach.donate.desc": "Открой Donate",
+    "ach.donate.comment": "Если задонатил - спасибо",
+
+    "ach.secret.title": "???",
+    "ach.secret.desc": "Нажми 24 раза в Портфолио по карточке Lucovisa",
+    "ach.secret.comment": "Что такое 24 и 221?",
+    "ach.secret.revealed": "24/221",
+
+    "ach.style.title": "Эксклюзивный",
+    "ach.style.desc": "Сделай кастомный ник, аватар и обои",
+    "ach.style.comment": "Ты оригинальный, молодец"
   }
 };
 

@@ -24,13 +24,26 @@
     if (!el) return;
     const d = new Date();
     const p = n => String(n).padStart(2, '0');
-    el.textContent = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const lang = document.documentElement.lang || 'en';
+    let dateStr;
+    if (lang === 'ru') {
+      const ruDays = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+      const ruMonths = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+      dateStr = ruDays[d.getDay()] + ', ' + d.getDate() + ' ' + ruMonths[d.getMonth()];
+    } else {
+      dateStr = days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + d.getDate();
+    }
+    el.textContent = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()) + ' · ' + dateStr;
   }
   tick();
   setInterval(tick, 1000);
 
   const clock = document.getElementById('clock');
-  if (clock) clock.addEventListener('click', () => location.reload());
+  if (clock) clock.addEventListener('click', () => {
+    if (typeof openApp === 'function') openApp('calendar');
+  });
 
   const modalOverlay = document.getElementById('modal-overlay');
   const modalTitle = document.getElementById('modal-title');
@@ -90,8 +103,6 @@
     if (modalMode === 'prompt') {
       const input = modalBody._input;
       closeModal(input ? input.value : '');
-    } else if (modalMode === 'confirm') {
-      closeModal(true);
     } else {
       closeModal(true);
     }
@@ -205,6 +216,7 @@
   const AVATAR_KEY = 'avatar';
   const WALLPAPER_KEY = 'wallpaper';
   const DESKTOP_POS_KEY = 'desktop_positions';
+  const ICON_SIZE_KEY = 'icon_size';
 
   const usernameEl = document.getElementById('start-username');
   const editBtn = document.getElementById('edit-username');
@@ -215,6 +227,7 @@
   const wallpaperBtn = document.getElementById('wallpaper-btn');
   const wallpaperFile = document.getElementById('wallpaper-file');
   const desktopEl = document.getElementById('desktop');
+  const desktopIcons = document.getElementById('desktop-icons');
 
   function detectDefaultName() {
     const ua = navigator.userAgent;
@@ -250,6 +263,7 @@
     try { localStorage.setItem(USERNAME_KEY, clean); } catch (e) {}
     if (usernameEl) usernameEl.textContent = clean;
     toast(t('toast.nameSaved'));
+    if (typeof checkStyleAchievement === 'function') checkStyleAchievement();
   }
 
   function updateUsernameUI() {
@@ -264,6 +278,7 @@
     try { localStorage.setItem(AVATAR_KEY, dataUrl); } catch (e) {}
     if (avatarImg) avatarImg.src = dataUrl;
     if (taskbarAvatar) taskbarAvatar.src = dataUrl;
+    if (typeof checkStyleAchievement === 'function') checkStyleAchievement();
   }
 
   function updateAvatarUI() {
@@ -295,6 +310,7 @@
       desktopEl.style.backgroundSize = 'cover';
       desktopEl.style.backgroundPosition = 'center';
     }
+    if (typeof checkStyleAchievement === 'function') checkStyleAchievement();
   }
 
   function updateWallpaperUI() {
@@ -316,15 +332,29 @@
     toast(t('toast.wallpaperReset'));
   }
 
+  function getIconSize() {
+    try { return localStorage.getItem(ICON_SIZE_KEY) || 'medium'; } catch (e) { return 'medium'; }
+  }
+
+  function setIconSize(size) {
+    if (['small', 'medium', 'large'].indexOf(size) === -1) size = 'medium';
+    try { localStorage.setItem(ICON_SIZE_KEY, size); } catch (e) {}
+    if (desktopIcons) desktopIcons.setAttribute('data-size', size);
+    relayoutIcons();
+  }
+
   window.resetProfile = resetProfile;
   window.resetWallpaper = resetWallpaper;
   window.setWallpaper = setWallpaper;
   window.setAvatar = setAvatar;
   window.setUsername = setUsername;
+  window.getIconSize = getIconSize;
+  window.setIconSize = setIconSize;
 
   updateUsernameUI();
   updateAvatarUI();
   updateWallpaperUI();
+  if (desktopIcons) desktopIcons.setAttribute('data-size', getIconSize());
 
   if (editBtn) {
     editBtn.addEventListener('click', async e => {
@@ -416,41 +446,68 @@
     });
   }
 
-  const desktopIcons = document.getElementById('desktop-icons');
+  function getGridMetrics() {
+    const size = getIconSize();
+    if (size === 'small')  return { cellW: 82,  cellH: 82,  iconSize: 32 };
+    if (size === 'large')  return { cellW: 118, cellH: 122, iconSize: 64 };
+    return { cellW: 100, cellH: 106, iconSize: 44 };
+  }
+
+  function relayoutIcons() {
+    if (!desktopIcons) return;
+    const saved = (function () {
+      try {
+        const raw = localStorage.getItem(DESKTOP_POS_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) { return {}; }
+    })();
+
+    const { cellW, cellH } = getGridMetrics();
+    const paddingTop = 16;
+    const paddingLeft = 16;
+
+    const allIcons = Array.from(desktopIcons.querySelectorAll('.app-icon'));
+    allIcons.forEach((el, index) => {
+      const id = el.dataset.icon || el.dataset.shortcut || ('icon_' + index);
+      let pos = saved[id];
+      if (!pos) {
+        const col = 0;
+        const row = index;
+        pos = { col: col, row: row };
+      }
+      const col = pos.col !== undefined ? pos.col : 0;
+      const row = pos.row !== undefined ? pos.row : index;
+      el.style.position = 'absolute';
+      el.style.left = (paddingLeft + col * cellW) + 'px';
+      el.style.top  = (paddingTop + row * cellH) + 'px';
+      el.dataset.gridCol = col;
+      el.dataset.gridRow = row;
+    });
+  }
+
+  window.relayoutIcons = relayoutIcons;
 
   function saveDesktopPositions() {
     if (!desktopIcons) return;
     const positions = {};
     desktopIcons.querySelectorAll('.app-icon').forEach(el => {
-      const id = el.dataset.icon;
+      const id = el.dataset.icon || el.dataset.shortcut;
       if (!id) return;
       positions[id] = {
-        left: parseInt(el.style.left) || 0,
-        top: parseInt(el.style.top) || 0
+        col: parseInt(el.dataset.gridCol) || 0,
+        row: parseInt(el.dataset.gridRow) || 0
       };
     });
     try { localStorage.setItem(DESKTOP_POS_KEY, JSON.stringify(positions)); } catch (e) {}
   }
 
   function loadDesktopPositions() {
-    if (!desktopIcons) return;
-    let positions = {};
-    try {
-      const raw = localStorage.getItem(DESKTOP_POS_KEY);
-      if (raw) positions = JSON.parse(raw);
-    } catch (e) {}
-
-    desktopIcons.querySelectorAll('.app-icon').forEach(el => {
-      const id = el.dataset.icon;
-      if (!id || !positions[id]) return;
-      el.style.position = 'absolute';
-      el.style.left = positions[id].left + 'px';
-      el.style.top = positions[id].top + 'px';
-    });
+    relayoutIcons();
   }
 
   function makeIconDraggable(el) {
     let startX = 0, startY = 0, origX = 0, origY = 0, dragging = false, moved = false;
+    const { cellW, cellH } = getGridMetrics();
 
     el.addEventListener('pointerdown', e => {
       if (e.button !== 0) return;
@@ -458,13 +515,8 @@
       moved = false;
       startX = e.clientX;
       startY = e.clientY;
-      const rect = el.getBoundingClientRect();
-      const parentRect = desktopIcons.getBoundingClientRect();
-      origX = rect.left - parentRect.left;
-      origY = rect.top - parentRect.top;
-      el.style.position = 'absolute';
-      el.style.left = origX + 'px';
-      el.style.top = origY + 'px';
+      origX = parseFloat(el.style.left) || 0;
+      origY = parseFloat(el.style.top) || 0;
       el.style.zIndex = 999;
       el.setPointerCapture(e.pointerId);
     });
@@ -474,22 +526,17 @@
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
       if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
-      const newLeft = Math.max(0, Math.min(window.innerWidth - 100, origX + dx));
-      const newTop = Math.max(0, Math.min(window.innerHeight - 100, origY + dy));
-      el.style.left = newLeft + 'px';
-      el.style.top = newTop + 'px';
+      el.style.left = Math.max(0, origX + dx) + 'px';
+      el.style.top = Math.max(0, origY + dy) + 'px';
 
       const trashEl = document.querySelector('.app-icon[data-drop="trash"]');
-      if (trashEl) {
+      if (trashEl && el.dataset.drop !== 'trash') {
         const trashRect = trashEl.getBoundingClientRect();
         const elRect = el.getBoundingClientRect();
         const overlap = !(elRect.right < trashRect.left || elRect.left > trashRect.right ||
                           elRect.bottom < trashRect.top || elRect.top > trashRect.bottom);
-        if (overlap && el.dataset.drop !== 'trash') {
-          trashEl.classList.add('is-drop-target');
-        } else {
-          trashEl.classList.remove('is-drop-target');
-        }
+        if (overlap) trashEl.classList.add('is-drop-target');
+        else trashEl.classList.remove('is-drop-target');
       }
     });
 
@@ -500,29 +547,40 @@
       try { el.releasePointerCapture(e.pointerId); } catch (err) {}
 
       const trashEl = document.querySelector('.app-icon[data-drop="trash"]');
-      if (trashEl) {
+      let droppedOnTrash = false;
+
+      if (trashEl && el.dataset.drop !== 'trash') {
         trashEl.classList.remove('is-drop-target');
         const trashRect = trashEl.getBoundingClientRect();
         const elRect = el.getBoundingClientRect();
         const overlap = !(elRect.right < trashRect.left || elRect.left > trashRect.right ||
                           elRect.bottom < trashRect.top || elRect.top > trashRect.bottom);
-        if (overlap && el.dataset.drop !== 'trash') {
-          const ok = await showModal({
-            mode: 'confirm',
-            title: t('trash.moveConfirm'),
-            message: t('trash.moveConfirmText'),
-            okText: t('trash.moveYes')
-          });
+        if (overlap) droppedOnTrash = true;
+      }
 
-          const yesBtn = document.getElementById('modal-ok');
-          const noBtn = document.getElementById('modal-cancel');
+      if (droppedOnTrash) {
+        const ok = await showModal({
+          mode: 'confirm',
+          title: t('trash.moveConfirm'),
+          message: t('trash.moveConfirmText'),
+          okText: t('trash.moveYes')
+        });
 
-          if (yesBtn) yesBtn.style.display = 'none';
-          if (noBtn) noBtn.textContent = t('trash.moveNo');
-        }
+        const yesBtn = document.getElementById('modal-ok');
+        const noBtn = document.getElementById('modal-cancel');
+        if (yesBtn) yesBtn.style.display = 'none';
+        if (noBtn) noBtn.textContent = t('trash.moveNo');
       }
 
       if (moved) {
+        const currentLeft = parseFloat(el.style.left) || 0;
+        const currentTop = parseFloat(el.style.top) || 0;
+        const col = Math.max(0, Math.round((currentLeft - 16) / cellW));
+        const row = Math.max(0, Math.round((currentTop - 16) / cellH));
+        el.dataset.gridCol = col;
+        el.dataset.gridRow = row;
+        el.style.left = (16 + col * cellW) + 'px';
+        el.style.top  = (16 + row * cellH) + 'px';
         saveDesktopPositions();
         el.dataset.dragged = '1';
         setTimeout(() => { delete el.dataset.dragged; }, 100);
@@ -540,11 +598,7 @@
   function resetDesktop() {
     if (!desktopIcons) return;
     try { localStorage.removeItem(DESKTOP_POS_KEY); } catch (e) {}
-    desktopIcons.querySelectorAll('.app-icon').forEach(el => {
-      el.style.position = '';
-      el.style.left = '';
-      el.style.top = '';
-    });
+    relayoutIcons();
     toast(t('toast.desktopReset'));
   }
 
@@ -553,7 +607,6 @@
   window.loadDesktopPositions = loadDesktopPositions;
   window.makeIconDraggable = makeIconDraggable;
 
-  loadDesktopPositions();
   if (desktopIcons) {
     desktopIcons.querySelectorAll('.app-icon').forEach(makeIconDraggable);
   }
@@ -568,7 +621,7 @@
     if (!contextMenu) return;
     contextMenu.classList.add('is-open');
     contextMenu.style.left = Math.min(x, window.innerWidth - 220) + 'px';
-    contextMenu.style.top = Math.min(y, window.innerHeight - 180) + 'px';
+    contextMenu.style.top = Math.min(y, window.innerHeight - 220) + 'px';
   }
 
   document.addEventListener('contextmenu', e => {
@@ -595,12 +648,59 @@
 
         if (action === 'refresh') {
           location.reload();
+        } else if (action === 'changeWallpaper') {
+          if (wallpaperFile) wallpaperFile.click();
         } else if (action === 'shortcut') {
           if (typeof handleCreateShortcut === 'function') handleCreateShortcut();
         } else if (action === 'personalization') {
           openApp('personalization');
         }
       });
+    });
+  }
+
+  const aboutSystemBtn = document.getElementById('about-system-btn');
+  if (aboutSystemBtn) {
+    aboutSystemBtn.addEventListener('click', () => {
+      if (startMenu) startMenu.classList.remove('is-open');
+      const build = '2026.09.11';
+      showAlert(
+        t('system.version') + ': 1.0.0\n' +
+        t('system.build') + ': ' + build + '\n' +
+        t('system.author') + ': Lucovisa\n\n' +
+        t('system.description'),
+        t('system.title')
+      );
+    });
+  }
+
+  const restartBtn = document.getElementById('restart-btn');
+  if (restartBtn) {
+    restartBtn.addEventListener('click', async () => {
+      if (startMenu) startMenu.classList.remove('is-open');
+      const ok = await showConfirm(t('system.restartConfirm'));
+      if (ok) {
+        document.body.style.transition = 'opacity .4s';
+        document.body.style.opacity = '0';
+        setTimeout(() => location.reload(), 500);
+      }
+    });
+  }
+
+  const shutdownBtn = document.getElementById('shutdown-btn');
+  if (shutdownBtn) {
+    shutdownBtn.addEventListener('click', async () => {
+      if (startMenu) startMenu.classList.remove('is-open');
+      const ok = await showConfirm(t('system.shutdownConfirm'));
+      if (ok) {
+        document.body.style.transition = 'opacity .8s';
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+          document.body.innerHTML = '<div class="goodbye">' + t('system.goodbye') + '</div>';
+          document.body.style.opacity = '1';
+          setTimeout(() => { window.close(); }, 1000);
+        }, 900);
+      }
     });
   }
 
@@ -680,17 +780,18 @@
     makeDraggable(node);
     bringToFront(node);
     updateTaskbar();
+
+    if (typeof unlockAchievement === 'function') {
+      if (appId !== 'achievements') {
+        unlockAchievement('first_app');
+      }
+    }
   }
 
   function getAppTitle(appId, app) {
     const key = 'app.' + appId;
     const translated = t(key);
     if (translated && translated !== key) return translated;
-    if (appId.startsWith('details_')) {
-      const base = appId.replace('details_', '');
-      const baseTitle = t('app.' + base);
-      return (baseTitle !== 'app.' + base ? baseTitle : base) + ' - ' + t('app.details');
-    }
     return app.title;
   }
 
@@ -785,7 +886,6 @@
       if (!app) return;
       const titleEl = w.el.querySelector('.window__title');
       if (titleEl) titleEl.textContent = getAppTitle(id, app);
-      app.render(w.body);
     });
     updateTaskbar();
   };
@@ -810,4 +910,8 @@
       }
     });
   });
+
+  if (typeof checkStyleAchievement === 'function') {
+    setTimeout(() => checkStyleAchievement(), 500);
+  }
 })();

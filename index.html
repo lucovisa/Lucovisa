@@ -39,7 +39,7 @@
 
 <div class="desktop" id="desktop">
 
-  <div class="desktop__icons" id="desktop-icons">
+  <div class="desktop__icons" id="desktop-icons" data-size="medium">
 
     <button class="app-icon" data-app="portfolio" data-icon="portfolio">
       <span class="app-icon__svg" data-svg="folder"></span>
@@ -86,6 +86,11 @@
       <span data-i18n="app.personalization">Personalization</span>
     </button>
 
+    <button class="app-icon" data-app="achievements" data-icon="achievements">
+      <span class="app-icon__svg" data-svg="trophy"></span>
+      <span data-i18n="app.achievements">Achievements</span>
+    </button>
+
   </div>
 
   <div class="windows-layer" id="windows-layer"></div>
@@ -106,7 +111,7 @@
         <button class="toggle__btn" data-theme="light" aria-label="Light"><span class="app-icon__svg app-icon__svg--sm" data-svg="sun"></span></button>
         <button class="toggle__btn" data-theme="dark" aria-label="Dark"><span class="app-icon__svg app-icon__svg--sm" data-svg="moon"></span></button>
       </div>
-      <button class="taskbar__clock" id="clock" title="Reload">--:--:--</button>
+      <button class="taskbar__clock" id="clock" title="Calendar">--:--:--</button>
     </div>
   </div>
 
@@ -159,9 +164,30 @@
       <span class="app-icon__svg app-icon__svg--sm" data-svg="settings"></span>
       <span data-i18n="app.personalization">Personalization</span>
     </button>
+    <button class="start-menu__item" data-app="achievements">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="trophy"></span>
+      <span data-i18n="app.achievements">Achievements</span>
+    </button>
+    <button class="start-menu__item" data-app="calendar">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="calendar"></span>
+      <span data-i18n="app.calendar">Calendar</span>
+    </button>
     <button class="start-menu__item" id="wallpaper-btn">
       <span class="app-icon__svg app-icon__svg--sm" data-svg="wallpaper"></span>
       <span data-i18n="taskbar.wallpaper">Set wallpaper</span>
+    </button>
+    <div class="start-menu__sep"></div>
+    <button class="start-menu__item" id="about-system-btn">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="infoCircle"></span>
+      <span data-i18n="system.about">About system</span>
+    </button>
+    <button class="start-menu__item" id="restart-btn">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="restart"></span>
+      <span data-i18n="system.restart">Restart</span>
+    </button>
+    <button class="start-menu__item start-menu__item--danger" id="shutdown-btn">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="power"></span>
+      <span data-i18n="system.shutdown">Shut down</span>
     </button>
   </div>
 
@@ -169,6 +195,10 @@
     <button class="context-menu__item" data-action="refresh">
       <span class="app-icon__svg app-icon__svg--sm" data-svg="refresh"></span>
       <span data-i18n="context.refresh">Refresh</span>
+    </button>
+    <button class="context-menu__item" data-action="changeWallpaper">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="wallpaper"></span>
+      <span data-i18n="context.changeWallpaper">Change wallpaper</span>
     </button>
     <div class="context-menu__sep"></div>
     <button class="context-menu__item" data-action="shortcut">
@@ -198,6 +228,8 @@
     </div>
   </div>
 
+  <div class="achievement-layer" id="achievement-layer"></div>
+
   <div class="toast-layer" id="toast-layer"></div>
 
 </div>
@@ -221,9 +253,9 @@
 <script src="js/theme.js"></script>
 <script src="js/icons.js"></script>
 <script src="js/apps.js"></script>
+<script src="js/achievements.js"></script>
 <script src="js/giscus.js"></script>
 <script src="js/shortcuts.js"></script>
-<script src="js/cursor.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

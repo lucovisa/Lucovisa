@@ -109,7 +109,9 @@ const APPS = {
   comments:        { title: 'Comments',        icon: 'comment',  width: 640, height: 520, render: renderComments },
   donate:          { title: 'Donate',          icon: 'heart',    width: 560, height: 480, render: renderDonate },
   trash:           { title: 'Trash',           icon: 'trash',    width: 520, height: 400, render: renderTrash },
-  personalization: { title: 'Personalization', icon: 'settings', width: 640, height: 620, render: renderPersonalization }
+  personalization: { title: 'Personalization', icon: 'settings', width: 640, height: 640, render: renderPersonalization },
+  achievements:    { title: 'Achievements',    icon: 'trophy',   width: 620, height: 520, render: renderAchievements },
+  calendar:        { title: 'Calendar',        icon: 'calendar', width: 480, height: 480, render: renderCalendar }
 };
 
 function lang() { return document.documentElement.lang || 'en'; }
@@ -121,7 +123,6 @@ function renderTrash(body) {
         '<span class="app-icon__svg trash-app__icon" data-svg="trash"></span>' +
         '<div>' +
           '<h2>' + t('trash.title') + '</h2>' +
-          '<p>' + t('trash.nothingHere') + '</p>' +
         '</div>' +
       '</div>' +
       '<div class="trash-app__files">' +
@@ -134,7 +135,6 @@ function renderTrash(body) {
           '<span class="trash-file__name">' + t('trash.bugFile') + '</span>' +
         '</button>' +
       '</div>' +
-      '<p class="trash-app__hint">' + t('trash.empty') + '</p>' +
     '</div>';
 
   renderIcons(body);
@@ -150,7 +150,7 @@ function renderTrash(body) {
 }
 
 function renderPersonalization(body) {
-  const tabs = ['profile', 'wallpaper', 'theme', 'language', 'achievements', 'reset', 'exportImport'];
+  const tabs = ['profile', 'wallpaper', 'theme', 'language', 'desktop', 'achievements', 'reset', 'exportImport'];
   let activeTab = 'profile';
 
   body.innerHTML =
@@ -183,6 +183,7 @@ function renderPersonalization(body) {
     else if (activeTab === 'wallpaper') renderPersWallpaper(contentEl);
     else if (activeTab === 'theme') renderPersTheme(contentEl);
     else if (activeTab === 'language') renderPersLanguage(contentEl);
+    else if (activeTab === 'desktop') renderPersDesktop(contentEl);
     else if (activeTab === 'achievements') renderPersAchievements(contentEl);
     else if (activeTab === 'reset') renderPersReset(contentEl);
     else if (activeTab === 'exportImport') renderPersExportImport(contentEl);
@@ -320,6 +321,32 @@ function renderPersLanguage(el) {
   });
 }
 
+function renderPersDesktop(el) {
+  let currentSize = 'medium';
+  try { currentSize = localStorage.getItem('icon_size') || 'medium'; } catch (e) {}
+
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.desktop') + '</h3>' +
+      '<div class="pers-label">' + t('personalization.iconSize') + '</div>' +
+      '<div class="pers-options">' +
+        '<button class="pers-option' + (currentSize === 'small' ? ' is-active' : '') + '" data-size="small">' + t('personalization.iconSmall') + '</button>' +
+        '<button class="pers-option' + (currentSize === 'medium' ? ' is-active' : '') + '" data-size="medium">' + t('personalization.iconMedium') + '</button>' +
+        '<button class="pers-option' + (currentSize === 'large' ? ' is-active' : '') + '" data-size="large">' + t('personalization.iconLarge') + '</button>' +
+      '</div>' +
+    '</div>';
+
+  el.querySelectorAll('[data-size]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const size = btn.dataset.size;
+      if (typeof setIconSize === 'function') setIconSize(size);
+      el.querySelectorAll('.pers-option').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      if (typeof toast === 'function') toast(t('toast.iconSizeChanged'));
+    });
+  });
+}
+
 function renderPersAchievements(el) {
   const posKey = 'achievement_position';
   let currentPos = 'bottom-right';
@@ -351,7 +378,6 @@ function renderPersAchievements(el) {
       try { localStorage.setItem(posKey, pos); } catch (e) {}
       el.querySelectorAll('.pers-option').forEach(b => b.classList.remove('is-active'));
       btn.classList.add('is-active');
-      if (typeof updateAchievementPosition === 'function') updateAchievementPosition(pos);
     });
   });
 }
@@ -397,6 +423,8 @@ function renderPersReset(el) {
           localStorage.removeItem('custom_shortcuts');
           localStorage.removeItem('starred_repo');
           localStorage.removeItem('achievement_position');
+          localStorage.removeItem('achievements_unlocked');
+          localStorage.removeItem('icon_size');
         } catch (e) {}
         toast(t('toast.allReset'));
         setTimeout(() => location.reload(), 800);
@@ -421,7 +449,7 @@ function renderPersExportImport(el) {
   const importFile = el.querySelector('#pers-import-file');
 
   exportBtn.addEventListener('click', () => {
-    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position'];
+    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size'];
     const data = { version: 1, date: new Date().toISOString() };
     keys.forEach(k => {
       try {
@@ -465,44 +493,132 @@ function renderPersExportImport(el) {
   });
 }
 
+function renderAchievements(body) {
+  const list = (typeof getAchievements === 'function') ? getAchievements() : [];
+  const total = list.length;
+  const unlocked = list.filter(a => a.unlocked).length;
+  const hiddenLeft = (typeof countAchievementsHiddenLeft === 'function') ? countAchievementsHiddenLeft() : 0;
+  const percent = total > 0 ? Math.round((unlocked / total) * 100) : 0;
+
+  let html =
+    '<div class="achievements-app">' +
+      '<div class="achievements-app__header">' +
+        '<span class="app-icon__svg achievements-app__icon" data-svg="trophy"></span>' +
+        '<div class="achievements-app__info">' +
+          '<h2>' + t('achievements.title') + '</h2>' +
+          '<p>' + t('achievements.progress') + ': ' + unlocked + ' / ' + total + ' (' + percent + '%)</p>' +
+          (hiddenLeft > 0 ? '<p class="achievements-app__hidden">' + t('achievements.hiddenLeft') + ': ' + hiddenLeft + '</p>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div class="achievements-app__bar"><div class="achievements-app__bar-fill" style="width: ' + percent + '%"></div></div>' +
+      '<div class="achievements-app__list">';
+
+  list.forEach(a => {
+    const isHiddenLocked = a.hidden && !a.unlocked;
+    const title = isHiddenLocked ? '???' : t(a.titleKey);
+    const desc = isHiddenLocked ? t('achievements.hidden') : t(a.descKey);
+    const comment = (!isHiddenLocked && t(a.commentKey)) ? t(a.commentKey) : '';
+    const iconKey = a.icon || 'trophy';
+
+    html +=
+      '<div class="ach-item' + (a.unlocked ? ' is-unlocked' : ' is-locked') + (isHiddenLocked ? ' is-hidden' : '') + '">' +
+        '<div class="ach-item__icon" data-svg="' + iconKey + '"></div>' +
+        '<div class="ach-item__body">' +
+          '<div class="ach-item__title">' + title + '</div>' +
+          '<div class="ach-item__desc">' + desc + '</div>' +
+          (comment ? '<div class="ach-item__comment">' + comment + '</div>' : '') +
+        '</div>' +
+        '<div class="ach-item__status">' + (a.unlocked ? t('achievements.unlocked') : t('achievements.locked')) + '</div>' +
+      '</div>';
+  });
+
+  html += '</div></div>';
+
+  body.innerHTML = html;
+  renderIcons(body);
+}
+
+function renderCalendar(body) {
+  const now = new Date();
+  let viewYear = now.getFullYear();
+  let viewMonth = now.getMonth();
+
+  const months = t('calendar.months');
+  const days = t('calendar.days');
+
+  function render() {
+    const firstDay = new Date(viewYear, viewMonth, 1);
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+    let startWeekday = firstDay.getDay();
+    startWeekday = (startWeekday + 6) % 7;
+
+    let grid = '';
+    for (let i = 0; i < startWeekday; i++) {
+      grid += '<div class="cal-day cal-day--empty"></div>';
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const isToday = (d === now.getDate() && viewMonth === now.getMonth() && viewYear === now.getFullYear());
+      grid += '<div class="cal-day' + (isToday ? ' cal-day--today' : '') + '">' + d + '</div>';
+    }
+
+    body.innerHTML =
+      '<div class="cal-app">' +
+        '<div class="cal-app__header">' +
+          '<button class="cal-nav" id="cal-prev">‹</button>' +
+          '<div class="cal-title">' + months[viewMonth] + ' ' + viewYear + '</div>' +
+          '<button class="cal-nav" id="cal-next">›</button>' +
+        '</div>' +
+        '<div class="cal-weekdays">' +
+          days.map(d => '<div class="cal-weekday">' + d + '</div>').join('') +
+        '</div>' +
+        '<div class="cal-grid">' + grid + '</div>' +
+        '<div class="cal-footer">' +
+          '<button class="pill pill--ghost" id="cal-today">' + t('calendar.today') + '</button>' +
+        '</div>' +
+      '</div>';
+
+    body.querySelector('#cal-prev').addEventListener('click', () => {
+      viewMonth--;
+      if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+      render();
+    });
+    body.querySelector('#cal-next').addEventListener('click', () => {
+      viewMonth++;
+      if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+      render();
+    });
+    body.querySelector('#cal-today').addEventListener('click', () => {
+      viewYear = now.getFullYear();
+      viewMonth = now.getMonth();
+      render();
+    });
+  }
+
+  render();
+}
+
 function projectCard(p, opts) {
   opts = opts || {};
   const l = lang();
-  const el = document.createElement(opts.link ? 'a' : 'div');
+  const el = document.createElement('div');
   el.className = 'pyramid__card' + (p.gold ? ' pyramid__card--gold' : '');
-  if (opts.link && p.site && !p.isSelf) {
-    el.href = p.site;
-    el.target = '_blank';
-    el.rel = 'noopener';
-  } else if (opts.link && p.site && p.isSelf) {
-    el.href = 'javascript:void(0)';
+  if (p.isSelf) {
+    el.classList.add('pyramid__card--self');
   }
+
   el.innerHTML =
     '<h3>' + p.title + '</h3>' +
-    '<p>' + (p.desc[l] || p.desc.en) + '</p>' +
-    '<div class="pyramid__actions">' +
-      (p.github ? '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>' : '') +
-      (p.site && !p.isSelf ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
-      (p.details ? '<button class="pill pill--details" data-details="' + p.id + '">' + t('portfolio.details') + '</button>' : '') +
-    '</div>';
+    '<p>' + (p.desc[l] || p.desc.en) + '</p>';
 
-  el.querySelectorAll('.pill').forEach(a => a.addEventListener('click', e => e.stopPropagation()));
-
-  if (p.isSelf) {
-    el.addEventListener('click', e => {
-      e.preventDefault();
+  el.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    if (p.isSelf) {
       handleSelfClick(el);
-    });
-  }
-
-  const detailsBtn = el.querySelector('[data-details]');
-  if (detailsBtn) {
-    detailsBtn.addEventListener('click', e => {
-      e.preventDefault();
-      e.stopPropagation();
-      openDetails(p);
-    });
-  }
+    } else if (p.site) {
+      window.open(p.site, '_blank', 'noopener');
+    }
+  });
 
   return el;
 }
@@ -513,40 +629,12 @@ function handleSelfClick(el) {
   selfClickCount++;
   if (selfClickCount >= 24) {
     toast(t('joke.24'));
+    if (typeof unlockAchievement === 'function') unlockAchievement('secret');
     selfClickCount = 0;
     return;
   }
   const idx = (selfClickCount - 1) % JOKES.length;
   toast(t(JOKES[idx]));
-}
-
-function openDetails(p) {
-  if (typeof openApp !== 'function') return;
-  const detailsId = 'details_' + p.id;
-
-  if (typeof closeWindowByApp === 'function') closeWindowByApp(detailsId);
-
-  const appDef = {
-    title: p.title + ' - ' + t('app.details'),
-    icon: p.gold ? 'star' : 'info',
-    width: 520,
-    height: 420,
-    render: function (body) {
-      const l = lang();
-      body.innerHTML =
-        '<div class="app-details">' +
-          '<h2>' + p.title + '</h2>' +
-          '<p>' + (p.details[l] || p.details.en) + '</p>' +
-          '<div class="app-details__actions">' +
-            (p.github ? '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>' : '') +
-            (p.site && !p.isSelf ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
-          '</div>' +
-        '</div>';
-    }
-  };
-
-  APPS[detailsId] = appDef;
-  openApp(detailsId);
 }
 
 function renderPortfolio(body) {
@@ -560,16 +648,18 @@ function renderPortfolio(body) {
 
   const t1 = document.createElement('div');
   t1.className = 'pyramid__tier pyramid__tier--1';
-  t1.appendChild(projectCard(PROJECTS[0], { link: true }));
+  t1.appendChild(projectCard(PROJECTS[0]));
   t1.appendChild(projectCard(CAT_DIGGER));
 
   const t2 = document.createElement('div');
   t2.className = 'pyramid__tier pyramid__tier--2';
-  t2.appendChild(projectCard(LUC_VISA, { link: true }));
+  t2.appendChild(projectCard(LUC_VISA));
 
   const t3 = document.createElement('div');
   t3.className = 'pyramid__tier pyramid__tier--3';
-  [PROJECTS[1], PROJECTS[2], PROJECTS[3]].forEach(p => t3.appendChild(projectCard(p)));
+  t3.appendChild(projectCard(PROJECTS[1]));
+  t3.appendChild(projectCard(PROJECTS[2]));
+  t3.appendChild(projectCard(PROJECTS[3]));
 
   const t4 = document.createElement('div');
   t4.className = 'pyramid__tier pyramid__tier--4';
@@ -673,26 +763,14 @@ function buildMapGraph(container) {
     rect.setAttribute('height', n.h);
     rect.setAttribute('rx', '8');
 
-    const circle = document.createElementNS(SVG_NS, 'circle');
-    circle.setAttribute('class', 'map-node-check');
-    circle.setAttribute('cx', '18');
-    circle.setAttribute('cy', n.h / 2);
-    circle.setAttribute('r', '8');
-
-    const check = document.createElementNS(SVG_NS, 'path');
-    check.setAttribute('class', 'map-node-tick');
-    check.setAttribute('d', 'M14 ' + (n.h / 2) + ' l3 3 l6 -6');
-    check.setAttribute('fill', 'none');
-
     const text = document.createElementNS(SVG_NS, 'text');
     text.setAttribute('class', 'map-node-text');
-    text.setAttribute('x', '34');
+    text.setAttribute('x', n.w / 2);
     text.setAttribute('y', n.h / 2 + 5);
+    text.setAttribute('text-anchor', 'middle');
     text.textContent = n.label;
 
     g.appendChild(rect);
-    g.appendChild(circle);
-    g.appendChild(check);
     g.appendChild(text);
 
     gNodes.appendChild(g);
@@ -705,7 +783,6 @@ function buildMapGraph(container) {
       const a = nodes.find(n => n.id === e.from);
       const b = nodes.find(n => n.id === e.to);
       if (!a || !b) return;
-
       const d = 'M ' + a.x + ' ' + a.y + ' L ' + b.x + ' ' + b.y;
       edgeEls[i].setAttribute('d', d);
     });
@@ -745,7 +822,6 @@ function makeNodeDraggable(g, node, allNodes) {
     node.y = Math.max(node.h / 2 + 4, Math.min(500 - node.h / 2 - 4, origY + dy));
 
     g.setAttribute('transform', 'translate(' + (node.x - node.w / 2) + ',' + (node.y - node.h / 2) + ')');
-
     if (window._mapRedraw) window._mapRedraw();
   });
 
@@ -819,11 +895,16 @@ function renderDonate(body) {
     copyText(btn.dataset.copy, btn, t('donate.copied'));
   });
 
+  const heart = document.createElement('div');
+  heart.style.display = 'none';
+
   body.innerHTML = '';
   body.appendChild(wrap);
 
-  const heart = wrap.querySelector('.app-donate__heart');
-  if (heart) heart.innerHTML = ICONS.heart;
+  const heartEl = wrap.querySelector('.app-donate__heart');
+  if (heartEl) heartEl.innerHTML = ICONS.heart;
+
+  if (typeof unlockAchievement === 'function') unlockAchievement('donate');
 }
 
 function renderComments(body) {
@@ -953,13 +1034,6 @@ function renderHacker(body) {
       currentInput = null;
       handle(cmd);
     });
-  };
-
-  const setupGameKeys = (onKey, loopRef) => {
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      clearInterval(loopRef.loop);
-    };
   };
 
   const runGame = (type) => {
@@ -1118,49 +1192,48 @@ function renderHacker(body) {
     pre.className = 'ascii-cat';
     term.appendChild(pre);
 
-    const frames = [
-      [
-        '        ~                     ',
-        '       /|\\                    ',
-        '      / | \\                   ',
-        '     /  |  \\    ,--.          ',
-        '    /   |   \\  ( o o )        ',
-        '   /    |    \\  \\ -- /  /\\_/\\',
-        '        |       \\    /  ( -.-)',
-        '        |        \\  /   /  ^ \\',
-        '       /|        \\/   ( (   ) )',
-        '      / |               \\  -  /',
-        '     /  |             /\\  \\___/',
-        '        |            /  \\      ',
-        '        |           /    \\     ',
-        '     ---+---       /      \\    ',
-        '        |                       ',
-        '  ~~~~~ fish ~(~<               '
-      ],
-      [
-        '                              ',
-        '        ~                     ',
-        '       /|\\                    ',
-        '      / | \\                   ',
-        '     /  |  \\    ,--.          ',
-        '    /   |   \\  ( o o )        ',
-        '   /    |    \\  \\ -- /  /\\_/\\',
-        '        |       \\    /  ( -.-)',
-        '        |        \\  /   /  ^ \\',
-        '       /|        \\/   ( (   ) )',
-        '      / |               \\  -  /',
-        '     /  |             /\\  \\___/',
-        '        |            /  \\      ',
-        '        |           /    \\     ',
-        '     ---+---       /      \\    ',
-        '  ~~~~ fish ~(~<                '
-      ]
+    const frame1 = [
+      '        ~                     ',
+      '       /|\\                    ',
+      '      / | \\                   ',
+      '     /  |  \\    ,--.          ',
+      '    /   |   \\  ( o o )        ',
+      '   /    |    \\  \\ -- /  /\\_/\\',
+      '        |       \\    /  ( -.-)',
+      '        |        \\  /   /  ^ \\',
+      '       /|        \\/   ( (   ) )',
+      '      / |               \\  -  /',
+      '     /  |             /\\  \\___/',
+      '        |            /  \\      ',
+      '        |           /    \\     ',
+      '     ---+---       /      \\    ',
+      '        |                       ',
+      '                <><             '
+    ];
+
+    const frame2 = [
+      '                              ',
+      '        ~                     ',
+      '       /|\\                    ',
+      '      / | \\                   ',
+      '     /  |  \\    ,--.          ',
+      '    /   |   \\  ( o o )        ',
+      '   /    |    \\  \\ -- /  /\\_/\\',
+      '        |       \\    /  ( -.-)',
+      '        |        \\  /   /  ^ \\',
+      '       /|        \\/   ( (   ) )',
+      '      / |               \\  -  /',
+      '     /  |             /\\  \\___/',
+      '        |            /  \\      ',
+      '        |           /    \\     ',
+      '     ---+---       /      \\    ',
+      '              <><              '
     ];
 
     let frame = 0;
     const render = () => {
-      pre.textContent = frames[frame].join('\n');
-      frame = (frame + 1) % frames.length;
+      pre.textContent = (frame === 0 ? frame1 : frame2).join('\n');
+      frame = (frame + 1) % 2;
     };
     render();
 
@@ -1296,9 +1369,7 @@ function renderHacker(body) {
     else printInput();
   });
 
-  printLine(t('hacker.welcome'), 'terminal__prompt');
-  printLine(t('hacker.hint'));
-  printLine('');
+  printLine(t('hacker.hint'), 'terminal__prompt');
   printInput();
   setTimeout(() => { if (currentInput) currentInput.focus(); }, 100);
 }
