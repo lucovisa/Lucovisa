@@ -3,6 +3,8 @@
 Developer focused on automation, web tools and game development.
 
 **Level:** Middle+
+**Experience:** 3 years
+**Timezone:** UTC+10
 
 **Native language:** Russian
 **Also understand:** English, French, German
@@ -48,4 +50,4 @@ BTC (Bitcoin mainnet)
 bc1q60tvcsw4guyhxa5e3n47eqmj0s3lpxzkxldpvp
 
 TON/USDT (The Open Network)
-UQDsZ_8MkBtjjp-pVa5Fefdg1jtJApOZ7eeFF3WBlLnwQcHF
+UQDsZ_8MkBtjjp-pVa5Fefdg1jtJApOZ7oeFF3WBlLnwQcHF
