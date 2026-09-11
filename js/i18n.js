@@ -380,7 +380,11 @@ const I18N = {
 
     "ach.sudoku.title": "Sudoku Master",
     "ach.sudoku.desc": "Solve a Sudoku",
-    "ach.sudoku.comment": "9x9 is not a problem"
+    "ach.sudoku.comment": "9x9 is not a problem",
+
+    "ach.ram_exploded.title": "Why...",
+    "ach.ram_exploded.desc": "Open all apps at once",
+    "ach.ram_exploded.comment": "Your RAM exploded"
   },
   ru: {
     "page.title": "Lucovisa Визитная Карточка",
@@ -763,7 +767,11 @@ const I18N = {
 
     "ach.sudoku.title": "Мастер Судоку",
     "ach.sudoku.desc": "Реши Судоку",
-    "ach.sudoku.comment": "9x9 не проблема"
+    "ach.sudoku.comment": "9x9 не проблема",
+
+    "ach.ram_exploded.title": "Ну зачем...",
+    "ach.ram_exploded.desc": "Открой все приложения сразу",
+    "ach.ram_exploded.comment": "У вас взорвалась оперативка"
   }
 };
 

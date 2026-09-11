@@ -414,7 +414,7 @@ function renderPersExportImport(el) {
   const importFile = el.querySelector('#pers-import-file');
 
   exportBtn.addEventListener('click', () => {
-    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size', 'clicker_count', 'best_2048_score', 'best_snake2d_score'];
+    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size', 'clicker_count', 'best_2048_score'];
     const data = { version: 1, date: new Date().toISOString() };
     keys.forEach(k => {
       try {
@@ -742,7 +742,7 @@ function projectCard(p, opts) {
 
   let actionsHtml = '';
   if (p.github) actionsHtml += '<a class="pill pill--ghost card-action" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>';
-  if (p.site) actionsHtml += '<button type="button" class="pill card-action card-action--site" data-self="' + (p.isSelf ? '1' : '0') + '">' + t('portfolio.site') + '</button>';
+  if (p.site) actionsHtml += '<button type="button" class="pill card-action card-action--site">' + t('portfolio.site') + '</button>';
 
   el.innerHTML =
     '<h3 class="card-title">' + p.title + '</h3>' +
@@ -754,9 +754,10 @@ function projectCard(p, opts) {
     siteBtn.addEventListener('click', e => {
       e.preventDefault();
       e.stopPropagation();
+
       if (p.isSelf) {
-        toast(t('joke.2'));
-      } else {
+        handleSelfClick();
+      } else if (p.site) {
         window.open(p.site, '_blank', 'noopener');
       }
     });
@@ -770,11 +771,6 @@ function projectCard(p, opts) {
       return;
     }
 
-    if (p.isSelf) {
-      showProjectInfo(p);
-      return;
-    }
-
     showProjectInfo(p);
   });
 
@@ -782,16 +778,28 @@ function projectCard(p, opts) {
 }
 
 let selfClickCount = 0;
+let selfSecretDone = false;
 
-function handleSelfClick(el) {
+function handleSelfClick() {
+  const total = 23;
+  const joker = total + 1;
+
   selfClickCount++;
-  if (selfClickCount >= 24) {
+
+  if (!selfSecretDone && selfClickCount === joker) {
+    selfSecretDone = true;
     toast(t('joke.24'));
     if (typeof unlockAchievement === 'function') unlockAchievement('secret');
     selfClickCount = 0;
     return;
   }
-  const idx = (selfClickCount - 1) % JOKES.length;
+
+  let idx;
+  if (selfSecretDone) {
+    idx = (selfClickCount - 1) % JOKES.length;
+  } else {
+    idx = (selfClickCount - 1) % JOKES.length;
+  }
   toast(t(JOKES[idx]));
 }
 
@@ -802,7 +810,7 @@ function showProjectInfo(p) {
     '<p>' + ((p.details && (p.details[l] || p.details.en)) || (p.desc[l] || p.desc.en)) + '</p>' +
     '<div class="project-info__actions">' +
       (p.github ? '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>' : '') +
-      (p.site && !p.isSelf ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
+      (p.site ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
     '</div>' +
   '</div>';
 
@@ -918,6 +926,7 @@ function buildMapGraph(container) {
     { from: 'conv', to: 'sql' },
     { from: 'conv', to: 'cursor' },
     { from: 'conv', to: 'font' },
+    { from: 'conv', to: 'cat' },
     { from: 'cat', to: 'cursor' },
     { from: 'cat', to: 'font' }
   ];

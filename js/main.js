@@ -363,8 +363,6 @@
 
     const fill = document.getElementById('boot-fill');
     const welcome = document.getElementById('boot-welcome');
-    const logo = boot.querySelector('.boot-screen__logo');
-    const text = boot.querySelector('.boot-screen__text');
 
     if (fill) fill.style.width = '0%';
     if (welcome) welcome.textContent = '';
@@ -930,6 +928,35 @@
       if (appId !== 'achievements') {
         unlockAchievement('first_app');
       }
+    }
+
+    checkAllAppsOpened();
+  }
+
+  function checkAllAppsOpened() {
+    const allApps = Object.keys(APPS).filter(id => !id.startsWith('details_'));
+    if (allApps.length === 0) return;
+
+    const allOpened = allApps.every(id => !!openWindows[id]);
+    if (!allOpened) return;
+
+    const unlocked = (typeof isAchievementUnlocked === 'function') ? isAchievementUnlocked('ram_exploded') : true;
+
+    Object.keys(openWindows).forEach(id => {
+      const w = openWindows[id];
+      if (w && w.el && w.el.parentNode) w.el.remove();
+      delete openWindows[id];
+    });
+    updateTaskbar();
+
+    if (!unlocked && typeof unlockAchievement === 'function') {
+      unlockAchievement('ram_exploded');
+
+      setTimeout(() => {
+        if (Math.random() < 0.3) {
+          location.reload();
+        }
+      }, 800);
     }
   }
 
