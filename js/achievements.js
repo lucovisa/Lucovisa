@@ -1,5 +1,7 @@
 (function () {
   const STORAGE_KEY = 'achievements_unlocked';
+  const POSITION = 'top-left';
+
   const ACHIEVEMENTS = [
     { id: 'first_app',         titleKey: 'ach.first_app.title',         descKey: 'ach.first_app.desc',         commentKey: 'ach.first_app.comment',         icon: 'info' },
     { id: 'donate',            titleKey: 'ach.donate.title',            descKey: 'ach.donate.desc',            commentKey: 'ach.donate.comment',            icon: 'heart' },
@@ -8,8 +10,8 @@
     { id: 'snake1000',         titleKey: 'ach.snake1000.title',         descKey: 'ach.snake1000.desc',         commentKey: 'ach.snake1000.comment',         icon: 'joystick' },
     { id: 'tetris10000',       titleKey: 'ach.tetris10000.title',       descKey: 'ach.tetris10000.desc',       commentKey: 'ach.tetris10000.comment',       icon: 'joystick' },
     { id: 'clicker1000000',    titleKey: 'ach.clicker1000000.title',    descKey: 'ach.clicker1000000.desc',    commentKey: 'ach.clicker1000000.comment',    icon: 'joystick' },
-    { id: 'minesweeper',       titleKey: 'ach.minesweeper.title',       descKey: 'ach.minesweeper.desc',       commentKey: 'ach.minesweeper.comment',       icon: 'joystick' },
-    { id: 'solitaire',         titleKey: 'ach.solitaire.title',         descKey: 'ach.solitaire.desc',         commentKey: 'ach.solitaire.comment',         icon: 'joystick' }
+    { id: 'minesweeper',       titleKey: 'ach.minesweeper.title',       descKey: 'ach.minesweeper.desc',       commentKey: 'ach.minesweeper.comment',       icon: 'minesweeper' },
+    { id: 'solitaire',         titleKey: 'ach.solitaire.title',         descKey: 'ach.solitaire.desc',         commentKey: 'ach.solitaire.comment',         icon: 'solitaire' }
   ];
 
   function getUnlocked() {
@@ -39,18 +41,12 @@
     return ACHIEVEMENTS.filter(a => a.hidden && !u[a.id]).length;
   }
 
-  function getPosition() {
-    try { return localStorage.getItem('achievement_position') || 'bottom-right'; }
-    catch (e) { return 'bottom-right'; }
-  }
-
   function showAchievementToast(ach) {
     const layer = document.getElementById('achievement-layer');
     if (!layer) return;
 
-    const pos = getPosition();
     const el = document.createElement('div');
-    el.className = 'achievement-toast achievement-toast--' + pos;
+    el.className = 'achievement-toast achievement-toast--' + POSITION;
 
     const icon = document.createElement('div');
     icon.className = 'achievement-toast__icon';

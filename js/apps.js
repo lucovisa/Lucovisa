@@ -9,7 +9,8 @@ const PROJECTS = [
     },
     github: 'https://github.com/lucovisa/LucConverter',
     site: 'https://lucovisa.github.io/LucConverter/',
-    gold: true
+    gold: true,
+    kind: 'site'
   },
   {
     id: 'sqlInImage',
@@ -20,7 +21,8 @@ const PROJECTS = [
       ru: 'Инструмент для сокрытия текста или кода внутри изображений и извлечения обратно.'
     },
     github: 'https://github.com/lucovisa/SQL-in-image',
-    site: 'https://lucovisa.github.io/SQL-in-image/'
+    site: 'https://lucovisa.github.io/SQL-in-image/',
+    kind: 'site'
   },
   {
     id: 'lucCursor',
@@ -31,7 +33,8 @@ const PROJECTS = [
       ru: 'Сайт для рисования своего кастомного курсора с референсом. Точно такой же как LucFont, но про курсор.'
     },
     github: 'https://github.com/lucovisa/LucCursor',
-    site: 'https://lucovisa.github.io/LucCursor/'
+    site: 'https://lucovisa.github.io/LucCursor/',
+    kind: 'site'
   },
   {
     id: 'lucFont',
@@ -42,7 +45,8 @@ const PROJECTS = [
       ru: 'Сайт для рисования своего кастомного шрифта с референсом.'
     },
     github: 'https://github.com/lucovisa/LucFont',
-    site: 'https://lucovisa.github.io/LucFont/'
+    site: 'https://lucovisa.github.io/LucFont/',
+    kind: 'site'
   },
   {
     id: 'ipCheck',
@@ -53,7 +57,8 @@ const PROJECTS = [
       ru: 'Мой первый проект для проверки всей информации, которая есть в айпи, с историей запросов и проверкой скорости интернета.'
     },
     github: 'https://github.com/lucovisa/IP-check',
-    site: 'https://lucovisa.github.io/IP-check/'
+    site: 'https://lucovisa.github.io/IP-check/',
+    kind: 'ip'
   }
 ];
 
@@ -64,7 +69,8 @@ const CAT_DIGGER = {
     en: 'Game currently in development (pre-alpha). Developed by an indie developer alone on Godot Engine 4. Will be released on Steam.',
     ru: 'Игра, которая находится в разработке (пре-альфа). Разрабатывается инди-разработчиком в одиночку на Godot Engine 4. Будет выходить в Steam.'
   },
-  gold: true
+  gold: true,
+  kind: 'game'
 };
 
 const LUC_VISA = {
@@ -76,7 +82,8 @@ const LUC_VISA = {
   },
   github: 'https://github.com/lucovisa/Lucovisa',
   site: 'https://lucovisa.github.io/Lucovisa/',
-  isSelf: true
+  isSelf: true,
+  kind: 'self'
 };
 
 const JOKES = ['joke.1', 'joke.2', 'joke.3', 'joke.4', 'joke.5', 'joke.6'];
@@ -94,19 +101,19 @@ const DONATE_WALLETS = [
 ];
 
 const APPS = {
-  portfolio:       { title: 'Portfolio',       icon: 'folder',   width: 720, height: 660, render: renderPortfolio },
-  about:           { title: 'About me',        icon: 'info',     width: 560, height: 580, render: renderAbout },
-  hacker:          { title: 'hacker.exe',      icon: 'terminal', width: 680, height: 500, render: renderHacker },
-  map:             { title: 'Map',             icon: 'web',      width: 800, height: 620, render: renderMap },
-  contact:         { title: 'Contact',         icon: 'mail',     width: 560, height: 420, render: renderContact },
-  comments:        { title: 'Comments',        icon: 'comment',  width: 640, height: 520, render: renderComments },
-  donate:          { title: 'Donate',          icon: 'heart',    width: 560, height: 480, render: renderDonate },
-  trash:           { title: 'Trash',           icon: 'trash',    width: 520, height: 400, render: renderTrash },
-  personalization: { title: 'Personalization', icon: 'settings', width: 640, height: 640, render: renderPersonalization },
-  achievements:    { title: 'Achievements',    icon: 'trophy',   width: 620, height: 540, render: renderAchievements },
-  calendar:        { title: 'Calendar',        icon: 'calendar', width: 520, height: 520, render: renderCalendar },
-  arcade:          { title: 'Arcade',          icon: 'joystick', width: 720, height: 620, render: renderArcadeWrapper },
-  work:            { title: 'Work',            icon: 'trophy',   width: 620, height: 560, render: renderWork }
+  portfolio:       { title: 'Portfolio',       icon: 'folder',     width: 760, height: 660, render: renderPortfolio },
+  about:           { title: 'About me',        icon: 'info',       width: 560, height: 580, render: renderAbout },
+  hacker:          { title: 'hacker.exe',      icon: 'terminal',   width: 680, height: 500, render: renderHacker },
+  map:             { title: 'Map',             icon: 'web',        width: 800, height: 620, render: renderMap },
+  contact:         { title: 'Contact',         icon: 'mail',       width: 560, height: 420, render: renderContact },
+  comments:        { title: 'Comments',        icon: 'comment',    width: 640, height: 520, render: renderComments },
+  donate:          { title: 'Donate',          icon: 'heart',      width: 560, height: 480, render: renderDonate },
+  trash:           { title: 'Trash',           icon: 'trash',      width: 520, height: 400, render: renderTrash },
+  personalization: { title: 'Personalization', icon: 'settings',   width: 640, height: 640, render: renderPersonalization },
+  achievements:    { title: 'Achievements',    icon: 'trophy',     width: 620, height: 540, render: renderAchievements },
+  calendar:        { title: 'Calendar',        icon: 'calendar',   width: 560, height: 620, render: renderCalendar },
+  arcade:          { title: 'Arcade',          icon: 'joystick',   width: 720, height: 620, render: renderArcadeWrapper },
+  work:            { title: 'Work',            icon: 'briefcase',  width: 640, height: 580, render: renderWork }
 };
 
 function lang() { return document.documentElement.lang || 'en'; }
@@ -118,10 +125,6 @@ function renderArcadeWrapper(body) {
 function renderTrash(body) {
   body.innerHTML =
     '<div class="trash-app">' +
-      '<div class="trash-app__header">' +
-        '<span class="app-icon__svg trash-app__icon" data-svg="trash"></span>' +
-        '<div><h2>' + t('trash.title') + '</h2></div>' +
-      '</div>' +
       '<div class="trash-app__files">' +
         '<button class="trash-file" data-file="error">' +
           '<span class="app-icon__svg trash-file__icon" data-svg="fileError"></span>' +
@@ -147,7 +150,7 @@ function renderTrash(body) {
 }
 
 function renderPersonalization(body) {
-  const tabs = ['profile', 'wallpaper', 'theme', 'language', 'desktop', 'achievements', 'reset', 'exportImport'];
+  const tabs = ['profile', 'wallpaper', 'theme', 'language', 'desktop', 'reset', 'exportImport'];
   let activeTab = 'profile';
 
   body.innerHTML =
@@ -181,7 +184,6 @@ function renderPersonalization(body) {
     else if (activeTab === 'theme') renderPersTheme(contentEl);
     else if (activeTab === 'language') renderPersLanguage(contentEl);
     else if (activeTab === 'desktop') renderPersDesktop(contentEl);
-    else if (activeTab === 'achievements') renderPersAchievements(contentEl);
     else if (activeTab === 'reset') renderPersReset(contentEl);
     else if (activeTab === 'exportImport') renderPersExportImport(contentEl);
   }
@@ -325,39 +327,6 @@ function renderPersDesktop(el) {
   });
 }
 
-function renderPersAchievements(el) {
-  const posKey = 'achievement_position';
-  let currentPos = 'bottom-right';
-  try { currentPos = localStorage.getItem(posKey) || 'bottom-right'; } catch (e) {}
-
-  const positions = [
-    { id: 'top-left',      label: 'personalization.achievementTopLeft' },
-    { id: 'top-right',     label: 'personalization.achievementTopRight' },
-    { id: 'bottom-left',   label: 'personalization.achievementBottomLeft' },
-    { id: 'bottom-right',  label: 'personalization.achievementBottomRight' }
-  ];
-
-  el.innerHTML =
-    '<div class="pers-section">' +
-      '<h3>' + t('personalization.achievements') + '</h3>' +
-      '<div class="pers-label">' + t('personalization.achievementPosition') + '</div>' +
-      '<div class="pers-options pers-options--grid">' +
-        positions.map(p =>
-          '<button class="pers-option' + (currentPos === p.id ? ' is-active' : '') + '" data-pos="' + p.id + '"><span>' + t(p.label) + '</span></button>'
-        ).join('') +
-      '</div>' +
-    '</div>';
-
-  el.querySelectorAll('[data-pos]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const pos = btn.dataset.pos;
-      try { localStorage.setItem(posKey, pos); } catch (e) {}
-      el.querySelectorAll('.pers-option').forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-    });
-  });
-}
-
 function renderPersReset(el) {
   el.innerHTML =
     '<div class="pers-section">' +
@@ -389,9 +358,7 @@ function renderPersReset(el) {
         clearShortcuts();
         toast(t('toast.shortcutsReset'));
       } else if (type === 'all') {
-        try { localStorage.clear(); } catch (e) {}
-        toast(t('toast.allReset'));
-        setTimeout(() => location.reload(), 800);
+        if (typeof resetAll === 'function') resetAll();
       }
     });
   });
@@ -413,7 +380,7 @@ function renderPersExportImport(el) {
   const importFile = el.querySelector('#pers-import-file');
 
   exportBtn.addEventListener('click', () => {
-    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size', 'clicker_count'];
+    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievements_unlocked', 'icon_size', 'clicker_count'];
     const data = { version: 1, date: new Date().toISOString() };
     keys.forEach(k => {
       try {
@@ -504,12 +471,16 @@ function renderCalendar(body) {
   const now = new Date();
   let viewYear = now.getFullYear();
   let viewMonth = now.getMonth();
+  let selectedDay = now.getDate();
+  let selectedMonth = now.getMonth();
+  let selectedYear = now.getFullYear();
 
   const months = t('calendar.months');
   const days = t('calendar.days');
 
   function getEventsForDate(y, m, d) {
     const result = [];
+    if (typeof WORK_EVENTS === 'undefined') return result;
     WORK_EVENTS.forEach(ev => {
       const [ey, em, ed] = ev.date.split('-').map(n => parseInt(n, 10));
       if (ey === y && em - 1 === m && ed === d) result.push(ev);
@@ -517,34 +488,34 @@ function renderCalendar(body) {
     return result;
   }
 
-  function showDayInfo(y, m, d) {
-    const events = getEventsForDate(y, m, d);
-    const target = new Date(y, m, d);
+  function renderInfo() {
+    const infoEl = body.querySelector('#cal-info');
+    if (!infoEl) return;
+
+    const events = getEventsForDate(selectedYear, selectedMonth, selectedDay);
+    const target = new Date(selectedYear, selectedMonth, selectedDay);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const diff = Math.round((target - today) / (1000 * 60 * 60 * 24));
 
-    let html = '<div class="cal-dayinfo">';
-    html += '<div class="cal-dayinfo__date">' + d + ' ' + months[m] + ' ' + y + '</div>';
+    let html = '<div class="cal-info__date">' + selectedDay + ' ' + months[selectedMonth] + ' ' + selectedYear + '</div>';
 
-    if (diff === 0) html += '<div class="cal-dayinfo__diff">' + t('calendar.today') + '</div>';
-    else if (diff > 0) html += '<div class="cal-dayinfo__diff">' + t('calendar.daysUntil') + ': ' + diff + '</div>';
-    else html += '<div class="cal-dayinfo__diff">' + t('calendar.daysPassed') + ': ' + Math.abs(diff) + '</div>';
+    if (diff === 0) html += '<div class="cal-info__diff">' + t('calendar.today') + '</div>';
+    else if (diff > 0) html += '<div class="cal-info__diff">' + t('calendar.daysUntil') + ': ' + diff + '</div>';
+    else html += '<div class="cal-info__diff">' + t('calendar.daysPassed') + ': ' + Math.abs(diff) + '</div>';
 
     if (events.length > 0) {
-      html += '<div class="cal-dayinfo__events">';
       events.forEach(ev => {
-        html += '<div class="cal-dayinfo__event">' +
-          '<div class="cal-dayinfo__event-title">' + t(ev.key) + '</div>' +
-          (ev.url ? '<a class="pill" href="' + ev.url + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
+        html += '<div class="cal-info__event">' +
+          '<div>' + t(ev.key) + '</div>' +
+          (ev.url ? '<a href="' + ev.url + '" target="_blank" rel="noopener">' + ev.url + '</a>' : '') +
         '</div>';
       });
-      html += '</div>';
+    } else {
+      html += '<div class="cal-info__empty">' + t('calendar.noEvent') + '</div>';
     }
 
-    html += '</div>';
-
-    showHtml(html, t('calendar.title'));
+    infoEl.innerHTML = html;
   }
 
   function render() {
@@ -560,9 +531,11 @@ function renderCalendar(body) {
     }
     for (let d = 1; d <= daysInMonth; d++) {
       const isToday = (d === now.getDate() && viewMonth === now.getMonth() && viewYear === now.getFullYear());
+      const isSelected = (d === selectedDay && viewMonth === selectedMonth && viewYear === selectedYear);
       const hasEvent = getEventsForDate(viewYear, viewMonth, d).length > 0;
       grid += '<div class="cal-day' +
         (isToday ? ' cal-day--today' : '') +
+        (isSelected && !isToday ? ' is-selected' : '') +
         (hasEvent ? ' cal-day--event' : '') +
         '" data-day="' + d + '">' + d + '</div>';
     }
@@ -578,6 +551,7 @@ function renderCalendar(body) {
           days.map(d => '<div class="cal-weekday">' + d + '</div>').join('') +
         '</div>' +
         '<div class="cal-grid">' + grid + '</div>' +
+        '<div class="cal-info" id="cal-info"></div>' +
         '<div class="cal-footer">' +
           '<button class="pill pill--ghost" id="cal-today">' + t('calendar.today') + '</button>' +
         '</div>' +
@@ -596,15 +570,22 @@ function renderCalendar(body) {
     body.querySelector('#cal-today').addEventListener('click', () => {
       viewYear = now.getFullYear();
       viewMonth = now.getMonth();
+      selectedDay = now.getDate();
+      selectedMonth = now.getMonth();
+      selectedYear = now.getFullYear();
       render();
     });
 
     body.querySelectorAll('.cal-day[data-day]').forEach(cell => {
       cell.addEventListener('click', () => {
-        const d = parseInt(cell.dataset.day);
-        showDayInfo(viewYear, viewMonth, d);
+        selectedDay = parseInt(cell.dataset.day);
+        selectedMonth = viewMonth;
+        selectedYear = viewYear;
+        render();
       });
     });
+
+    renderInfo();
   }
 
   render();
@@ -612,72 +593,96 @@ function renderCalendar(body) {
 
 function renderWork(body) {
   const l = lang();
+  let activeTab = 'timeline';
 
-  let html =
-    '<div class="work-app">' +
-      '<div class="work-app__header">' +
-        '<span class="app-icon__svg work-app__icon" data-svg="trophy"></span>' +
-        '<div>' +
-          '<h2>' + t('app.work') + '</h2>' +
-          '<p>' + WORK_EVENTS.length + ' ' + (l === 'ru' ? 'событий' : 'events') + '</p>' +
+  function renderTabs() {
+    let html = '<div class="work-tabs">';
+    ['timeline', 'tech', 'reviews'].forEach(key => {
+      const label = key === 'timeline' ? 'work.tabTimeline' : key === 'tech' ? 'work.tabTech' : 'work.tabReviews';
+      html += '<button class="work-tab' + (activeTab === key ? ' is-active' : '') + '" data-tab="' + key + '">' + t(label) + '</button>';
+    });
+    html += '</div>';
+
+    html += '<div class="work-panel' + (activeTab === 'timeline' ? ' is-active' : '') + '" data-panel="timeline">';
+    html += renderWorkTimeline();
+    html += '</div>';
+
+    html += '<div class="work-panel' + (activeTab === 'tech' ? ' is-active' : '') + '" data-panel="tech">';
+    html += renderWorkTech();
+    html += '</div>';
+
+    html += '<div class="work-panel' + (activeTab === 'reviews' ? ' is-active' : '') + '" data-panel="reviews">';
+    html += '<p class="work-reviews__empty">' + t('work.reviewsEmpty') + '</p>';
+    html += '</div>';
+
+    return html;
+  }
+
+  function renderWorkTimeline() {
+    let html = '<div class="work-timeline">';
+    const sorted = (typeof WORK_EVENTS !== 'undefined' ? WORK_EVENTS : []).slice().sort((a, b) => b.date.localeCompare(a.date));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    sorted.forEach(ev => {
+      const [y, m, d] = ev.date.split('-').map(n => parseInt(n, 10));
+      const evDate = new Date(y, m - 1, d);
+      const diffDays = Math.round((today - evDate) / (1000 * 60 * 60 * 24));
+
+      let relText = '';
+      if (diffDays === 0) relText = l === 'ru' ? 'сегодня' : 'today';
+      else if (diffDays > 0) relText = (l === 'ru' ? 'прошло ' : '') + diffDays + (l === 'ru' ? ' дн.' : ' days ago');
+      else relText = (l === 'ru' ? 'через ' : 'in ') + Math.abs(diffDays) + (l === 'ru' ? ' дн.' : ' days');
+
+      html +=
+        '<div class="work-item">' +
+          '<div class="work-item__dot"></div>' +
+          '<div class="work-item__body">' +
+            '<div class="work-item__date">' + d + '.' + String(m).padStart(2, '0') + '.' + y + ' · ' + relText + '</div>' +
+            '<div class="work-item__title">' + t(ev.key) + '</div>' +
+            (ev.url ? '<a class="work-item__link" href="' + ev.url + '" target="_blank" rel="noopener">' + ev.url + '</a>' : '') +
+          '</div>' +
+        '</div>';
+    });
+
+    html += '</div>';
+    return html;
+  }
+
+  function renderWorkTech() {
+    const techs = ['JavaScript', 'C++', 'C#', 'Python', 'C', 'gdscript', 'Git', 'HTML', 'CSS', 'SEO'];
+    let html = '<div class="work-tech__grid">';
+    techs.forEach(tech => {
+      html += '<span class="work-tech__item">' + tech + '</span>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function updateView() {
+    body.innerHTML =
+      '<div class="work-app">' +
+        '<div class="work-app__header">' +
+          '<span class="app-icon__svg work-app__icon" data-svg="briefcase"></span>' +
+          '<div>' +
+            '<h2>' + t('work.title') + '</h2>' +
+            '<p>' + (typeof WORK_EVENTS !== 'undefined' ? WORK_EVENTS.length : 0) + ' ' + (l === 'ru' ? 'событий' : 'events') + '</p>' +
+          '</div>' +
         '</div>' +
-      '</div>' +
-      '<div class="work-timeline">';
-
-  const sorted = WORK_EVENTS.slice().sort((a, b) => b.date.localeCompare(a.date));
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  sorted.forEach(ev => {
-    const [y, m, d] = ev.date.split('-').map(n => parseInt(n, 10));
-    const evDate = new Date(y, m - 1, d);
-    const diffDays = Math.round((today - evDate) / (1000 * 60 * 60 * 24));
-
-    let relText = '';
-    if (diffDays === 0) relText = l === 'ru' ? 'сегодня' : 'today';
-    else if (diffDays > 0) relText = (l === 'ru' ? 'прошло ' : '') + diffDays + (l === 'ru' ? ' дн.' : ' days ago');
-    else relText = (l === 'ru' ? 'через ' : 'in ') + Math.abs(diffDays) + (l === 'ru' ? ' дн.' : ' days');
-
-    html +=
-      '<div class="work-item">' +
-        '<div class="work-item__dot"></div>' +
-        '<div class="work-item__body">' +
-          '<div class="work-item__date">' + d + '.' + String(m).padStart(2, '0') + '.' + y + ' · ' + relText + '</div>' +
-          '<div class="work-item__title">' + t(ev.key) + '</div>' +
-          (ev.url ? '<a class="work-item__link" href="' + ev.url + '" target="_blank" rel="noopener">' + ev.url + '</a>' : '') +
-        '</div>' +
+        renderTabs() +
       '</div>';
-  });
 
-  html += '</div>';
+    renderIcons(body);
 
-  html +=
-    '<div class="work-tech">' +
-      '<h3>' + (l === 'ru' ? 'Технологии' : 'Tech stack') + '</h3>' +
-      '<div class="work-tech__grid">' +
-        '<span class="work-tech__item">JavaScript</span>' +
-        '<span class="work-tech__item">C++</span>' +
-        '<span class="work-tech__item">C#</span>' +
-        '<span class="work-tech__item">Python</span>' +
-        '<span class="work-tech__item">C</span>' +
-        '<span class="work-tech__item">Godot</span>' +
-        '<span class="work-tech__item">Git</span>' +
-        '<span class="work-tech__item">HTML</span>' +
-        '<span class="work-tech__item">CSS</span>' +
-        '<span class="work-tech__item">SEO</span>' +
-      '</div>' +
-    '</div>';
+    body.querySelectorAll('.work-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeTab = btn.dataset.tab;
+        updateView();
+      });
+    });
+  }
 
-  html +=
-    '<div class="work-reviews">' +
-      '<h3>' + (l === 'ru' ? 'Отзывы' : 'Reviews') + '</h3>' +
-      '<p class="work-reviews__empty">' + (l === 'ru' ? 'Пока нет отзывов' : 'No reviews yet') + '</p>' +
-    '</div>';
-
-  html += '</div>';
-
-  body.innerHTML = html;
-  renderIcons(body);
+  updateView();
 }
 
 function projectCard(p, opts) {
@@ -689,20 +694,32 @@ function projectCard(p, opts) {
 
   let actionsHtml = '';
   if (p.github) actionsHtml += '<a class="pill pill--ghost card-action" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>';
-  if (p.site && !p.isSelf) actionsHtml += '<a class="pill card-action" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>';
+  if (p.site && !p.isSelf) actionsHtml += '<a class="pill card-action card-action--site" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>';
 
   el.innerHTML =
-    '<h3>' + p.title + '</h3>' +
+    '<h3 class="card-title">' + p.title + '</h3>' +
     '<p>' + (p.desc[l] || p.desc.en) + '</p>' +
     (actionsHtml ? '<div class="pyramid__actions">' + actionsHtml + '</div>' : '');
 
   el.addEventListener('click', e => {
     if (e.target.closest('.card-action')) return;
+
     if (p.isSelf) {
+      const titleEl = e.target.closest('.card-title');
+      if (titleEl) {
+        window.open(p.site, '_blank', 'noopener');
+        return;
+      }
       handleSelfClick(el);
-    } else {
-      showProjectInfo(p);
+      return;
     }
+
+    if (e.target.closest('.card-title') && p.site) {
+      window.open(p.site, '_blank', 'noopener');
+      return;
+    }
+
+    showProjectInfo(p);
   });
 
   return el;
@@ -813,13 +830,13 @@ function buildMapGraph(container) {
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
   const nodes = [
-    { id: 'vis',    label: 'Lucovisa',      x: 400, y: 250, w: 170, h: 50, center: true },
-    { id: 'conv',   label: 'LucConverter',  x: 400, y: 80,  w: 170, h: 44 },
-    { id: 'sql',    label: 'SQL-in-image',  x: 150, y: 160, w: 160, h: 44 },
-    { id: 'cursor', label: 'LucCursor',     x: 650, y: 160, w: 150, h: 44 },
-    { id: 'font',   label: 'LucFont',       x: 150, y: 340, w: 150, h: 44 },
-    { id: 'cat',    label: 'Cat Digger',    x: 650, y: 340, w: 150, h: 44 },
-    { id: 'ip',     label: 'IP-check',      x: 400, y: 420, w: 150, h: 44 }
+    { id: 'vis',    label: 'Lucovisa',      x: 400, y: 250, w: 170, h: 50, color: 'gold',   center: true },
+    { id: 'conv',   label: 'LucConverter',  x: 400, y: 80,  w: 170, h: 44, color: 'site' },
+    { id: 'sql',    label: 'SQL-in-image',  x: 150, y: 160, w: 160, h: 44, color: 'site' },
+    { id: 'cursor', label: 'LucCursor',     x: 650, y: 160, w: 150, h: 44, color: 'site' },
+    { id: 'font',   label: 'LucFont',       x: 150, y: 340, w: 150, h: 44, color: 'site' },
+    { id: 'cat',    label: 'Cat Digger',    x: 650, y: 340, w: 150, h: 44, color: 'game' },
+    { id: 'ip',     label: 'IP-check',      x: 400, y: 420, w: 150, h: 44, color: 'ip' }
   ];
 
   const edges = [
@@ -853,11 +870,11 @@ function buildMapGraph(container) {
 
   nodes.forEach(n => {
     const g = document.createElementNS(SVG_NS, 'g');
-    g.setAttribute('class', 'map-node-g' + (n.center ? ' map-node-g--center' : ''));
+    g.setAttribute('class', 'map-node-g map-node-g--' + n.color + (n.center ? ' map-node-g--center' : ''));
     g.setAttribute('transform', 'translate(' + (n.x - n.w / 2) + ',' + (n.y - n.h / 2) + ')');
 
     const rect = document.createElementNS(SVG_NS, 'rect');
-    rect.setAttribute('class', 'map-node-rect' + (n.center ? ' map-node-rect--center' : ''));
+    rect.setAttribute('class', 'map-node-rect map-node-rect--' + n.color);
     rect.setAttribute('width', n.w);
     rect.setAttribute('height', n.h);
     rect.setAttribute('rx', '8');
@@ -867,10 +884,6 @@ function buildMapGraph(container) {
     text.setAttribute('x', n.w / 2);
     text.setAttribute('y', n.h / 2 + 5);
     text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('fill', '#E5EDF5');
-    text.setAttribute('font-family', 'Segoe UI, Tahoma, sans-serif');
-    text.setAttribute('font-size', '13');
-    text.setAttribute('font-weight', '600');
     text.textContent = n.label;
 
     g.appendChild(rect);
@@ -1058,7 +1071,7 @@ function renderHacker(body) {
   let history = [];
   let historyIndex = -1;
 
-  const COMMANDS = ['help', 'clear', 'matrix', 'guess', 'cat', 'whoami', 'ls', 'theme', 'lang', 'reset', 'restart', 'exit'];
+  const COMMANDS = ['help', 'clear', 'matrix', 'cat', 'whoami', 'ls', 'theme', 'lang', 'reset', 'restart', 'exit'];
 
   const printLine = (text, cls) => {
     const line = document.createElement('div');
@@ -1179,58 +1192,6 @@ function renderHacker(body) {
     }, 50);
   };
 
-  const runGuess = () => {
-    const secret = Math.floor(Math.random() * 100) + 1;
-    let attempts = 0;
-    busy = true;
-
-    printLine(t('hacker.guessHint'), 'terminal__prompt');
-
-    const guessInput = () => {
-      const line = document.createElement('div');
-      line.className = 'terminal__line terminal__line--input';
-      line.innerHTML = '<span class="terminal__prompt">&gt;</span>';
-      const input = document.createElement('input');
-      input.className = 'terminal__input';
-      input.type = 'number';
-      input.min = '1';
-      input.max = '100';
-      line.appendChild(input);
-      term.appendChild(line);
-      input.focus();
-      term.scrollTop = term.scrollHeight;
-
-      input.addEventListener('keydown', e => {
-        if (e.key !== 'Enter') return;
-        const val = parseInt(input.value, 10);
-        input.disabled = true;
-        line.querySelector('.terminal__prompt').textContent = '> ' + input.value;
-        input.remove();
-
-        if (isNaN(val)) {
-          printLine(t('hacker.guessInvalid'));
-          guessInput();
-          return;
-        }
-        attempts++;
-        if (val === secret) {
-          printLine(t('hacker.guessWin') + attempts + t('hacker.guessAttempts'));
-          busy = false;
-          printLine(t('hacker.hint'), 'terminal__prompt');
-          printInput();
-        } else if (val < secret) {
-          printLine(t('hacker.guessHigher'));
-          guessInput();
-        } else {
-          printLine(t('hacker.guessLower'));
-          guessInput();
-        }
-      });
-    };
-
-    guessInput();
-  };
-
   const runCat = () => {
     busy = true;
     term.innerHTML = '';
@@ -1253,37 +1214,42 @@ function renderHacker(body) {
     hint.textContent = t('hacker.catHint');
     term.appendChild(hint);
 
-    let pos = 0;
+    const stageW = stage.clientWidth || 400;
+    const catW = 100;
+    const fishW = 50;
+    const maxCatX = Math.max(0, stageW - catW - 10);
+    const maxFishX = Math.max(0, stageW - fishW - 10);
+
+    let catX = 20;
     let dir = 1;
-    const maxPos = 60;
 
     const framesRight = [
       [
-        ' /\\_/\\   ',
-        '( o.o )  ',
-        ' > ^ <   ',
-        ' /   \\   '
+        ' /\\_/\\  ',
+        '( o.o ) ',
+        ' > ^ <  ',
+        ' /   \\  '
       ],
       [
-        ' /\\_/\\   ',
-        '( o.o )  ',
-        ' > ^ <   ',
-        '  / \\    '
+        ' /\\_/\\  ',
+        '( o.o ) ',
+        ' > ^ <  ',
+        '  / \\   '
       ]
     ];
 
     const framesLeft = [
       [
-        '   /\\_/\\ ',
-        '  ( o.o )',
-        '   > ^ < ',
-        '   /   \\ '
+        '  /\\_/\\ ',
+        ' ( o.o )',
+        '  > ^ < ',
+        '  /   \\ '
       ],
       [
-        '   /\\_/\\ ',
-        '  ( o.o )',
-        '   > ^ < ',
-        '    / \\  '
+        '  /\\_/\\ ',
+        ' ( o.o )',
+        '  > ^ < ',
+        '   / \\  '
       ]
     ];
 
@@ -1293,11 +1259,16 @@ function renderHacker(body) {
       pre.textContent = frames[frameIdx].join('\n');
       frameIdx = (frameIdx + 1) % frames.length;
 
-      pos += dir;
-      if (pos >= maxPos) dir = -1;
-      if (pos <= 0) dir = 1;
+      catX += dir * 14;
+      if (catX >= maxCatX) { catX = maxCatX; dir = -1; }
+      if (catX <= 20) { catX = 20; dir = 1; }
 
-      fish.style.left = (pos * 4) + 'px';
+      pre.style.left = catX + 'px';
+      pre.style.top = '60px';
+
+      const fishX = dir === 1 ? Math.min(maxFishX, catX + catW - 20) : Math.max(10, catX - 30);
+      fish.style.left = fishX + 'px';
+      fish.style.top = '120px';
       fish.textContent = dir === 1 ? '<><' : '><>';
     };
     render();
@@ -1316,7 +1287,7 @@ function renderHacker(body) {
     };
     window.addEventListener('keydown', onKey);
 
-    const loop = setInterval(render, 400);
+    const loop = setInterval(render, 380);
   };
 
   const handle = (cmd) => {
@@ -1420,7 +1391,6 @@ function renderHacker(body) {
     }
 
     if (c === 'matrix') { runMatrix(); return; }
-    if (c === 'guess') { runGuess(); return; }
     if (c === 'cat') { runCat(); return; }
 
     printLine(t('hacker.unknown') + cmd + t('hacker.tryHelp'));

@@ -492,6 +492,29 @@
     return { cellW: 100, cellH: 106 };
   }
 
+  function getBounds() {
+    const padTop = 16;
+    const padLeft = 16;
+    const padRight = 16;
+    const padBottom = 68;
+    return {
+      minX: padLeft,
+      minY: padTop,
+      maxX: window.innerWidth - padRight,
+      maxY: window.innerHeight - padBottom
+    };
+  }
+
+  function clampPos(x, y, sizeW, sizeH) {
+    const b = getBounds();
+    const maxX = Math.max(b.minX, b.maxX - sizeW);
+    const maxY = Math.max(b.minY, b.maxY - sizeH);
+    return {
+      x: Math.max(b.minX, Math.min(maxX, x)),
+      y: Math.max(b.minY, Math.min(maxY, y))
+    };
+  }
+
   function relayoutIcons() {
     if (!desktopIcons) return;
     const saved = (function () {
@@ -504,10 +527,12 @@
     const { cellW, cellH } = getGridMetrics();
     const padTop = 16;
     const padLeft = 16;
-    const containerH = desktopIcons.clientHeight - padTop;
-    const maxRows = Math.max(1, Math.floor(containerH / cellH));
 
     const allIcons = Array.from(desktopIcons.querySelectorAll('.app-icon'));
+    const containerH = desktopIcons.clientHeight - padTop - 8;
+    const maxRows = Math.max(1, Math.floor(containerH / cellH));
+    const maxCols = Math.max(1, Math.floor((window.innerWidth - padLeft - 16) / cellW));
+
     allIcons.forEach((el, index) => {
       const id = el.dataset.icon || el.dataset.shortcut || ('icon_' + index);
       let pos = saved[id];
@@ -518,6 +543,10 @@
       } else {
         col = Math.floor(index / maxRows);
         row = index % maxRows;
+      }
+      if (col >= maxCols) {
+        col = col % maxCols;
+        row = (row + Math.floor(index / (maxRows * maxCols)) * 0);
       }
       el.style.position = 'absolute';
       el.style.left = (padLeft + col * cellW) + 'px';
@@ -547,9 +576,31 @@
     relayoutIcons();
   }
 
+  function swapIcons(el, targetEl) {
+    const elCol = parseInt(el.dataset.gridCol) || 0;
+    const elRow = parseInt(el.dataset.gridRow) || 0;
+    const tCol = parseInt(targetEl.dataset.gridCol) || 0;
+    const tRow = parseInt(targetEl.dataset.gridRow) || 0;
+
+    const { cellW, cellH } = getGridMetrics();
+    const padTop = 16;
+    const padLeft = 16;
+
+    el.dataset.gridCol = tCol;
+    el.dataset.gridRow = tRow;
+    targetEl.dataset.gridCol = elCol;
+    targetEl.dataset.gridRow = elRow;
+
+    el.style.left = (padLeft + tCol * cellW) + 'px';
+    el.style.top  = (padTop + tRow * cellH) + 'px';
+    targetEl.style.left = (padLeft + elCol * cellW) + 'px';
+    targetEl.style.top  = (padTop + elRow * cellH) + 'px';
+
+    saveDesktopPositions();
+  }
+
   function makeIconDraggable(el) {
     let startX = 0, startY = 0, origX = 0, origY = 0, dragging = false, moved = false;
-    const { cellW, cellH } = getGridMetrics();
 
     el.addEventListener('pointerdown', e => {
       if (e.button !== 0 && e.pointerType === 'mouse') return;
@@ -568,8 +619,12 @@
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
       if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
-      el.style.left = Math.max(0, origX + dx) + 'px';
-      el.style.top = Math.max(0, origY + dy) + 'px';
+
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      const clamped = clampPos(origX + dx, origY + dy, w, h);
+      el.style.left = clamped.x + 'px';
+      el.style.top = clamped.y + 'px';
 
       const trashEl = document.querySelector('.app-icon[data-drop="trash"]');
       if (trashEl && el.dataset.drop !== 'trash') {
@@ -612,21 +667,41 @@
         const noBtn = document.getElementById('modal-cancel');
         if (yesBtn) yesBtn.style.display = 'none';
         if (noBtn) noBtn.textContent = t('trash.moveNo');
+        return;
       }
 
-      if (moved) {
-        const currentLeft = parseFloat(el.style.left) || 0;
-        const currentTop = parseFloat(el.style.top) || 0;
-        const col = Math.max(0, Math.round((currentLeft - 16) / cellW));
-        const row = Math.max(0, Math.round((currentTop - 16) / cellH));
-        el.dataset.gridCol = col;
-        el.dataset.gridRow = row;
-        el.style.left = (16 + col * cellW) + 'px';
-        el.style.top  = (16 + row * cellH) + 'px';
+      if (!moved) return;
+
+      const { cellW, cellH } = getGridMetrics();
+      const padTop = 16;
+      const padLeft = 16;
+      const currentLeft = parseFloat(el.style.left) || 0;
+      const currentTop = parseFloat(el.style.top) || 0;
+      let col = Math.max(0, Math.round((currentLeft - padLeft) / cellW));
+      let row = Math.max(0, Math.round((currentTop - padTop) / cellH));
+
+      const targetEl = Array.from(desktopIcons.querySelectorAll('.app-icon')).find(other => {
+        if (other === el) return false;
+        const oc = parseInt(other.dataset.gridCol) || 0;
+        const or = parseInt(other.dataset.gridRow) || 0;
+        return oc === col && or === row;
+      });
+
+      if (targetEl) {
+        swapIcons(el, targetEl);
+      } else {
+        const w = el.offsetWidth;
+        const h = el.offsetHeight;
+        const finalPos = clampPos(padLeft + col * cellW, padTop + row * cellH, w, h);
+        el.dataset.gridCol = Math.max(0, Math.round((finalPos.x - padLeft) / cellW));
+        el.dataset.gridRow = Math.max(0, Math.round((finalPos.y - padTop) / cellH));
+        el.style.left = finalPos.x + 'px';
+        el.style.top = finalPos.y + 'px';
         saveDesktopPositions();
-        el.dataset.dragged = '1';
-        setTimeout(() => { delete el.dataset.dragged; }, 100);
       }
+
+      el.dataset.dragged = '1';
+      setTimeout(() => { delete el.dataset.dragged; }, 100);
     });
 
     el.addEventListener('click', e => {
@@ -644,7 +719,14 @@
     toast(t('toast.desktopReset'));
   }
 
+  function resetAll() {
+    try { localStorage.clear(); } catch (e) {}
+    toast(t('toast.allReset'));
+    setTimeout(() => location.reload(), 800);
+  }
+
   window.resetDesktop = resetDesktop;
+  window.resetAll = resetAll;
   window.saveDesktopPositions = saveDesktopPositions;
   window.loadDesktopPositions = loadDesktopPositions;
   window.makeIconDraggable = makeIconDraggable;
@@ -655,6 +737,18 @@
 
   window.addEventListener('resize', () => {
     relayoutIcons();
+    Object.keys(openWindows).forEach(id => {
+      const w = openWindows[id].el;
+      const rect = w.getBoundingClientRect();
+      if (rect.right > window.innerWidth) {
+        w.style.left = Math.max(0, window.innerWidth - rect.width - 8) + 'px';
+      }
+      if (rect.bottom > window.innerHeight - 52) {
+        w.style.top = Math.max(0, window.innerHeight - rect.height - 60) + 'px';
+      }
+      if (rect.left < 0) w.style.left = '8px';
+      if (rect.top < 0) w.style.top = '8px';
+    });
   });
 
   const contextMenu = document.getElementById('context-menu');
@@ -878,8 +972,13 @@
       if (!dragging) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      win.style.left = Math.max(0, Math.min(window.innerWidth - 100, origX + dx)) + 'px';
-      win.style.top  = Math.max(0, Math.min(window.innerHeight - 80, origY + dy)) + 'px';
+      const w = win.offsetWidth;
+      const h = win.offsetHeight;
+      const b = getBounds();
+      const maxX = Math.max(b.minX, window.innerWidth - w - 8);
+      const maxY = Math.max(b.minY, window.innerHeight - h - 60);
+      win.style.left = Math.max(0, Math.min(maxX, origX + dx)) + 'px';
+      win.style.top  = Math.max(0, Math.min(maxY, origY + dy)) + 'px';
     });
 
     handle.addEventListener('pointerup', e => {
@@ -940,19 +1039,6 @@
       const id = btn.dataset.app;
       if (id) openApp(id);
       if (startMenu) startMenu.classList.remove('is-open');
-    });
-  });
-
-  window.addEventListener('resize', () => {
-    Object.keys(openWindows).forEach(id => {
-      const w = openWindows[id].el;
-      const rect = w.getBoundingClientRect();
-      if (rect.right > window.innerWidth) {
-        w.style.left = Math.max(0, window.innerWidth - rect.width - 8) + 'px';
-      }
-      if (rect.bottom > window.innerHeight - 52) {
-        w.style.top = Math.max(0, window.innerHeight - rect.height - 60) + 'px';
-      }
     });
   });
 
