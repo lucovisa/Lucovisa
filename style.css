@@ -298,7 +298,7 @@ body {
   border: none;
   border-radius: 999px;
   cursor: pointer;
-  transition: all .18s ease;
+  transition: color .18s ease, background .18s ease;
 }
 .toggle__btn:hover { color: var(--text); }
 .toggle__btn.is-active {
@@ -399,16 +399,14 @@ body {
 }
 .start-menu__item:hover { background: var(--bg-panel-hi); }
 
-.pyramid-wrap {
-  padding: 4px;
-}
+.pyramid-wrap { padding: 4px; }
 
 .pyramid {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0;
-  max-width: 620px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 0;
   position: relative;
@@ -439,16 +437,16 @@ body {
   width: 100%;
   justify-content: center;
   flex-wrap: wrap;
-  padding: 16px 8px;
+  padding: 18px 10px;
   position: relative;
   border-top: 1px dashed var(--line-soft);
 }
-.pyramid__tier:first-child { border-top: none; padding-top: 22px; }
-.pyramid__tier:last-child { padding-bottom: 22px; }
-
-.pyramid__tier--1 { max-width: 100%; }
-.pyramid__tier--3 { max-width: 100%; }
-.pyramid__tier--5 { max-width: 100%; }
+.pyramid__tier:first-child { border-top: none; padding-top: 24px; }
+.pyramid__tier:last-child { padding-bottom: 24px; }
+.pyramid__tier--1,
+.pyramid__tier--2,
+.pyramid__tier--3,
+.pyramid__tier--4 { max-width: 100%; }
 
 .pyramid__card {
   flex: 1 1 200px;
@@ -488,104 +486,72 @@ body {
   color: var(--gold-2);
   text-shadow: 0 0 10px var(--gold-glow);
 }
-.pyramid__badge {
-  position: absolute;
-  top: -8px;
-  right: 10px;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #221800;
-  background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 100%);
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 0 2px 8px -2px var(--gold-glow);
-}
 
-.map-web { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 0; }
-
-.gh-graph {
+.map-app {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 4px 4px;
-  width: 100%;
+  gap: 10px;
+  height: 100%;
+  min-height: 400px;
 }
-.gh-graph__row {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  gap: 12px;
-}
-.gh-graph__row--ip { margin-bottom: 4px; }
+.map-app__title { font-size: 16px; color: var(--accent-2); }
+.map-app__hint { font-size: 11px; color: var(--text-mute); text-align: center; }
 
-.gh-node {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px 8px 10px;
-  background: linear-gradient(180deg, var(--bg-panel-hi) 0%, var(--bg-panel) 100%);
+.map-canvas {
+  flex: 1;
+  min-height: 400px;
+  background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-panel) 100%);
   border: 1px solid var(--line-soft);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  min-width: 180px;
-  box-shadow: var(--shadow-sm);
-  transition: border-color .15s, box-shadow .15s;
-}
-.gh-node:hover {
-  border-color: var(--accent-line);
-  box-shadow: var(--shadow-md), 0 0 18px -6px var(--accent-glow);
-}
-.gh-node__check {
-  width: 16px;
-  height: 16px;
-  display: inline-flex;
-  flex-shrink: 0;
-}
-.gh-node__check svg { width: 100%; height: 100%; display: block; }
-.gh-node__title { color: var(--text); }
-.gh-node__desc {
-  font-size: 11px;
-  color: var(--text-mute);
-  font-weight: 400;
-  margin-left: auto;
-  padding-left: 12px;
-}
-
-.gh-connector {
-  background: var(--accent-line);
-  border-radius: 2px;
-}
-.gh-connector--v {
-  width: 2px;
-  height: 20px;
-}
-
-.gh-branches {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  width: 100%;
-  padding: 4px 0;
+  border-radius: 10px;
+  overflow: hidden;
   position: relative;
 }
-.gh-branch {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+
+.map-svg { display: block; width: 100%; height: 100%; }
+
+.map-edge {
+  stroke: var(--accent-2);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 4px var(--accent-glow));
 }
 
-.gh-graph__hint {
-  margin-top: 16px;
-  font-size: 11px;
-  color: var(--text-mute);
-  text-align: center;
+.map-node-g {
+  cursor: grab;
+  transition: filter .15s;
+}
+.map-node-g:active,
+.map-node-g.is-dragging { cursor: grabbing; }
+.map-node-g:hover .map-node-rect { stroke: var(--accent-2); }
+
+.map-node-rect {
+  fill: var(--bg-panel-hi);
+  stroke: var(--line-soft);
+  stroke-width: 1.2;
+  transition: stroke .15s, filter .15s;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+}
+
+.map-node-check {
+  fill: #2DA44E;
+  filter: drop-shadow(0 0 6px rgba(45,164,78,0.6));
+}
+
+.map-node-tick {
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-node-text {
+  fill: var(--text);
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  user-select: none;
 }
 
 .app-about { display: flex; flex-direction: column; gap: 10px; line-height: 1.6; }
@@ -648,8 +614,18 @@ body {
   text-align: center;
 }
 .app-donate__hero p { font-size: 12px; color: var(--text-dim); max-width: 380px; }
-.app-donate__heart { width: 64px; height: 64px; }
-.app-donate__heart svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 3px 10px rgba(224,58,109,0.35)); }
+.app-donate__heart {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+}
+.app-donate__heart svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+}
 
 .comments__star {
   display: flex;
@@ -709,7 +685,9 @@ body {
   flex-direction: column;
   gap: 4px;
   cursor: text;
+  outline: none;
 }
+.terminal:focus { outline: none; }
 .terminal__line { white-space: pre-wrap; word-break: break-word; }
 .terminal__input {
   background: transparent;
@@ -738,7 +716,6 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(2px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -888,11 +865,10 @@ body {
   .taskbar { padding: 0 8px; gap: 6px; }
   .start-menu { left: 8px; right: 8px; width: auto; }
 
-  .pyramid__tier--3 { flex-direction: column; align-items: stretch; }
+  .pyramid__tier { flex-direction: column; align-items: stretch; }
   .pyramid__card { min-width: 0; max-width: none; }
 
-  .gh-branches { flex-direction: column; align-items: center; gap: 12px; }
-  .gh-node { min-width: 0; width: 100%; max-width: 300px; }
+  .map-canvas { min-height: 320px; }
 
   .contact-row { flex-direction: column; align-items: flex-start; }
   .contact-row__actions { width: 100%; }

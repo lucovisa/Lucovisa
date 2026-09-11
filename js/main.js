@@ -270,6 +270,18 @@
     }
   }
 
+  function resetProfile() {
+    try {
+      localStorage.removeItem(USERNAME_KEY);
+      localStorage.removeItem(AVATAR_KEY);
+    } catch (e) {}
+    if (usernameEl) usernameEl.textContent = detectDefaultName();
+    if (avatarImg) avatarImg.src = 'icon.png';
+    if (taskbarAvatar) taskbarAvatar.src = 'icon.png';
+  }
+
+  window.resetProfile = resetProfile;
+
   updateUsernameUI();
   updateAvatarUI();
 
@@ -358,11 +370,13 @@
     const titleEl = node.querySelector('.window__title');
     titleEl.textContent = app.title;
 
-    const offset = Object.keys(openWindows).length * 24;
+    const offset = Object.keys(openWindows).length * 20;
     const wWidth = Math.min(app.width, window.innerWidth - 40);
     const wHeight = Math.min(app.height, window.innerHeight - 100);
-    node.style.top = (40 + offset) + 'px';
-    node.style.left = (80 + offset) + 'px';
+    const left = Math.max(8, Math.round((window.innerWidth - wWidth) / 2) + offset);
+    const top = Math.max(8, Math.round((window.innerHeight - wHeight - 52) / 2) + offset);
+    node.style.top = top + 'px';
+    node.style.left = left + 'px';
     node.style.width = wWidth + 'px';
     node.style.height = wHeight + 'px';
 

@@ -37,12 +37,17 @@ const PROJECTS = [
   }
 ];
 
+const CAT_DIGGER = {
+  title: 'Cat Digger',
+  desc: { en: 'Game in pre-alpha development.', ru: 'Игра в стадии преальфа-разработки.' },
+  gold: true
+};
+
 const LUC_VISA = {
   title: 'Lucovisa',
   desc: { en: 'About the developer and all projects.', ru: 'О разработчике и все проекты.' },
   github: 'https://github.com/lucovisa/Lucovisa',
-  site: 'https://lucovisa.github.io/Lucovisa/',
-  gold: true
+  site: 'https://lucovisa.github.io/Lucovisa/'
 };
 
 const CONTACTS = [
@@ -58,10 +63,10 @@ const DONATE_WALLETS = [
 ];
 
 const APPS = {
-  portfolio: { title: 'Portfolio',  icon: 'folder',   width: 680, height: 620, render: renderPortfolio },
+  portfolio: { title: 'Portfolio',  icon: 'folder',   width: 680, height: 640, render: renderPortfolio },
   about:     { title: 'About me',   icon: 'info',     width: 560, height: 540, render: renderAbout },
   hacker:    { title: 'hacker.exe', icon: 'terminal', width: 680, height: 500, render: renderHacker },
-  map:       { title: 'Map',        icon: 'web',      width: 720, height: 560, render: renderMap },
+  map:       { title: 'Map',        icon: 'web',      width: 760, height: 600, render: renderMap },
   contact:   { title: 'Contact',    icon: 'mail',     width: 560, height: 420, render: renderContact },
   comments:  { title: 'Comments',   icon: 'comment',  width: 640, height: 520, render: renderComments },
   donate:    { title: 'Donate',     icon: 'heart',    width: 560, height: 480, render: renderDonate }
@@ -80,7 +85,6 @@ function projectCard(p, opts) {
     el.rel = 'noopener';
   }
   el.innerHTML =
-    (p.gold ? '<span class="pyramid__badge">' + t('portfolio.gold') + '</span>' : '') +
     '<h3>' + p.title + '</h3>' +
     '<p>' + (p.desc[l] || p.desc.en) + '</p>' +
     '<div class="pyramid__actions">' +
@@ -103,19 +107,24 @@ function renderPortfolio(body) {
   const t1 = document.createElement('div');
   t1.className = 'pyramid__tier pyramid__tier--1';
   t1.appendChild(projectCard(PROJECTS[0], { link: true }));
-  t1.appendChild(projectCard(LUC_VISA, { link: true }));
+  t1.appendChild(projectCard(CAT_DIGGER));
+
+  const t2 = document.createElement('div');
+  t2.className = 'pyramid__tier pyramid__tier--2';
+  t2.appendChild(projectCard(LUC_VISA, { link: true }));
 
   const t3 = document.createElement('div');
   t3.className = 'pyramid__tier pyramid__tier--3';
   [PROJECTS[1], PROJECTS[2], PROJECTS[3]].forEach(p => t3.appendChild(projectCard(p)));
 
-  const t5 = document.createElement('div');
-  t5.className = 'pyramid__tier pyramid__tier--5';
-  t5.appendChild(projectCard(PROJECTS[4]));
+  const t4 = document.createElement('div');
+  t4.className = 'pyramid__tier pyramid__tier--4';
+  t4.appendChild(projectCard(PROJECTS[4]));
 
   inner.appendChild(t1);
+  inner.appendChild(t2);
   inner.appendChild(t3);
-  inner.appendChild(t5);
+  inner.appendChild(t4);
 
   wrap.appendChild(inner);
   body.appendChild(wrap);
@@ -146,53 +155,167 @@ function renderAbout(body) {
 function renderMap(body) {
   const l = lang();
 
-  const projects = {
-    ip:       { title: 'IP-check',      desc: { en: 'standalone', ru: 'отдельный' } },
-    conv:     { title: 'LucConverter',  desc: { en: 'hub', ru: 'хаб' } },
-    sql:      { title: 'SQL-in-image',  desc: { en: 'tool', ru: 'инструмент' } },
-    cursor:   { title: 'LucCursor',     desc: { en: 'tool', ru: 'инструмент' } },
-    font:     { title: 'LucFont',       desc: { en: 'tool', ru: 'инструмент' } },
-    vis:      { title: 'Lucovisa',      desc: { en: 'root', ru: 'корень' } }
-  };
-
-  function nodeHTML(id) {
-    const p = projects[id];
-    return '<div class="gh-node" data-node="' + id + '">' +
-      '<span class="gh-node__check"></span>' +
-      '<span class="gh-node__title">' + p.title + '</span>' +
-      '<span class="gh-node__desc">' + p.desc[l] + '</span>' +
+  body.innerHTML =
+    '<div class="map-app">' +
+      '<h2 class="map-app__title">' + t('map.title') + '</h2>' +
+      '<div class="map-canvas" id="map-canvas"></div>' +
+      '<p class="map-app__hint">' + t('map.hint') + '</p>' +
     '</div>';
+
+  const canvas = body.querySelector('#map-canvas');
+  buildMapGraph(canvas);
+}
+
+function buildMapGraph(container) {
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+
+  const nodes = [
+    { id: 'conv',   label: 'LucConverter',  x: 380, y: 60,  w: 180, h: 44 },
+    { id: 'cat',    label: 'Cat Digger',    x: 600, y: 60,  w: 160, h: 44 },
+    { id: 'vis',    label: 'Lucovisa',      x: 380, y: 170, w: 180, h: 44 },
+    { id: 'sql',    label: 'SQL-in-image',  x: 160, y: 280, w: 170, h: 44 },
+    { id: 'cursor', label: 'LucCursor',     x: 380, y: 280, w: 170, h: 44 },
+    { id: 'font',   label: 'LucFont',       x: 600, y: 280, w: 170, h: 44 },
+    { id: 'ip',     label: 'IP-check',      x: 380, y: 400, w: 170, h: 44 }
+  ];
+
+  const edges = [
+    { from: 'conv', to: 'cat' },
+    { from: 'conv', to: 'vis' },
+    { from: 'vis',  to: 'sql' },
+    { from: 'vis',  to: 'cursor' },
+    { from: 'vis',  to: 'font' },
+    { from: 'vis',  to: 'ip' }
+  ];
+
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '100%');
+  svg.setAttribute('viewBox', '0 0 800 500');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  svg.classList.add('map-svg');
+
+  const gEdges = document.createElementNS(SVG_NS, 'g');
+  const gNodes = document.createElementNS(SVG_NS, 'g');
+  svg.appendChild(gEdges);
+  svg.appendChild(gNodes);
+
+  const edgeEls = edges.map(() => {
+    const path = document.createElementNS(SVG_NS, 'path');
+    path.setAttribute('class', 'map-edge');
+    path.setAttribute('fill', 'none');
+    gEdges.appendChild(path);
+    return path;
+  });
+
+  const nodeEls = {};
+
+  nodes.forEach(n => {
+    const g = document.createElementNS(SVG_NS, 'g');
+    g.setAttribute('class', 'map-node-g');
+    g.setAttribute('transform', 'translate(' + (n.x - n.w / 2) + ',' + (n.y - n.h / 2) + ')');
+
+    const rect = document.createElementNS(SVG_NS, 'rect');
+    rect.setAttribute('class', 'map-node-rect');
+    rect.setAttribute('width', n.w);
+    rect.setAttribute('height', n.h);
+    rect.setAttribute('rx', '8');
+
+    const circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('class', 'map-node-check');
+    circle.setAttribute('cx', '18');
+    circle.setAttribute('cy', n.h / 2);
+    circle.setAttribute('r', '8');
+
+    const check = document.createElementNS(SVG_NS, 'path');
+    check.setAttribute('class', 'map-node-tick');
+    check.setAttribute('d', 'M14 ' + (n.h / 2) + ' l3 3 l6 -6');
+    check.setAttribute('fill', 'none');
+
+    const text = document.createElementNS(SVG_NS, 'text');
+    text.setAttribute('class', 'map-node-text');
+    text.setAttribute('x', '34');
+    text.setAttribute('y', n.h / 2 + 5);
+    text.textContent = n.label;
+
+    g.appendChild(rect);
+    g.appendChild(circle);
+    g.appendChild(check);
+    g.appendChild(text);
+
+    gNodes.appendChild(g);
+    nodeEls[n.id] = g;
+
+    makeNodeDraggable(g, n, nodeEls, edgeEls, edges, nodes);
+  });
+
+  function redrawEdges() {
+    edges.forEach((e, i) => {
+      const a = nodes.find(n => n.id === e.from);
+      const b = nodes.find(n => n.id === e.to);
+      if (!a || !b) return;
+
+      const ax = a.x;
+      const ay = a.y + a.h / 2;
+      const bx = b.x;
+      const by = b.y - b.h / 2;
+
+      const midY = (ay + by) / 2;
+      const d = 'M ' + ax + ' ' + ay +
+                ' V ' + midY +
+                ' H ' + bx +
+                ' V ' + by;
+      edgeEls[i].setAttribute('d', d);
+    });
   }
 
-  body.innerHTML =
-    '<div class="gh-graph">' +
-      '<div class="gh-graph__row gh-graph__row--ip">' +
-        nodeHTML('ip') +
-      '</div>' +
+  container.appendChild(svg);
+  redrawEdges();
 
-      '<div class="gh-connector gh-connector--v"></div>' +
+  window._mapRedraw = redrawEdges;
+}
 
-      '<div class="gh-graph__row">' +
-        nodeHTML('conv') +
-      '</div>' +
+function makeNodeDraggable(g, node, nodeEls, edgeEls, edges, nodes) {
+  let startX = 0, startY = 0, origX = 0, origY = 0, dragging = false;
 
-      '<div class="gh-branches">' +
-        '<div class="gh-branch"><div class="gh-connector gh-connector--v"></div>' + nodeHTML('sql') + '</div>' +
-        '<div class="gh-branch"><div class="gh-connector gh-connector--v"></div>' + nodeHTML('cursor') + '</div>' +
-        '<div class="gh-branch"><div class="gh-connector gh-connector--v"></div>' + nodeHTML('font') + '</div>' +
-      '</div>' +
+  g.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    dragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    origX = node.x;
+    origY = node.y;
+    g.setPointerCapture(e.pointerId);
+    g.classList.add('is-dragging');
+  });
 
-      '<div class="gh-connector gh-connector--v"></div>' +
+  g.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const svg = g.ownerSVGElement;
+    const rect = svg.getBoundingClientRect();
+    const vb = svg.viewBox.baseVal;
+    const scaleX = vb.width / rect.width;
+    const scaleY = vb.height / rect.height;
+    const dx = (e.clientX - startX) * scaleX;
+    const dy = (e.clientY - startY) * scaleY;
 
-      '<div class="gh-graph__row">' +
-        nodeHTML('vis') +
-      '</div>' +
+    node.x = Math.max(node.w / 2 + 4, Math.min(800 - node.w / 2 - 4, origX + dx));
+    node.y = Math.max(node.h / 2 + 4, Math.min(500 - node.h / 2 - 4, origY + dy));
 
-      '<p class="gh-graph__hint">' + t('map.hint') + '</p>' +
-    '</div>';
+    g.setAttribute('transform', 'translate(' + (node.x - node.w / 2) + ',' + (node.y - node.h / 2) + ')');
 
-  body.querySelectorAll('.gh-node__check').forEach(el => {
-    el.innerHTML = ICONS.check;
+    if (window._mapRedraw) window._mapRedraw();
+  });
+
+  g.addEventListener('pointerup', e => {
+    dragging = false;
+    g.classList.remove('is-dragging');
+    try { g.releasePointerCapture(e.pointerId); } catch (err) {}
+  });
+
+  g.addEventListener('pointercancel', () => {
+    dragging = false;
+    g.classList.remove('is-dragging');
   });
 }
 
@@ -295,7 +418,6 @@ function renderComments(body) {
       if (wrap) wrap.classList.add('is-starred');
       if (starIconEl) starIconEl.innerHTML = ICONS.star;
       if (starBtn) starBtn.textContent = t('comments.starred');
-      toast(t('toast.copied') ? t('comments.starred') : '');
     });
   } else {
     if (starBtn) starBtn.style.pointerEvents = 'none';
@@ -306,9 +428,12 @@ function renderComments(body) {
 }
 
 function renderHacker(body) {
-  body.innerHTML = '<div class="terminal" id="terminal"></div>';
+  body.innerHTML = '<div class="terminal" id="terminal" tabindex="0"></div>';
   const term = body.querySelector('#terminal');
   let busy = false;
+  let currentInput = null;
+
+  const COMMANDS = ['help', 'clear', 'snake', 'tetris', 'exit', 'reset', 'profile'];
 
   const printLine = (text, cls) => {
     const line = document.createElement('div');
@@ -332,13 +457,36 @@ function renderHacker(body) {
     term.appendChild(line);
     input.focus();
     term.scrollTop = term.scrollHeight;
+    currentInput = input;
 
     input.addEventListener('keydown', e => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const val = input.value.trim().toLowerCase();
+        if (val === '') {
+          printLine('');
+          COMMANDS.forEach(c => printLine('  ' + c));
+          printInput();
+          input.remove();
+          return;
+        }
+        const match = COMMANDS.filter(c => c.startsWith(val));
+        if (match.length === 1) {
+          input.value = match[0] + ' ';
+        } else if (match.length > 1) {
+          printLine('');
+          match.forEach(c => printLine('  ' + c));
+          printInput();
+          input.remove();
+        }
+        return;
+      }
       if (e.key !== 'Enter') return;
       const cmd = input.value.trim();
       input.disabled = true;
       line.querySelector('.terminal__prompt').textContent = '$ ' + cmd;
       input.remove();
+      currentInput = null;
       handle(cmd);
     });
   };
@@ -354,18 +502,27 @@ function renderHacker(body) {
     hint.textContent = type === 'snake' ? t('hacker.snakeHint') : t('hacker.tetrisHint');
     term.appendChild(hint);
 
-    let restart = () => {};
+    let gameOverShown = false;
     const gameOver = () => {
+      if (gameOverShown) return;
+      gameOverShown = true;
       const go = document.createElement('div');
       go.className = 'game-over';
       go.textContent = t('hacker.gameOver');
       term.appendChild(go);
     };
 
+    const resetGameOver = () => {
+      gameOverShown = false;
+      const go = term.querySelector('.game-over');
+      if (go) go.remove();
+    };
+
     const stop = () => {
       window.removeEventListener('keydown', onKey);
       clearInterval(loop);
       busy = false;
+      currentInput = null;
       term.innerHTML = '';
       printInput();
     };
@@ -374,9 +531,9 @@ function renderHacker(body) {
     let loop;
 
     if (type === 'snake') {
-      loop = startSnake(canvas, stop, gameOver, k => { onKey = k; }, r => { restart = r; });
+      loop = startSnake(canvas, stop, gameOver, resetGameOver, k => { onKey = k; });
     } else {
-      loop = startTetris(canvas, stop, gameOver, k => { onKey = k; }, r => { restart = r; });
+      loop = startTetris(canvas, stop, gameOver, resetGameOver, k => { onKey = k; });
     }
   };
 
@@ -387,21 +544,32 @@ function renderHacker(body) {
     if (c === '') { printInput(); return; }
     if (c === 'clear') { term.innerHTML = ''; printInput(); return; }
 
-    if (c === 'npm' || c === 'help') {
+    if (c === 'help' || c === 'npm') {
       t('hacker.helpLines').forEach(l => printLine(l));
+      printInput(); return;
+    }
+
+    if (c === 'reset profile' || c === 'resetprofile' || c === 'reset') {
+      if (typeof resetProfile === 'function') {
+        resetProfile();
+        printLine(t('hacker.profileReset'));
+      } else {
+        printLine(t('hacker.profileResetFail'));
+      }
       printInput(); return;
     }
 
     if (c.startsWith('exit')) {
       const parts = c.split(/\s+/);
       if (parts.length < 2) {
-        printLine('Usage: exit <app>');
+        printLine(t('hacker.usage'));
         printInput(); return;
       }
       const appId = parts[1];
       if (typeof closeWindowByApp === 'function' && APPS[appId]) {
-        closeWindowByApp(appId);
-        printLine(t('hacker.exited') + appId);
+        const ok = closeWindowByApp(appId);
+        if (ok) printLine(t('hacker.exited') + appId);
+        else printLine(t('hacker.exitNotFound') + appId);
       } else {
         printLine(t('hacker.exitNotFound') + appId);
       }
@@ -414,47 +582,42 @@ function renderHacker(body) {
     printInput();
   };
 
+  term.addEventListener('click', () => {
+    if (busy) return;
+    if (currentInput && !currentInput.disabled) currentInput.focus();
+    else printInput();
+  });
+
   printLine(t('hacker.welcome'), 'terminal__prompt');
   printLine(t('hacker.hint'));
   printLine('');
   printInput();
+  setTimeout(() => { if (currentInput) currentInput.focus(); }, 100);
 }
 
-function startSnake(canvas, onStop, onGameOver, setOnKey, setRestart) {
+function startSnake(canvas, onStop, onGameOver, onResetGameOver, setOnKey) {
   const ctx = canvas.getContext('2d');
   const cell = 16;
-  const cols = Math.floor(canvas.clientWidth / cell) || 30;
+  const cols = 30;
   const rows = 20;
   canvas.width = cols * cell;
   canvas.height = rows * cell;
 
   let snake, dir, food, alive, score, loop;
 
-  const reset = () => {
-    snake = [{x: 5, y: 5}];
-    dir = {x: 1, y: 0};
-    food = {x: 10, y: 10};
-    alive = true;
-    score = 0;
-    place();
-  };
-
   const place = () => {
     food = { x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows) };
   };
 
-  const onKey = e => {
-    if (e.key === 'q' || e.key === 'Q') { alive = false; onStop(); return; }
-    if ((e.key === 'r' || e.key === 'R') && !alive) { reset(); return; }
-    if (!alive) return;
-    const k = e.key;
-    if (k === 'ArrowUp' && dir.y === 0) dir = {x: 0, y: -1};
-    else if (k === 'ArrowDown' && dir.y === 0) dir = {x: 0, y: 1};
-    else if (k === 'ArrowLeft' && dir.x === 0) dir = {x: -1, y: 0};
-    else if (k === 'ArrowRight' && dir.x === 0) dir = {x: 1, y: 0};
+  const reset = () => {
+    snake = [{x: 5, y: 5}];
+    dir = {x: 1, y: 0};
+    alive = true;
+    score = 0;
+    place();
+    onResetGameOver();
+    draw();
   };
-  setOnKey(onKey);
-  window.addEventListener('keydown', onKey);
 
   const draw = () => {
     ctx.fillStyle = '#0a0f15';
@@ -471,11 +634,25 @@ function startSnake(canvas, onStop, onGameOver, setOnKey, setRestart) {
     ctx.fillText(t('hacker.score') + score, 6, 14);
   };
 
+  const onKey = e => {
+    const k = e.key.toLowerCase();
+
+    if (k === 'q' || e.key === 'Q' || k === 'й') { alive = false; onStop(); return; }
+    if (k === 'r' || e.key === 'R' || k === 'к') { reset(); return; }
+    if (!alive) return;
+
+    if ((e.key === 'ArrowUp' || k === 'w' || k === 'ц') && dir.y === 0) dir = {x: 0, y: -1};
+    else if ((e.key === 'ArrowDown' || k === 's' || k === 'ы') && dir.y === 0) dir = {x: 0, y: 1};
+    else if ((e.key === 'ArrowLeft' || k === 'a' || k === 'ф') && dir.x === 0) dir = {x: -1, y: 0};
+    else if ((e.key === 'ArrowRight' || k === 'd' || k === 'в') && dir.x === 0) dir = {x: 1, y: 0};
+  };
+  setOnKey(onKey);
+  window.addEventListener('keydown', onKey);
+
   reset();
-  draw();
 
   loop = setInterval(() => {
-    if (!alive) { draw(); return; }
+    if (!alive) return;
     let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
 
     if (head.x < 0) head.x = cols - 1;
@@ -496,11 +673,10 @@ function startSnake(canvas, onStop, onGameOver, setOnKey, setRestart) {
     draw();
   }, 110);
 
-  setRestart(reset);
   return loop;
 }
 
-function startTetris(canvas, onStop, onGameOver, setOnKey, setRestart) {
+function startTetris(canvas, onStop, onGameOver, onResetGameOver, setOnKey) {
   const ctx = canvas.getContext('2d');
   const cell = 20;
   const cols = 10;
@@ -584,18 +760,22 @@ function startTetris(canvas, onStop, onGameOver, setOnKey, setRestart) {
     grid = Array.from({length: rows}, () => Array(cols).fill(0));
     score = 0;
     alive = true;
+    onResetGameOver();
     spawn();
     draw();
   };
 
   const onKey = e => {
-    if (e.key === 'q' || e.key === 'Q') { alive = false; onStop(); return; }
-    if ((e.key === 'r' || e.key === 'R') && !alive) { reset(); return; }
+    const k = e.key.toLowerCase();
+
+    if (k === 'q' || e.key === 'Q' || k === 'й') { alive = false; onStop(); return; }
+    if (k === 'r' || e.key === 'R' || k === 'к') { reset(); return; }
     if (!alive) return;
-    if (e.key === 'ArrowLeft' && !collide(piece, px - 1, py)) px--;
-    else if (e.key === 'ArrowRight' && !collide(piece, px + 1, py)) px++;
-    else if (e.key === 'ArrowDown') drop();
-    else if (e.key === 'ArrowUp') rotate();
+
+    if (e.key === 'ArrowLeft' || k === 'a' || k === 'ф') { if (!collide(piece, px - 1, py)) px--; }
+    else if (e.key === 'ArrowRight' || k === 'd' || k === 'в') { if (!collide(piece, px + 1, py)) px++; }
+    else if (e.key === 'ArrowDown' || k === 's' || k === 'ы') drop();
+    else if (e.key === 'ArrowUp' || k === 'w' || k === 'ц') rotate();
     draw();
   };
   setOnKey(onKey);
@@ -609,6 +789,5 @@ function startTetris(canvas, onStop, onGameOver, setOnKey, setRestart) {
     draw();
   }, 480);
 
-  setRestart(reset);
   return loop;
 }
