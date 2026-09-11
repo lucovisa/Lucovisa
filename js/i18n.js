@@ -159,6 +159,12 @@ const I18N = {
     "personalization.iconMedium": "Medium",
     "personalization.iconLarge": "Large",
 
+    "personalization.achievementPosition": "Notification position",
+    "personalization.achievementTopLeft": "Top left",
+    "personalization.achievementTopRight": "Top right",
+    "personalization.achievementBottomLeft": "Bottom left",
+    "personalization.achievementBottomRight": "Bottom right",
+
     "personalization.resetProfile": "Reset profile",
     "personalization.resetWallpaper": "Reset wallpaper",
     "personalization.resetDesktop": "Reset desktop icons",
@@ -505,6 +511,12 @@ const I18N = {
     "personalization.iconMedium": "Средние",
     "personalization.iconLarge": "Большие",
 
+    "personalization.achievementPosition": "Позиция уведомлений",
+    "personalization.achievementTopLeft": "Слева сверху",
+    "personalization.achievementTopRight": "Справа сверху",
+    "personalization.achievementBottomLeft": "Слева снизу",
+    "personalization.achievementBottomRight": "Справа снизу",
+
     "personalization.resetProfile": "Сбросить профиль",
     "personalization.resetWallpaper": "Сбросить обои",
     "personalization.resetDesktop": "Сбросить иконки рабочего стола",
@@ -736,5 +748,5 @@ function applyLang(lang) {
   try { localStorage.setItem('lang', lang); } catch (e) {}
 
   if (typeof updateGiscusLang === 'function') updateGiscusLang(lang);
-  if (typeof rerenderOpenWindows === 'function') rerenderOpenWindows();
+  if (typeof updateTaskbar === 'function') updateTaskbar();
 }

@@ -109,7 +109,7 @@ const APPS = {
   comments:        { title: 'Comments',        icon: 'comment',    width: 640, height: 520, render: renderComments },
   donate:          { title: 'Donate',          icon: 'heart',      width: 560, height: 480, render: renderDonate },
   trash:           { title: 'Trash',           icon: 'trash',      width: 520, height: 400, render: renderTrash },
-  personalization: { title: 'Personalization', icon: 'settings',   width: 640, height: 640, render: renderPersonalization },
+  personalization: { title: 'Personalization', icon: 'settings',   width: 640, height: 660, render: renderPersonalization },
   achievements:    { title: 'Achievements',    icon: 'trophy',     width: 620, height: 540, render: renderAchievements },
   calendar:        { title: 'Calendar',        icon: 'calendar',   width: 560, height: 620, render: renderCalendar },
   arcade:          { title: 'Arcade',          icon: 'joystick',   width: 720, height: 620, render: renderArcadeWrapper },
@@ -150,7 +150,7 @@ function renderTrash(body) {
 }
 
 function renderPersonalization(body) {
-  const tabs = ['profile', 'wallpaper', 'theme', 'language', 'desktop', 'reset', 'exportImport'];
+  const tabs = ['profile', 'wallpaper', 'theme', 'language', 'desktop', 'achievements', 'reset', 'exportImport'];
   let activeTab = 'profile';
 
   body.innerHTML =
@@ -184,6 +184,7 @@ function renderPersonalization(body) {
     else if (activeTab === 'theme') renderPersTheme(contentEl);
     else if (activeTab === 'language') renderPersLanguage(contentEl);
     else if (activeTab === 'desktop') renderPersDesktop(contentEl);
+    else if (activeTab === 'achievements') renderPersAchievements(contentEl);
     else if (activeTab === 'reset') renderPersReset(contentEl);
     else if (activeTab === 'exportImport') renderPersExportImport(contentEl);
   }
@@ -327,6 +328,39 @@ function renderPersDesktop(el) {
   });
 }
 
+function renderPersAchievements(el) {
+  const posKey = 'achievement_position';
+  let currentPos = 'top-left';
+  try { currentPos = localStorage.getItem(posKey) || 'top-left'; } catch (e) {}
+
+  const positions = [
+    { id: 'top-left',      label: 'personalization.achievementTopLeft' },
+    { id: 'top-right',     label: 'personalization.achievementTopRight' },
+    { id: 'bottom-left',   label: 'personalization.achievementBottomLeft' },
+    { id: 'bottom-right',  label: 'personalization.achievementBottomRight' }
+  ];
+
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.achievements') + '</h3>' +
+      '<div class="pers-label">' + t('personalization.achievementPosition') + '</div>' +
+      '<div class="pers-options pers-options--grid">' +
+        positions.map(p =>
+          '<button class="pers-option' + (currentPos === p.id ? ' is-active' : '') + '" data-pos="' + p.id + '"><span>' + t(p.label) + '</span></button>'
+        ).join('') +
+      '</div>' +
+    '</div>';
+
+  el.querySelectorAll('[data-pos]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pos = btn.dataset.pos;
+      try { localStorage.setItem(posKey, pos); } catch (e) {}
+      el.querySelectorAll('.pers-option').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+}
+
 function renderPersReset(el) {
   el.innerHTML =
     '<div class="pers-section">' +
@@ -380,7 +414,7 @@ function renderPersExportImport(el) {
   const importFile = el.querySelector('#pers-import-file');
 
   exportBtn.addEventListener('click', () => {
-    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievements_unlocked', 'icon_size', 'clicker_count'];
+    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size', 'clicker_count'];
     const data = { version: 1, date: new Date().toISOString() };
     keys.forEach(k => {
       try {
@@ -694,28 +728,36 @@ function projectCard(p, opts) {
 
   let actionsHtml = '';
   if (p.github) actionsHtml += '<a class="pill pill--ghost card-action" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>';
-  if (p.site && !p.isSelf) actionsHtml += '<a class="pill card-action card-action--site" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>';
+  if (p.site) actionsHtml += '<button type="button" class="pill card-action card-action--site" data-self="' + (p.isSelf ? '1' : '0') + '">' + t('portfolio.site') + '</button>';
 
   el.innerHTML =
     '<h3 class="card-title">' + p.title + '</h3>' +
     '<p>' + (p.desc[l] || p.desc.en) + '</p>' +
     (actionsHtml ? '<div class="pyramid__actions">' + actionsHtml + '</div>' : '');
 
+  const siteBtn = el.querySelector('.card-action--site');
+  if (siteBtn) {
+    siteBtn.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (p.isSelf) {
+        toast(t('joke.2'));
+      } else {
+        window.open(p.site, '_blank', 'noopener');
+      }
+    });
+  }
+
   el.addEventListener('click', e => {
     if (e.target.closest('.card-action')) return;
 
-    if (p.isSelf) {
-      const titleEl = e.target.closest('.card-title');
-      if (titleEl) {
-        window.open(p.site, '_blank', 'noopener');
-        return;
-      }
-      handleSelfClick(el);
+    if (e.target.closest('.card-title') && p.site && !p.isSelf) {
+      window.open(p.site, '_blank', 'noopener');
       return;
     }
 
-    if (e.target.closest('.card-title') && p.site) {
-      window.open(p.site, '_blank', 'noopener');
+    if (p.isSelf) {
+      handleSelfClick(el);
       return;
     }
 
@@ -845,7 +887,12 @@ function buildMapGraph(container) {
     { from: 'vis', to: 'cursor' },
     { from: 'vis', to: 'font' },
     { from: 'vis', to: 'cat' },
-    { from: 'vis', to: 'ip' }
+    { from: 'vis', to: 'ip' },
+    { from: 'conv', to: 'sql' },
+    { from: 'conv', to: 'cursor' },
+    { from: 'conv', to: 'font' },
+    { from: 'cat', to: 'cursor' },
+    { from: 'cat', to: 'font' }
   ];
 
   const svg = document.createElementNS(SVG_NS, 'svg');
@@ -1227,13 +1274,13 @@ function renderHacker(body) {
       [
         ' /\\_/\\  ',
         '( o.o ) ',
-        ' > ^ <  ',
+        ' > ω <  ',
         ' /   \\  '
       ],
       [
         ' /\\_/\\  ',
         '( o.o ) ',
-        ' > ^ <  ',
+        ' > ω <  ',
         '  / \\   '
       ]
     ];
@@ -1242,13 +1289,13 @@ function renderHacker(body) {
       [
         '  /\\_/\\ ',
         ' ( o.o )',
-        '  > ^ < ',
+        '  > ω < ',
         '  /   \\ '
       ],
       [
         '  /\\_/\\ ',
         ' ( o.o )',
-        '  > ^ < ',
+        '  > ω < ',
         '   / \\  '
       ]
     ];

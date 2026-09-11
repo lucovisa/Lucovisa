@@ -29,9 +29,7 @@
       if (progress >= 100) {
         progress = 100;
         clearInterval(tick);
-        const name = (function () {
-          try { return localStorage.getItem('username') || 'User'; } catch (e) { return 'User'; }
-        })();
+        const name = getUsername();
         if (welcome) welcome.textContent = t('boot.welcome') + name + '!';
         setTimeout(() => {
           boot.classList.add('boot-screen--out');
@@ -43,8 +41,6 @@
       if (fill) fill.style.width = progress + '%';
     }, 180);
   }
-
-  runBoot();
 
   document.querySelectorAll('.lang-toggle [data-lang]').forEach(btn => {
     btn.addEventListener('click', () => applyLang(btn.dataset.lang));
@@ -387,6 +383,7 @@
   window.setWallpaper = setWallpaper;
   window.setAvatar = setAvatar;
   window.setUsername = setUsername;
+  window.getUsername = getUsername;
   window.getIconSize = getIconSize;
   window.setIconSize = setIconSize;
 
@@ -531,7 +528,6 @@
     const allIcons = Array.from(desktopIcons.querySelectorAll('.app-icon'));
     const containerH = desktopIcons.clientHeight - padTop - 8;
     const maxRows = Math.max(1, Math.floor(containerH / cellH));
-    const maxCols = Math.max(1, Math.floor((window.innerWidth - padLeft - 16) / cellW));
 
     allIcons.forEach((el, index) => {
       const id = el.dataset.icon || el.dataset.shortcut || ('icon_' + index);
@@ -543,10 +539,6 @@
       } else {
         col = Math.floor(index / maxRows);
         row = index % maxRows;
-      }
-      if (col >= maxCols) {
-        col = col % maxCols;
-        row = (row + Math.floor(index / (maxRows * maxCols)) * 0);
       }
       el.style.position = 'absolute';
       el.style.left = (padLeft + col * cellW) + 'px';
@@ -974,9 +966,8 @@
       const dy = e.clientY - startY;
       const w = win.offsetWidth;
       const h = win.offsetHeight;
-      const b = getBounds();
-      const maxX = Math.max(b.minX, window.innerWidth - w - 8);
-      const maxY = Math.max(b.minY, window.innerHeight - h - 60);
+      const maxX = Math.max(0, window.innerWidth - w - 8);
+      const maxY = Math.max(0, window.innerHeight - h - 60);
       win.style.left = Math.max(0, Math.min(maxX, origX + dx)) + 'px';
       win.style.top  = Math.max(0, Math.min(maxY, origY + dy)) + 'px';
     });

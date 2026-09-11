@@ -592,14 +592,6 @@
             '<label>' + t('arcade.guessMaxNumber') +
               '<input type="number" id="g-max" min="2" max="100000" value="100" />' +
             '</label>';
-        } else if (mode === 'words') {
-          setup.innerHTML =
-            '<label>' + t('arcade.guessMinLen') +
-              '<input type="number" id="g-min" min="4" max="12" value="4" />' +
-            '</label>' +
-            '<label>' + t('arcade.guessMaxLen') +
-              '<input type="number" id="g-maxlen" min="4" max="12" value="8" />' +
-            '</label>';
         } else {
           setup.innerHTML =
             '<label>' + t('arcade.guessMinLen') +
@@ -620,6 +612,14 @@
       }
 
       function runGame() {
+        const maxEl = stage.querySelector('#g-max');
+        const minEl = stage.querySelector('#g-min');
+        const maxLenEl = stage.querySelector('#g-maxlen');
+
+        const maxNum = maxEl ? Math.max(2, parseInt(maxEl.value, 10) || 100) : 100;
+        const minLen = minEl ? Math.max(4, Math.min(12, parseInt(minEl.value, 10) || 4)) : 4;
+        const maxLen = maxLenEl ? Math.max(minLen, Math.min(12, parseInt(maxLenEl.value, 10) || 8)) : 8;
+
         stage.innerHTML = '';
 
         const info = document.createElement('div');
@@ -627,17 +627,15 @@
         stage.appendChild(info);
 
         if (mode === 'numbers') {
-          const maxEl = document.getElementById('g-max');
-          const max = Math.max(2, parseInt(maxEl.value, 10) || 100);
-          const secret = Math.floor(Math.random() * max) + 1;
+          const secret = Math.floor(Math.random() * maxNum) + 1;
           let attempts = 0;
           const history = [];
 
           function renderNum() {
             info.innerHTML =
-              '<div class="guess-text">' + t('arcade.guessNumbers') + ': 1 - ' + max + '</div>' +
+              '<div class="guess-text">' + t('arcade.guessNumbers') + ': 1 - ' + maxNum + '</div>' +
               '<div class="guess-row">' +
-                '<input type="number" id="g-input" min="1" max="' + max + '" />' +
+                '<input type="number" id="g-input" min="1" max="' + maxNum + '" />' +
                 '<button class="pill" id="g-go">OK</button>' +
               '</div>' +
               '<div class="guess-history">' +
@@ -653,9 +651,7 @@
               if (isNaN(v)) return;
               attempts++;
               if (v === secret) {
-                history.push({ v: v, r: t('arcade.guessCorrect') });
-                info.querySelector('.guess-history').innerHTML = history.map(h => h.v + ' — ' + h.r).join('<br>');
-                info.querySelector('.guess-row').innerHTML = '<div class="guess-text">' + t('arcade.guessCorrect') + ' (' + attempts + ')</div>';
+                info.innerHTML = '<div class="guess-text">' + t('arcade.guessCorrect') + ' (' + attempts + ')</div>';
                 return;
               }
               const rel = v < secret ? '↑' : '↓';
@@ -665,10 +661,6 @@
           }
           renderNum();
         } else {
-          const minEl = document.getElementById('g-min');
-          const maxEl = document.getElementById('g-maxlen');
-          const minLen = Math.max(4, Math.min(12, parseInt(minEl.value, 10) || 4));
-          const maxLen = Math.max(minLen, Math.min(12, parseInt(maxEl.value, 10) || 8));
           const words = getWords().filter(w => w.length >= minLen && w.length <= maxLen);
           if (words.length === 0) {
             info.innerHTML = '<div class="guess-text">No words</div>';
@@ -855,16 +847,12 @@
         }
         html += '</div>';
 
+        wrap.innerHTML = html;
+
         const footer = document.createElement('div');
         footer.className = 'solitaire__footer';
-        footer.style.display = 'flex';
-        footer.style.gap = '8px';
-        footer.style.marginTop = '12px';
-        footer.style.justifyContent = 'center';
         footer.innerHTML =
           '<button class="pill pill--ghost" id="sol-new">' + t('arcade.solitaireNewDeal') + '</button>';
-
-        wrap.innerHTML = html;
         wrap.appendChild(footer);
 
         wrap.querySelectorAll('[data-clickable]').forEach(el => {
@@ -888,7 +876,7 @@
 
         if (pileName === 'stock') {
           if (stock.length === 0) {
-            stock = waste.reverse().map(c => ({ ...c, faceUp: false }));
+            stock = waste.reverse().map(c => Object.assign({}, c, { faceUp: false }));
             waste = [];
           } else {
             const card = stock.pop();
@@ -1005,7 +993,8 @@
       let COLS = 9;
       let ROWS = 9;
       let MINES = 10;
-      let grid, revealed, flagged, gameOver, won, flagMode;
+      let grid = null;
+      let revealed, flagged, gameOver, won, flagMode;
 
       function reset() {
         grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
@@ -1088,9 +1077,15 @@
       }
 
       function render() {
+        if (!grid) {
+          renderSetup();
+          return;
+        }
+
         let html = '<div class="ms-header">';
         html += '<button class="ms-btn' + (flagMode ? ' is-active' : '') + '" id="ms-flag">🚩 ' + t('arcade.flagMode') + '</button>';
         html += '<button class="ms-btn" id="ms-restart">↻</button>';
+        html += '<button class="ms-btn" id="ms-new">+</button>';
         html += '<div class="ms-info">' + t('arcade.mines') + ': ' + MINES + '</div>';
         html += '</div>';
         html += '<div class="ms-grid" style="grid-template-columns: repeat(' + COLS + ', 1fr);">';
@@ -1126,6 +1121,9 @@
 
         const restartBtn = wrap.querySelector('#ms-restart');
         if (restartBtn) restartBtn.addEventListener('click', () => { reset(); render(); });
+
+        const newBtn = wrap.querySelector('#ms-new');
+        if (newBtn) newBtn.addEventListener('click', () => { grid = null; render(); });
 
         wrap.querySelectorAll('.ms-cell').forEach(cell => {
           cell.addEventListener('click', () => {
@@ -1164,7 +1162,6 @@
         });
       }
 
-      reset();
       render();
     }
 
@@ -1194,6 +1191,7 @@
                   '<div class="clicker__cat-eye clicker__cat-eye--l"></div>' +
                   '<div class="clicker__cat-eye clicker__cat-eye--r"></div>' +
                   '<div class="clicker__cat-nose"></div>' +
+                  '<div class="clicker__cat-mouth">ω</div>' +
                 '</div>' +
                 '<div class="clicker__cat-paw"></div>' +
               '</div>' +

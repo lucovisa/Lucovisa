@@ -1,6 +1,5 @@
 (function () {
   const STORAGE_KEY = 'achievements_unlocked';
-  const POSITION = 'top-left';
 
   const ACHIEVEMENTS = [
     { id: 'first_app',         titleKey: 'ach.first_app.title',         descKey: 'ach.first_app.desc',         commentKey: 'ach.first_app.comment',         icon: 'info' },
@@ -9,7 +8,7 @@
     { id: 'style',             titleKey: 'ach.style.title',             descKey: 'ach.style.desc',             commentKey: 'ach.style.comment',             icon: 'settings' },
     { id: 'snake1000',         titleKey: 'ach.snake1000.title',         descKey: 'ach.snake1000.desc',         commentKey: 'ach.snake1000.comment',         icon: 'joystick' },
     { id: 'tetris10000',       titleKey: 'ach.tetris10000.title',       descKey: 'ach.tetris10000.desc',       commentKey: 'ach.tetris10000.comment',       icon: 'joystick' },
-    { id: 'clicker1000000',    titleKey: 'ach.clicker1000000.title',    descKey: 'ach.clicker1000000.desc',    commentKey: 'ach.clicker1000000.comment',    icon: 'joystick' },
+    { id: 'clicker1000000',    titleKey: 'ach.clicker1000000.title',    descKey: 'ach.clicker1000000.desc',    commentKey: 'ach.clicker1000000.comment',    icon: 'heart' },
     { id: 'minesweeper',       titleKey: 'ach.minesweeper.title',       descKey: 'ach.minesweeper.desc',       commentKey: 'ach.minesweeper.comment',       icon: 'minesweeper' },
     { id: 'solitaire',         titleKey: 'ach.solitaire.title',         descKey: 'ach.solitaire.desc',         commentKey: 'ach.solitaire.comment',         icon: 'solitaire' }
   ];
@@ -41,12 +40,18 @@
     return ACHIEVEMENTS.filter(a => a.hidden && !u[a.id]).length;
   }
 
+  function getPosition() {
+    try { return localStorage.getItem('achievement_position') || 'top-left'; }
+    catch (e) { return 'top-left'; }
+  }
+
   function showAchievementToast(ach) {
     const layer = document.getElementById('achievement-layer');
     if (!layer) return;
 
+    const pos = getPosition();
     const el = document.createElement('div');
-    el.className = 'achievement-toast achievement-toast--' + POSITION;
+    el.className = 'achievement-toast achievement-toast--' + pos;
 
     const icon = document.createElement('div');
     icon.className = 'achievement-toast__icon';
