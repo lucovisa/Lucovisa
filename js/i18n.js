@@ -4,15 +4,19 @@ const I18N = {
     "page.description": "This is my visit card site for viewing my projects - frontend, game dev and web tools by Lucovisa.",
 
     "taskbar.start": "Start",
+    "taskbar.editName": "Click to change name",
+
     "app.portfolio": "Portfolio",
     "app.about": "About me",
     "app.hacker": "hacker.exe",
     "app.map": "Map",
     "app.contact": "Contact",
     "app.comments": "Comments",
+    "app.donate": "Donate",
 
     "portfolio.github": "GitHub",
     "portfolio.site": "Site",
+    "portfolio.seeMore": "See the Portfolio app for more details",
 
     "contact.x": "X (Twitter)",
     "contact.steam": "Steam",
@@ -22,6 +26,7 @@ const I18N = {
     "contact.copied": "Copied!",
 
     "comments.login": "Sign in with GitHub",
+    "comments.create": "Create GitHub account",
     "comments.hint": "GitHub account required. Be respectful - comments are moderated.",
 
     "about.title": "About me",
@@ -58,22 +63,33 @@ const I18N = {
     "hacker.unknown": "Unknown command: ",
     "hacker.snakeHint": "Arrows to move. Press Q to quit.",
     "hacker.tetrisHint": "Arrows to move, Up to rotate. Press Q to quit.",
-    "hacker.gameOver": "Game over. Press Q to quit."
+    "hacker.gameOver": "Game over. Press Q to quit.",
+
+    "donate.title": "Donate",
+    "donate.subtitle": "Your donation helps keep my projects free and anonymous",
+    "donate.copy": "Copy",
+    "donate.copied": "Copied!",
+
+    "name.ask": "Enter your name:"
   },
   ru: {
     "page.title": "Lucovisa - визитная карточка",
     "page.description": "Сайт-визитка Lucovisa: фронтенд, разработка игр и веб-инструменты.",
 
     "taskbar.start": "Пуск",
+    "taskbar.editName": "Нажми, чтобы изменить имя",
+
     "app.portfolio": "Портфолио",
     "app.about": "Обо мне",
     "app.hacker": "hacker.exe",
     "app.map": "Карта",
     "app.contact": "Связь",
     "app.comments": "Комментарии",
+    "app.donate": "Донат",
 
     "portfolio.github": "GitHub",
     "portfolio.site": "Сайт",
+    "portfolio.seeMore": "Подробности в приложении Портфолио",
 
     "contact.x": "X (Twitter)",
     "contact.steam": "Steam",
@@ -83,6 +99,7 @@ const I18N = {
     "contact.copied": "Скопировано!",
 
     "comments.login": "Войти через GitHub",
+    "comments.create": "Создать GitHub-аккаунт",
     "comments.hint": "Нужен GitHub-аккаунт. Будьте вежливы - комментарии модерируются.",
 
     "about.title": "Обо мне",
@@ -119,7 +136,14 @@ const I18N = {
     "hacker.unknown": "Неизвестная команда: ",
     "hacker.snakeHint": "Стрелки - движение. Q - выход.",
     "hacker.tetrisHint": "Стрелки - движение, Вверх - поворот. Q - выход.",
-    "hacker.gameOver": "Игра окончена. Q - выход."
+    "hacker.gameOver": "Игра окончена. Q - выход.",
+
+    "donate.title": "Донат",
+    "donate.subtitle": "Ваш донат помогает моим проектам оставаться бесплатными и анонимными",
+    "donate.copy": "Скопировать",
+    "donate.copied": "Скопировано!",
+
+    "name.ask": "Введите ваше имя:"
   }
 };
 
@@ -153,6 +177,9 @@ function applyLang(lang) {
   document.querySelectorAll('.lang-toggle [data-lang]').forEach(btn => {
     btn.classList.toggle('is-active', btn.dataset.lang === lang);
   });
+
+  const editBtn = document.getElementById('edit-username');
+  if (editBtn) editBtn.title = t('taskbar.editName');
 
   try { localStorage.setItem('lang', lang); } catch (e) {}
 

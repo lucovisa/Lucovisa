@@ -27,6 +27,8 @@ Developer focused on automation, web tools and game development.
 
 All current projects are listed at https://lucovisa.github.io/Lucovisa/
 
+See the Portfolio app for more details.
+
 ---
 
 ## Contacts
@@ -46,4 +48,4 @@ BTC (Bitcoin mainnet)
 bc1q60tvcsw4guyhxa5e3n47eqmj0s3lpxzkxldpvp
 
 TON/USDT (The Open Network)
-UQDsZ_8MkBtjjp-pVa5Fefdg1jtJApOZ7oeFF3WBlLnwQcHF
+UQDsZ_8MkBtjjp-pVa5Fefdg1jtJApOZ7eeFF3WBlLnwQcHF

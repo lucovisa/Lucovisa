@@ -10,6 +10,8 @@
   applyTheme(savedTheme);
   applyLang(savedLang);
 
+  renderIcons(document);
+
   document.querySelectorAll('.lang-toggle [data-lang]').forEach(btn => {
     btn.addEventListener('click', () => applyLang(btn.dataset.lang));
   });
@@ -42,6 +44,60 @@
       if (!startMenu.contains(e.target) && e.target !== startBtn) {
         startMenu.classList.remove('is-open');
       }
+    });
+  }
+
+  const DEFAULT_NAME_KEY = 'username';
+  const usernameEl = document.getElementById('start-username');
+  const editBtn = document.getElementById('edit-username');
+
+  function detectDefaultName() {
+    const ua = navigator.userAgent;
+    let os = 'User';
+    let browser = '';
+
+    if (/Windows/i.test(ua)) os = 'Windows';
+    else if (/Mac OS X/i.test(ua)) os = 'Mac';
+    else if (/Android/i.test(ua)) os = 'Android';
+    else if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+    else if (/Linux/i.test(ua)) os = 'Linux';
+
+    if (/Edg\//i.test(ua)) browser = 'Edge';
+    else if (/OPR\//i.test(ua)) browser = 'Opera';
+    else if (/Chrome\//i.test(ua)) browser = 'Chrome';
+    else if (/Firefox\//i.test(ua)) browser = 'Firefox';
+    else if (/Safari\//i.test(ua)) browser = 'Safari';
+
+    return browser ? browser + ' User' : os + ' User';
+  }
+
+  function getUsername() {
+    try {
+      const saved = localStorage.getItem(DEFAULT_NAME_KEY);
+      if (saved) return saved;
+    } catch (e) {}
+    return detectDefaultName();
+  }
+
+  function setUsername(name) {
+    if (!name || !name.trim()) return;
+    const clean = name.trim().slice(0, 32);
+    try { localStorage.setItem(DEFAULT_NAME_KEY, clean); } catch (e) {}
+    if (usernameEl) usernameEl.textContent = clean;
+  }
+
+  function updateUsernameUI() {
+    if (usernameEl) usernameEl.textContent = getUsername();
+  }
+
+  updateUsernameUI();
+
+  if (editBtn) {
+    editBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const current = getUsername();
+      const name = prompt(t('name.ask'), current);
+      if (name !== null) setUsername(name);
     });
   }
 
@@ -78,22 +134,24 @@
     node.dataset.app = appId;
 
     const iconEl = node.querySelector('.window__icon');
-    iconEl.src = app.icon;
+    if (iconEl && ICONS[app.icon]) iconEl.innerHTML = ICONS[app.icon];
 
     const titleEl = node.querySelector('.window__title');
     titleEl.textContent = app.title;
 
     const offset = Object.keys(openWindows).length * 24;
+    const wWidth = Math.min(app.width, window.innerWidth - 40);
+    const wHeight = Math.min(app.height, window.innerHeight - 100);
     node.style.top = (40 + offset) + 'px';
     node.style.left = (80 + offset) + 'px';
-    node.style.width = app.width + 'px';
-    node.style.height = app.height + 'px';
+    node.style.width = wWidth + 'px';
+    node.style.height = wHeight + 'px';
 
     const body = node.querySelector('.window__body');
 
     document.getElementById('windows-layer').appendChild(node);
 
-    openWindows[appId] = { el: node, body, render: app.render };
+    openWindows[appId] = { el: node, body };
 
     app.render(body);
 
@@ -157,8 +215,8 @@
       if (!dragging) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      win.style.left = Math.max(0, origX + dx) + 'px';
-      win.style.top = Math.max(0, origY + dy) + 'px';
+      win.style.left = Math.max(0, Math.min(window.innerWidth - 100, origX + dx)) + 'px';
+      win.style.top  = Math.max(0, Math.min(window.innerHeight - 80, origY + dy)) + 'px';
     });
 
     handle.addEventListener('pointerup', e => {
@@ -180,7 +238,8 @@
       const btn = document.createElement('button');
       btn.className = 'taskbar__app';
       btn.dataset.app = id;
-      btn.innerHTML = '<img src="' + app.icon + '" alt="" /><span>' + app.title + '</span>';
+      btn.innerHTML = '<span class="window__icon window__icon--sm"></span><span>' + app.title + '</span>';
+      if (ICONS[app.icon]) btn.querySelector('.window__icon').innerHTML = ICONS[app.icon];
 
       btn.addEventListener('click', () => {
         if (w.el.classList.contains('is-minimized')) {
@@ -204,10 +263,11 @@
   window.rerenderOpenWindows = function () {
     Object.keys(openWindows).forEach(id => {
       const w = openWindows[id];
-      const titleEl = w.el.querySelector('.window__title');
       const app = APPS[id];
-      if (titleEl && app) titleEl.textContent = app.title;
-      if (app && app.render) app.render(w.body);
+      if (!app) return;
+      const titleEl = w.el.querySelector('.window__title');
+      if (titleEl) titleEl.textContent = app.title;
+      app.render(w.body);
     });
     updateTaskbar();
   };

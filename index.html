@@ -11,7 +11,7 @@
 <meta name="author" content="Lucovisa" />
 <meta name="robots" content="index, follow" />
 
-<link rel="canonical" href="https://lucovisa.github.io/" />
+<link rel="canonical" href="https://lucovisa.github.io/Lucovisa/" />
 
 <meta name="theme-color" content="#171A21" />
 <meta name="color-scheme" content="dark light" />
@@ -20,15 +20,15 @@
 <meta property="og:site_name" content="Lucovisa Visit card" />
 <meta property="og:title" content="Lucovisa Visit card" />
 <meta property="og:description" content="This is my visit card site for viewing my projects - frontend, game dev and web tools by Lucovisa." />
-<meta property="og:image" content="https://lucovisa.github.io/preview.png" />
+<meta property="og:image" content="https://lucovisa.github.io/Lucovisa/preview.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:url" content="https://lucovisa.github.io/" />
+<meta property="og:url" content="https://lucovisa.github.io/Lucovisa/" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Lucovisa Visit card" />
 <meta name="twitter:description" content="This is my visit card site for viewing my projects." />
-<meta name="twitter:image" content="https://lucovisa.github.io/preview.png" />
+<meta name="twitter:image" content="https://lucovisa.github.io/Lucovisa/preview.png" />
 
 <link rel="icon" type="image/png" href="icon.png" />
 <link rel="apple-touch-icon" href="icon.png" />
@@ -42,33 +42,38 @@
   <div class="desktop__icons" id="desktop-icons">
 
     <button class="app-icon" data-app="portfolio">
-      <img src="icon.png" alt="" />
+      <span class="app-icon__svg" data-svg="folder"></span>
       <span data-i18n="app.portfolio">Portfolio</span>
     </button>
 
     <button class="app-icon" data-app="about">
-      <img src="images.png" alt="" />
+      <span class="app-icon__svg" data-svg="info"></span>
       <span data-i18n="app.about">About me</span>
     </button>
 
     <button class="app-icon" data-app="hacker">
-      <img src="https://lucovisa.github.io/SQL-in-image/favicon.png" alt="" />
+      <span class="app-icon__svg" data-svg="terminal"></span>
       <span>hacker.exe</span>
     </button>
 
     <button class="app-icon" data-app="map">
-      <img src="sitemap.png" alt="" />
+      <span class="app-icon__svg" data-svg="web"></span>
       <span data-i18n="app.map">Map</span>
     </button>
 
     <button class="app-icon" data-app="contact">
-      <img src="contacs.png" alt="" />
+      <span class="app-icon__svg" data-svg="mail"></span>
       <span data-i18n="app.contact">Contact</span>
     </button>
 
     <button class="app-icon" data-app="comments">
-      <img src="comment.png" alt="" />
+      <span class="app-icon__svg" data-svg="comment"></span>
       <span data-i18n="app.comments">Comments</span>
+    </button>
+
+    <button class="app-icon" data-app="donate">
+      <span class="app-icon__svg" data-svg="heart"></span>
+      <span data-i18n="app.donate">Donate</span>
     </button>
 
   </div>
@@ -92,38 +97,46 @@
         <button class="toggle__btn" data-theme="light" aria-label="Light">☀</button>
         <button class="toggle__btn" data-theme="dark" aria-label="Dark">🌙</button>
       </div>
-      <button class="taskbar__clock" id="clock" title="Click to reload">--:--:--</button>
+      <button class="taskbar__clock" id="clock" title="Reload">--:--:--</button>
     </div>
   </div>
 
   <div class="start-menu" id="start-menu">
     <div class="start-menu__header">
       <img src="icon.png" alt="" />
-      <span>Lucovisa</span>
+      <div class="start-menu__user">
+        <span class="start-menu__label" data-i18n="taskbar.start">Start</span>
+        <span class="start-menu__name" id="start-username">User</span>
+      </div>
+      <button class="start-menu__edit" id="edit-username" title="Change name">✏️</button>
     </div>
     <button class="start-menu__item" data-app="portfolio">
-      <img src="icon.png" alt="" />
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="folder"></span>
       <span data-i18n="app.portfolio">Portfolio</span>
     </button>
     <button class="start-menu__item" data-app="about">
-      <img src="images.png" alt="" />
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="info"></span>
       <span data-i18n="app.about">About me</span>
     </button>
     <button class="start-menu__item" data-app="hacker">
-      <img src="https://lucovisa.github.io/SQL-in-image/favicon.png" alt="" />
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="terminal"></span>
       <span>hacker.exe</span>
     </button>
     <button class="start-menu__item" data-app="map">
-      <img src="sitemap.png" alt="" />
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="web"></span>
       <span data-i18n="app.map">Map</span>
     </button>
     <button class="start-menu__item" data-app="contact">
-      <img src="contacs.png" alt="" />
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="mail"></span>
       <span data-i18n="app.contact">Contact</span>
     </button>
     <button class="start-menu__item" data-app="comments">
-      <img src="comment.png" alt="" />
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="comment"></span>
       <span data-i18n="app.comments">Comments</span>
+    </button>
+    <button class="start-menu__item" data-app="donate">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="heart"></span>
+      <span data-i18n="app.donate">Donate</span>
     </button>
   </div>
 
@@ -132,7 +145,7 @@
 <template id="window-template">
   <div class="window" data-app="">
     <div class="window__titlebar" data-drag>
-      <img class="window__icon" src="" alt="" />
+      <span class="window__icon"></span>
       <span class="window__title"></span>
       <div class="window__buttons">
         <button class="btn btn--min" data-action="min" aria-label="Minimize">_</button>
@@ -146,6 +159,7 @@
 
 <script src="js/i18n.js"></script>
 <script src="js/theme.js"></script>
+<script src="js/icons.js"></script>
 <script src="js/apps.js"></script>
 <script src="js/giscus.js"></script>
 <script src="js/main.js"></script>

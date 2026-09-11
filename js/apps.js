@@ -36,75 +36,121 @@ const PROJECTS = [
   }
 ];
 
+const CAT_DIGGER = {
+  title: 'Cat Digger',
+  desc: { en: 'Game in pre-alpha development.', ru: 'Игра в стадии преальфа-разработки.' }
+};
+
+const LUC_VISA = {
+  title: 'Lucovisa',
+  desc: { en: 'About the developer.', ru: 'О разработчике.' },
+  url: 'https://lucovisa.github.io/Lucovisa/'
+};
+
 const CONTACTS = [
-  { id: 'x',     label: 'contact.x',     value: '@Lukovica467771',                 url: 'https://x.com/Lukovica467771/' },
-  { id: 'steam', label: 'contact.steam', value: 'steamcommunity.com/id/Lucovisa',  url: 'https://steamcommunity.com/id/Lucovisa/' },
-  { id: 'email', label: 'contact.email', value: 'lucovisa24@gmail.com',            url: 'mailto:lucovisa24@gmail.com' }
+  { id: 'x',     label: 'contact.x',     value: '@Lukovica467771',                url: 'https://x.com/Lukovica467771/' },
+  { id: 'steam', label: 'contact.steam', value: 'steamcommunity.com/id/Lucovisa', url: 'https://steamcommunity.com/id/Lucovisa/' },
+  { id: 'email', label: 'contact.email', value: 'lucovisa24@gmail.com',           url: 'mailto:lucovisa24@gmail.com' }
+];
+
+const DONATE_WALLETS = [
+  { label: 'ETH/USDT (ERC-20)',             value: '0xFa78966938743C9168abFC2acD6D7751d7dA35Cf' },
+  { label: 'BTC (Bitcoin mainnet)',         value: 'bc1q60tvcsw4guyhxa5e3n47eqmj0s3lpxzkxldpvp' },
+  { label: 'TON/USDT (The Open Network)',   value: 'UQDsZ_8MkBtjjp-pVa5Fefdg1jtJApOZ7oeFF3WBlLnwQcHF' }
 ];
 
 const APPS = {
-  portfolio: {
-    title: 'Portfolio',
-    icon: 'icon.png',
-    width: 640, height: 480,
-    render: renderPortfolio
-  },
-  about: {
-    title: 'About me',
-    icon: 'images.png',
-    width: 560, height: 520,
-    render: renderAbout
-  },
-  hacker: {
-    title: 'hacker.exe',
-    icon: 'https://lucovisa.github.io/SQL-in-image/favicon.png',
-    width: 640, height: 460,
-    render: renderHacker
-  },
-  map: {
-    title: 'Map',
-    icon: 'sitemap.png',
-    width: 640, height: 460,
-    render: renderMap
-  },
-  contact: {
-    title: 'Contact',
-    icon: 'contacs.png',
-    width: 560, height: 420,
-    render: renderContact
-  },
-  comments: {
-    title: 'Comments',
-    icon: 'comment.png',
-    width: 700, height: 560,
-    render: renderComments
-  }
+  portfolio: { title: 'Portfolio', icon: 'folder',    width: 660, height: 560, render: renderPortfolio },
+  about:     { title: 'About me',  icon: 'info',      width: 560, height: 520, render: renderAbout },
+  hacker:    { title: 'hacker.exe',icon: 'terminal',  width: 660, height: 480, render: renderHacker },
+  map:       { title: 'Map',       icon: 'web',       width: 660, height: 520, render: renderMap },
+  contact:   { title: 'Contact',   icon: 'mail',      width: 560, height: 420, render: renderContact },
+  comments:  { title: 'Comments',  icon: 'comment',   width: 700, height: 560, render: renderComments },
+  donate:    { title: 'Donate',    icon: 'heart',     width: 560, height: 460, render: renderDonate }
 };
 
 function lang() { return document.documentElement.lang || 'en'; }
 
 function renderPortfolio(body) {
   const l = lang();
-  const list = document.createElement('div');
-  list.className = 'app-portfolio';
+  body.innerHTML = '';
 
-  PROJECTS.forEach(p => {
-    const item = document.createElement('div');
-    item.className = 'app-portfolio__item';
-    item.innerHTML =
-      '<div class="app-portfolio__info">' +
-        '<h3>' + p.title + '</h3>' +
-        '<p>' + (p.desc[l] || p.desc.en) + '</p>' +
-      '</div>' +
-      '<div class="app-portfolio__actions">' +
+  const wrap = document.createElement('div');
+  wrap.className = 'pyramid';
+
+  const t1 = document.createElement('div');
+  t1.className = 'pyramid__tier pyramid__tier--1';
+  const cardConv = document.createElement('a');
+  cardConv.className = 'pyramid__card';
+  cardConv.href = PROJECTS[0].site;
+  cardConv.target = '_blank';
+  cardConv.rel = 'noopener';
+  cardConv.innerHTML =
+    '<h3>' + PROJECTS[0].title + '</h3>' +
+    '<p>' + PROJECTS[0].desc[l] + '</p>' +
+    '<div class="pyramid__actions">' +
+      '<a class="pill pill--ghost" href="' + PROJECTS[0].github + '" target="_blank" rel="noopener">GitHub</a>' +
+      '<a class="pill" href="' + PROJECTS[0].site + '" target="_blank" rel="noopener">Site</a>' +
+    '</div>';
+  cardConv.addEventListener('click', e => e.stopPropagation());
+  t1.appendChild(cardConv);
+
+  const t2 = document.createElement('div');
+  t2.className = 'pyramid__tier pyramid__tier--2';
+  const catCard = document.createElement('div');
+  catCard.className = 'pyramid__card pyramid__card--plain';
+  catCard.innerHTML =
+    '<h3>' + CAT_DIGGER.title + '</h3>' +
+    '<p>' + CAT_DIGGER.desc[l] + '</p>';
+  t2.appendChild(catCard);
+
+  const t3 = document.createElement('div');
+  t3.className = 'pyramid__tier pyramid__tier--3';
+  [PROJECTS[1], PROJECTS[2], PROJECTS[3]].forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'pyramid__card';
+    card.innerHTML =
+      '<h4>' + p.title + '</h4>' +
+      '<p>' + p.desc[l] + '</p>' +
+      '<div class="pyramid__actions">' +
         '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">GitHub</a>' +
-        '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' +
+        '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">Site</a>' +
       '</div>';
-    list.appendChild(item);
+    t3.appendChild(card);
   });
 
-  body.innerHTML = '';
-  body.appendChild(list);
+  const t4 = document.createElement('div');
+  t4.className = 'pyramid__tier pyramid__tier--4';
+  const visCard = document.createElement('a');
+  visCard.className = 'pyramid__card pyramid__card--accent';
+  visCard.href = LUC_VISA.url;
+  visCard.target = '_blank';
+  visCard.rel = 'noopener';
+  visCard.innerHTML =
+    '<h3>' + LUC_VISA.title + '</h3>' +
+    '<p>' + LUC_VISA.desc[l] + '</p>';
+  t4.appendChild(visCard);
+
+  const t5 = document.createElement('div');
+  t5.className = 'pyramid__tier pyramid__tier--5';
+  const ipCard = document.createElement('div');
+  ipCard.className = 'pyramid__card';
+  ipCard.innerHTML =
+    '<h4>' + PROJECTS[4].title + '</h4>' +
+    '<p>' + PROJECTS[4].desc[l] + '</p>' +
+    '<div class="pyramid__actions">' +
+      '<a class="pill pill--ghost" href="' + PROJECTS[4].github + '" target="_blank" rel="noopener">GitHub</a>' +
+      '<a class="pill" href="' + PROJECTS[4].site + '" target="_blank" rel="noopener">Site</a>' +
+    '</div>';
+  t5.appendChild(ipCard);
+
+  wrap.appendChild(t1);
+  wrap.appendChild(t2);
+  wrap.appendChild(t3);
+  wrap.appendChild(t4);
+  wrap.appendChild(t5);
+
+  body.appendChild(wrap);
 }
 
 function renderAbout(body) {
@@ -134,29 +180,51 @@ function renderAbout(body) {
 
 function renderMap(body) {
   const l = lang();
-  const wrap = document.createElement('div');
-  wrap.className = 'app-map';
+  body.innerHTML =
+    '<div class="map-web">' +
+      '<h2 class="map-web__title">' + t('map.title') + '</h2>' +
 
-  const title = document.createElement('h2');
-  title.textContent = t('map.title');
-  title.style.color = 'var(--accent-2)';
-  title.style.fontSize = '16px';
-  wrap.appendChild(title);
+      '<div class="map-web__row map-web__row--top">' +
+        '<div class="map-node map-node--isolated">IP-check</div>' +
+      '</div>' +
 
-  PROJECTS.forEach((p, i) => {
-    const node = document.createElement('div');
-    node.className = 'map-node';
-    node.innerHTML =
-      '<span class="map-node__arrow">' + (i === 0 ? '▶' : '└▶') + '</span>' +
-      '<div style="flex:1">' +
-        '<a href="' + p.site + '" target="_blank" rel="noopener">' + p.title + '</a>' +
-        '<p style="font-size:12px;color:var(--text-dim);margin-top:2px">' + (p.desc[l] || p.desc.en) + '</p>' +
-      '</div>';
-    wrap.appendChild(node);
-  });
+      '<div class="map-line map-line--v"></div>' +
 
-  body.innerHTML = '';
-  body.appendChild(wrap);
+      '<div class="map-web__row">' +
+        '<div class="map-node map-node--hub">LucConverter</div>' +
+      '</div>' +
+
+      '<div class="map-branches">' +
+        '<div class="map-branch">' +
+          '<div class="map-line map-line--v"></div>' +
+          '<div class="map-node">SQL-in-image</div>' +
+        '</div>' +
+        '<div class="map-branch">' +
+          '<div class="map-line map-line--v"></div>' +
+          '<div class="map-node">LucCursor</div>' +
+          '<div class="map-line map-line--v"></div>' +
+          '<div class="map-node map-node--small">Cat Digger</div>' +
+        '</div>' +
+        '<div class="map-branch">' +
+          '<div class="map-line map-line--v"></div>' +
+          '<div class="map-node">LucFont</div>' +
+          '<div class="map-line map-line--v"></div>' +
+          '<div class="map-node map-node--small">Cat Digger</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="map-line map-line--v"></div>' +
+
+      '<div class="map-web__row">' +
+        '<div class="map-node map-node--center">Lucovisa</div>' +
+      '</div>' +
+
+      '<p class="map-web__hint">' +
+        (l === 'ru'
+          ? 'Все проекты связаны с Lucovisa. IP-check - отдельный.'
+          : 'All projects connect to Lucovisa. IP-check is standalone.') +
+      '</p>' +
+    '</div>';
 }
 
 function renderContact(body) {
@@ -193,10 +261,52 @@ function renderContact(body) {
   body.appendChild(wrap);
 }
 
+function renderDonate(body) {
+  const wrap = document.createElement('div');
+  wrap.className = 'app-donate';
+
+  const hero = document.createElement('div');
+  hero.className = 'app-donate__hero';
+  hero.innerHTML = '<div class="app-donate__heart"></div><p>' + t('donate.subtitle') + '</p>';
+  wrap.appendChild(hero);
+
+  DONATE_WALLETS.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'contact-row';
+    row.innerHTML =
+      '<div class="contact-row__info">' +
+        '<div class="contact-row__label">' + w.label + '</div>' +
+        '<div class="contact-row__value">' + w.value + '</div>' +
+      '</div>' +
+      '<div class="contact-row__actions">' +
+        '<button class="pill" data-copy="' + w.value + '">' + t('donate.copy') + '</button>' +
+      '</div>';
+    wrap.appendChild(row);
+  });
+
+  wrap.addEventListener('click', e => {
+    const btn = e.target.closest('[data-copy]');
+    if (!btn) return;
+    const text = btn.dataset.copy;
+    navigator.clipboard.writeText(text).then(() => {
+      const old = btn.textContent;
+      btn.textContent = t('donate.copied');
+      setTimeout(() => { btn.textContent = old; }, 1200);
+    });
+  });
+
+  body.innerHTML = '';
+  body.appendChild(wrap);
+
+  const heart = wrap.querySelector('.app-donate__heart');
+  if (heart) heart.innerHTML = ICONS.heart;
+}
+
 function renderComments(body) {
   body.innerHTML =
     '<div class="comments__auth" id="comments-auth">' +
       '<button class="pill" id="comments-login">' + t('comments.login') + '</button>' +
+      '<a class="pill pill--ghost" href="https://github.com/signup" target="_blank" rel="noopener">' + t('comments.create') + '</a>' +
       '<p class="comments__hint">' + t('comments.hint') + '</p>' +
     '</div>' +
     '<div class="giscus" id="giscus-container"></div>';
@@ -268,11 +378,8 @@ function renderHacker(body) {
     let onKey = () => {};
     let loop;
 
-    if (type === 'snake') {
-      loop = startSnake(canvas, () => onKey, key => { onKey = key; }, stop);
-    } else {
-      loop = startTetris(canvas, () => onKey, key => { onKey = key; }, stop);
-    }
+    if (type === 'snake') loop = startSnake(canvas, stop, k => { onKey = k; });
+    else loop = startTetris(canvas, stop, k => { onKey = k; });
   };
 
   const handle = (cmd) => {
@@ -291,6 +398,7 @@ function renderHacker(body) {
     if (c === 'projects') {
       printLine(t('hacker.projectsTitle'));
       PROJECTS.forEach(p => printLine('  - ' + p.title + '  ' + p.site));
+      printLine('  - Cat Digger (pre-alpha)');
       printInput(); return;
     }
 
@@ -302,9 +410,7 @@ function renderHacker(body) {
       printInput(); return;
     }
 
-    if (c === 'snake' || c === 'tetris') {
-      runGame(c); return;
-    }
+    if (c === 'snake' || c === 'tetris') { runGame(c); return; }
 
     printLine(t('hacker.unknown') + cmd);
     printInput();
@@ -316,7 +422,7 @@ function renderHacker(body) {
   printInput();
 }
 
-function startSnake(canvas, getOnKey, setOnKey, onStop) {
+function startSnake(canvas, onStop, setOnKey) {
   const ctx = canvas.getContext('2d');
   const cell = 16;
   const cols = canvas.width / cell;
@@ -327,9 +433,7 @@ function startSnake(canvas, getOnKey, setOnKey, onStop) {
   let food = {x: 10, y: 10};
   let alive = true;
 
-  const place = () => {
-    food = { x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows) };
-  };
+  const place = () => { food = { x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows) }; };
   place();
 
   const onKey = e => {
@@ -365,7 +469,7 @@ function startSnake(canvas, getOnKey, setOnKey, onStop) {
   }, 110);
 }
 
-function startTetris(canvas, getOnKey, setOnKey, onStop) {
+function startTetris(canvas, onStop, setOnKey) {
   const ctx = canvas.getContext('2d');
   const cell = 20;
   const cols = 10;
@@ -384,16 +488,8 @@ function startTetris(canvas, getOnKey, setOnKey, onStop) {
   ];
 
   let grid = Array.from({length: rows}, () => Array(cols).fill(0));
-  let piece, px, py, shape;
+  let piece, px, py;
   let alive = true;
-
-  const spawn = () => {
-    shape = SHAPES[Math.floor(Math.random() * SHAPES.length)].map(r => r.slice());
-    piece = shape.map(r => r.slice());
-    px = Math.floor((cols - piece[0].length) / 2);
-    py = 0;
-    if (collide(piece, px, py)) { alive = false; onStop(); }
-  };
 
   const collide = (p, x, y) => {
     for (let r = 0; r < p.length; r++)
@@ -404,6 +500,13 @@ function startTetris(canvas, getOnKey, setOnKey, onStop) {
         if (ny >= 0 && grid[ny][nx]) return true;
       }
     return false;
+  };
+
+  const spawn = () => {
+    piece = SHAPES[Math.floor(Math.random() * SHAPES.length)].map(r => r.slice());
+    px = Math.floor((cols - piece[0].length) / 2);
+    py = 0;
+    if (collide(piece, px, py)) { alive = false; onStop(); }
   };
 
   const merge = () => {
@@ -418,27 +521,20 @@ function startTetris(canvas, getOnKey, setOnKey, onStop) {
   };
 
   const drop = () => {
-    if (!collide(piece, px, py + 1)) { py++; return true; }
+    if (!collide(piece, px, py + 1)) { py++; return; }
     merge();
-    let lines = 0;
-    grid = grid.filter(row => {
-      if (row.every(v => v)) { lines++; return false; }
-      return true;
-    });
+    grid = grid.filter(row => !row.every(v => v));
     while (grid.length < rows) grid.unshift(Array(cols).fill(0));
     spawn();
-    return false;
   };
 
   const draw = () => {
     ctx.fillStyle = '#0a0f15';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = '#2F80ED';
     grid.forEach((row, r) => row.forEach((v, c) => {
       if (v) ctx.fillRect(c * cell, r * cell, cell - 1, cell - 1);
     }));
-
     ctx.fillStyle = '#66C0F4';
     piece.forEach((row, r) => row.forEach((v, c) => {
       if (v) ctx.fillRect((px + c) * cell, (py + r) * cell, cell - 1, cell - 1);

@@ -15,9 +15,7 @@ function loadGiscusIn(scope) {
   const container = scope.querySelector('#giscus-container');
   if (!container || container.dataset.loaded) return;
 
-  const theme = document.documentElement.getAttribute('data-theme') === 'light'
-    ? 'light'
-    : 'dark_dimmed';
+  const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark_dimmed';
 
   const script = document.createElement('script');
   script.src = 'https://giscus.app/client.js';
