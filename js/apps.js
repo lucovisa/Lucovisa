@@ -717,10 +717,23 @@ function renderWork(body) {
             '<div class="work-app__experience-value">' + t('about.experienceValue') + '</div>' +
           '</div>' +
         '</div>' +
+        '<div class="work-app__actions">' +
+          '<button class="pill" id="work-contact">' +
+            '<span class="app-icon__svg app-icon__svg--sm" data-svg="mail2"></span>' +
+            '<span>' + t('about.contact') + '</span>' +
+          '</button>' +
+        '</div>' +
         renderTabs() +
       '</div>';
 
     renderIcons(body);
+
+    const contactBtn = body.querySelector('#work-contact');
+    if (contactBtn) {
+      contactBtn.addEventListener('click', () => {
+        if (typeof openApp === 'function') openApp('contact');
+      });
+    }
 
     body.querySelectorAll('.work-tab').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -781,12 +794,11 @@ let selfClickCount = 0;
 let selfSecretDone = false;
 
 function handleSelfClick() {
-  const total = 23;
-  const joker = total + 1;
+  const total = 24;
 
   selfClickCount++;
 
-  if (!selfSecretDone && selfClickCount === joker) {
+  if (!selfSecretDone && selfClickCount === total) {
     selfSecretDone = true;
     toast(t('joke.24'));
     if (typeof unlockAchievement === 'function') unlockAchievement('secret');
@@ -794,12 +806,7 @@ function handleSelfClick() {
     return;
   }
 
-  let idx;
-  if (selfSecretDone) {
-    idx = (selfClickCount - 1) % JOKES.length;
-  } else {
-    idx = (selfClickCount - 1) % JOKES.length;
-  }
+  const idx = (selfClickCount - 1) % JOKES.length;
   toast(t(JOKES[idx]));
 }
 

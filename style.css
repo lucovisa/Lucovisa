@@ -948,6 +948,12 @@ body {
   text-shadow: 0 0 12px var(--gold-glow);
 }
 
+.work-app__actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
 .work-tabs {
   display: flex;
   gap: 4px;

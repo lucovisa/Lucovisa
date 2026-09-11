@@ -15,7 +15,8 @@
     { id: '2048_score',        titleKey: 'ach.2048_score.title',        descKey: 'ach.2048_score.desc',        commentKey: 'ach.2048_score.comment',        icon: 'grid' },
     { id: '2048_record',       titleKey: 'ach.2048_record.title',       descKey: 'ach.2048_record.desc',       commentKey: 'ach.2048_record.comment',       icon: 'grid' },
     { id: 'guess_win',         titleKey: 'ach.guess_win.title',         descKey: 'ach.guess_win.desc',         commentKey: 'ach.guess_win.comment',         icon: 'info' },
-    { id: 'sudoku',            titleKey: 'ach.sudoku.title',            descKey: 'ach.sudoku.desc',            commentKey: 'ach.sudoku.comment',            icon: 'grid' }
+    { id: 'sudoku',            titleKey: 'ach.sudoku.title',            descKey: 'ach.sudoku.desc',            commentKey: 'ach.sudoku.comment',            icon: 'grid' },
+    { id: 'ram_exploded',      titleKey: 'ach.ram_exploded.title',      descKey: 'ach.ram_exploded.desc',      commentKey: 'ach.ram_exploded.comment',      icon: 'terminal', hidden: true }
   ];
 
   function getUnlocked() {
