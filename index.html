@@ -81,9 +81,8 @@
   <div class="windows-layer" id="windows-layer"></div>
 
   <div class="taskbar">
-    <button class="taskbar__start" id="start-btn">
-      <img src="icon.png" alt="" />
-      <span data-i18n="taskbar.start">Start</span>
+    <button class="taskbar__start" id="start-btn" aria-label="Start">
+      <img src="icon.png" alt="" id="start-avatar" />
     </button>
 
     <div class="taskbar__apps" id="taskbar-apps"></div>
@@ -103,13 +102,16 @@
 
   <div class="start-menu" id="start-menu">
     <div class="start-menu__header">
-      <img src="icon.png" alt="" />
+      <button class="start-menu__avatar" id="start-menu-avatar" title="Change avatar">
+        <img src="icon.png" alt="" id="start-menu-avatar-img" />
+      </button>
       <div class="start-menu__user">
         <span class="start-menu__label" data-i18n="taskbar.start">Start</span>
         <span class="start-menu__name" id="start-username">User</span>
       </div>
       <button class="start-menu__edit" id="edit-username" title="Change name">✏️</button>
     </div>
+    <input type="file" id="avatar-file" accept="image/*" hidden />
     <button class="start-menu__item" data-app="portfolio">
       <span class="app-icon__svg app-icon__svg--sm" data-svg="folder"></span>
       <span data-i18n="app.portfolio">Portfolio</span>
@@ -139,6 +141,25 @@
       <span data-i18n="app.donate">Donate</span>
     </button>
   </div>
+
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal__titlebar" data-drag-modal>
+        <span class="modal__icon"></span>
+        <span class="modal__title" id="modal-title">Message</span>
+        <div class="modal__buttons">
+          <button class="btn btn--close" id="modal-close" aria-label="Close">✕</button>
+        </div>
+      </div>
+      <div class="modal__body" id="modal-body"></div>
+      <div class="modal__footer">
+        <button class="pill pill--ghost" id="modal-cancel" data-i18n="modal.cancel">Cancel</button>
+        <button class="pill" id="modal-ok" data-i18n="modal.ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-layer" id="toast-layer"></div>
 
 </div>
 

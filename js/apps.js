@@ -4,7 +4,8 @@ const PROJECTS = [
     title: 'LucConverter',
     desc: { en: 'Files, units, currencies, links, media - all in one converter.', ru: 'Файлы, единицы, валюты, ссылки, медиа - всё в одном конвертере.' },
     github: 'https://github.com/lucovisa/LucConverter',
-    site: 'https://lucovisa.github.io/LucConverter/'
+    site: 'https://lucovisa.github.io/LucConverter/',
+    gold: true
   },
   {
     id: 'sqlInImage',
@@ -36,15 +37,12 @@ const PROJECTS = [
   }
 ];
 
-const CAT_DIGGER = {
-  title: 'Cat Digger',
-  desc: { en: 'Game in pre-alpha development.', ru: 'Игра в стадии преальфа-разработки.' }
-};
-
 const LUC_VISA = {
   title: 'Lucovisa',
-  desc: { en: 'About the developer.', ru: 'О разработчике.' },
-  url: 'https://lucovisa.github.io/Lucovisa/'
+  desc: { en: 'About the developer and all projects.', ru: 'О разработчике и все проекты.' },
+  github: 'https://github.com/lucovisa/Lucovisa',
+  site: 'https://lucovisa.github.io/Lucovisa/',
+  gold: true
 };
 
 const CONTACTS = [
@@ -54,102 +52,72 @@ const CONTACTS = [
 ];
 
 const DONATE_WALLETS = [
-  { label: 'ETH/USDT (ERC-20)',             value: '0xFa78966938743C9168abFC2acD6D7751d7dA35Cf' },
-  { label: 'BTC (Bitcoin mainnet)',         value: 'bc1q60tvcsw4guyhxa5e3n47eqmj0s3lpxzkxldpvp' },
-  { label: 'TON/USDT (The Open Network)',   value: 'UQDsZ_8MkBtjjp-pVa5Fefdg1jtJApOZ7oeFF3WBlLnwQcHF' }
+  { label: 'ETH/USDT (ERC-20)',           value: '0xFa78966938743C9168abFC2acD6D7751d7dA35Cf' },
+  { label: 'BTC (Bitcoin mainnet)',       value: 'bc1q60tvcsw4guyhxa5e3n47eqmj0s3lpxzkxldpvp' },
+  { label: 'TON/USDT (The Open Network)', value: 'UQDsZ_8MkBtjjp-pVa5Fefdg1jtJApOZ7oeFF3WBlLnwQcHF' }
 ];
 
 const APPS = {
-  portfolio: { title: 'Portfolio', icon: 'folder',    width: 660, height: 560, render: renderPortfolio },
-  about:     { title: 'About me',  icon: 'info',      width: 560, height: 520, render: renderAbout },
-  hacker:    { title: 'hacker.exe',icon: 'terminal',  width: 660, height: 480, render: renderHacker },
-  map:       { title: 'Map',       icon: 'web',       width: 660, height: 520, render: renderMap },
-  contact:   { title: 'Contact',   icon: 'mail',      width: 560, height: 420, render: renderContact },
-  comments:  { title: 'Comments',  icon: 'comment',   width: 700, height: 560, render: renderComments },
-  donate:    { title: 'Donate',    icon: 'heart',     width: 560, height: 460, render: renderDonate }
+  portfolio: { title: 'Portfolio',  icon: 'folder',   width: 680, height: 620, render: renderPortfolio },
+  about:     { title: 'About me',   icon: 'info',     width: 560, height: 540, render: renderAbout },
+  hacker:    { title: 'hacker.exe', icon: 'terminal', width: 680, height: 500, render: renderHacker },
+  map:       { title: 'Map',        icon: 'web',      width: 720, height: 560, render: renderMap },
+  contact:   { title: 'Contact',    icon: 'mail',     width: 560, height: 420, render: renderContact },
+  comments:  { title: 'Comments',   icon: 'comment',  width: 640, height: 520, render: renderComments },
+  donate:    { title: 'Donate',     icon: 'heart',    width: 560, height: 480, render: renderDonate }
 };
 
 function lang() { return document.documentElement.lang || 'en'; }
 
-function renderPortfolio(body) {
+function projectCard(p, opts) {
+  opts = opts || {};
   const l = lang();
+  const el = document.createElement(opts.link ? 'a' : 'div');
+  el.className = 'pyramid__card' + (p.gold ? ' pyramid__card--gold' : '');
+  if (opts.link && p.site) {
+    el.href = p.site;
+    el.target = '_blank';
+    el.rel = 'noopener';
+  }
+  el.innerHTML =
+    (p.gold ? '<span class="pyramid__badge">' + t('portfolio.gold') + '</span>' : '') +
+    '<h3>' + p.title + '</h3>' +
+    '<p>' + (p.desc[l] || p.desc.en) + '</p>' +
+    '<div class="pyramid__actions">' +
+      (p.github ? '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>' : '') +
+      (p.site ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
+    '</div>';
+  el.querySelectorAll('.pill').forEach(a => a.addEventListener('click', e => e.stopPropagation()));
+  return el;
+}
+
+function renderPortfolio(body) {
   body.innerHTML = '';
 
   const wrap = document.createElement('div');
-  wrap.className = 'pyramid';
+  wrap.className = 'pyramid-wrap';
+
+  const inner = document.createElement('div');
+  inner.className = 'pyramid';
 
   const t1 = document.createElement('div');
   t1.className = 'pyramid__tier pyramid__tier--1';
-  const cardConv = document.createElement('a');
-  cardConv.className = 'pyramid__card';
-  cardConv.href = PROJECTS[0].site;
-  cardConv.target = '_blank';
-  cardConv.rel = 'noopener';
-  cardConv.innerHTML =
-    '<h3>' + PROJECTS[0].title + '</h3>' +
-    '<p>' + PROJECTS[0].desc[l] + '</p>' +
-    '<div class="pyramid__actions">' +
-      '<a class="pill pill--ghost" href="' + PROJECTS[0].github + '" target="_blank" rel="noopener">GitHub</a>' +
-      '<a class="pill" href="' + PROJECTS[0].site + '" target="_blank" rel="noopener">Site</a>' +
-    '</div>';
-  cardConv.addEventListener('click', e => e.stopPropagation());
-  t1.appendChild(cardConv);
-
-  const t2 = document.createElement('div');
-  t2.className = 'pyramid__tier pyramid__tier--2';
-  const catCard = document.createElement('div');
-  catCard.className = 'pyramid__card pyramid__card--plain';
-  catCard.innerHTML =
-    '<h3>' + CAT_DIGGER.title + '</h3>' +
-    '<p>' + CAT_DIGGER.desc[l] + '</p>';
-  t2.appendChild(catCard);
+  t1.appendChild(projectCard(PROJECTS[0], { link: true }));
+  t1.appendChild(projectCard(LUC_VISA, { link: true }));
 
   const t3 = document.createElement('div');
   t3.className = 'pyramid__tier pyramid__tier--3';
-  [PROJECTS[1], PROJECTS[2], PROJECTS[3]].forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'pyramid__card';
-    card.innerHTML =
-      '<h4>' + p.title + '</h4>' +
-      '<p>' + p.desc[l] + '</p>' +
-      '<div class="pyramid__actions">' +
-        '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">GitHub</a>' +
-        '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">Site</a>' +
-      '</div>';
-    t3.appendChild(card);
-  });
-
-  const t4 = document.createElement('div');
-  t4.className = 'pyramid__tier pyramid__tier--4';
-  const visCard = document.createElement('a');
-  visCard.className = 'pyramid__card pyramid__card--accent';
-  visCard.href = LUC_VISA.url;
-  visCard.target = '_blank';
-  visCard.rel = 'noopener';
-  visCard.innerHTML =
-    '<h3>' + LUC_VISA.title + '</h3>' +
-    '<p>' + LUC_VISA.desc[l] + '</p>';
-  t4.appendChild(visCard);
+  [PROJECTS[1], PROJECTS[2], PROJECTS[3]].forEach(p => t3.appendChild(projectCard(p)));
 
   const t5 = document.createElement('div');
   t5.className = 'pyramid__tier pyramid__tier--5';
-  const ipCard = document.createElement('div');
-  ipCard.className = 'pyramid__card';
-  ipCard.innerHTML =
-    '<h4>' + PROJECTS[4].title + '</h4>' +
-    '<p>' + PROJECTS[4].desc[l] + '</p>' +
-    '<div class="pyramid__actions">' +
-      '<a class="pill pill--ghost" href="' + PROJECTS[4].github + '" target="_blank" rel="noopener">GitHub</a>' +
-      '<a class="pill" href="' + PROJECTS[4].site + '" target="_blank" rel="noopener">Site</a>' +
-    '</div>';
-  t5.appendChild(ipCard);
+  t5.appendChild(projectCard(PROJECTS[4]));
 
-  wrap.appendChild(t1);
-  wrap.appendChild(t2);
-  wrap.appendChild(t3);
-  wrap.appendChild(t4);
-  wrap.appendChild(t5);
+  inner.appendChild(t1);
+  inner.appendChild(t3);
+  inner.appendChild(t5);
 
+  wrap.appendChild(inner);
   body.appendChild(wrap);
 }
 
@@ -163,11 +131,7 @@ function renderAbout(body) {
          '<strong>' + t('about.also') + ':</strong> ' + t('about.alsoValue') + '</p>' +
       '<h3>' + t('about.skills') + '</h3>' +
       '<ul>' +
-        '<li>JavaScript</li>' +
-        '<li>C++</li>' +
-        '<li>C#</li>' +
-        '<li>Python</li>' +
-        '<li>C</li>' +
+        '<li>JavaScript</li><li>C++</li><li>C#</li><li>Python</li><li>C</li>' +
       '</ul>' +
       '<p><strong>' + t('about.mainFocus') + ':</strong> ' + t('about.mainFocusValue') + '</p>' +
       '<p><strong>' + t('about.learning') + ':</strong> ' + t('about.learningValue') + '</p>' +
@@ -175,56 +139,61 @@ function renderAbout(body) {
       '<p>' + t('about.projectsText') +
         '<a href="https://lucovisa.github.io/Lucovisa/" target="_blank" rel="noopener">lucovisa.github.io/Lucovisa</a>' +
       '</p>' +
+      '<p>' + t('about.seePortfolio') + '</p>' +
     '</div>';
 }
 
 function renderMap(body) {
   const l = lang();
-  body.innerHTML =
-    '<div class="map-web">' +
-      '<h2 class="map-web__title">' + t('map.title') + '</h2>' +
 
-      '<div class="map-web__row map-web__row--top">' +
-        '<div class="map-node map-node--isolated">IP-check</div>' +
-      '</div>' +
+  const projects = {
+    ip:       { title: 'IP-check',      desc: { en: 'standalone', ru: 'отдельный' } },
+    conv:     { title: 'LucConverter',  desc: { en: 'hub', ru: 'хаб' } },
+    sql:      { title: 'SQL-in-image',  desc: { en: 'tool', ru: 'инструмент' } },
+    cursor:   { title: 'LucCursor',     desc: { en: 'tool', ru: 'инструмент' } },
+    font:     { title: 'LucFont',       desc: { en: 'tool', ru: 'инструмент' } },
+    vis:      { title: 'Lucovisa',      desc: { en: 'root', ru: 'корень' } }
+  };
 
-      '<div class="map-line map-line--v"></div>' +
-
-      '<div class="map-web__row">' +
-        '<div class="map-node map-node--hub">LucConverter</div>' +
-      '</div>' +
-
-      '<div class="map-branches">' +
-        '<div class="map-branch">' +
-          '<div class="map-line map-line--v"></div>' +
-          '<div class="map-node">SQL-in-image</div>' +
-        '</div>' +
-        '<div class="map-branch">' +
-          '<div class="map-line map-line--v"></div>' +
-          '<div class="map-node">LucCursor</div>' +
-          '<div class="map-line map-line--v"></div>' +
-          '<div class="map-node map-node--small">Cat Digger</div>' +
-        '</div>' +
-        '<div class="map-branch">' +
-          '<div class="map-line map-line--v"></div>' +
-          '<div class="map-node">LucFont</div>' +
-          '<div class="map-line map-line--v"></div>' +
-          '<div class="map-node map-node--small">Cat Digger</div>' +
-        '</div>' +
-      '</div>' +
-
-      '<div class="map-line map-line--v"></div>' +
-
-      '<div class="map-web__row">' +
-        '<div class="map-node map-node--center">Lucovisa</div>' +
-      '</div>' +
-
-      '<p class="map-web__hint">' +
-        (l === 'ru'
-          ? 'Все проекты связаны с Lucovisa. IP-check - отдельный.'
-          : 'All projects connect to Lucovisa. IP-check is standalone.') +
-      '</p>' +
+  function nodeHTML(id) {
+    const p = projects[id];
+    return '<div class="gh-node" data-node="' + id + '">' +
+      '<span class="gh-node__check"></span>' +
+      '<span class="gh-node__title">' + p.title + '</span>' +
+      '<span class="gh-node__desc">' + p.desc[l] + '</span>' +
     '</div>';
+  }
+
+  body.innerHTML =
+    '<div class="gh-graph">' +
+      '<div class="gh-graph__row gh-graph__row--ip">' +
+        nodeHTML('ip') +
+      '</div>' +
+
+      '<div class="gh-connector gh-connector--v"></div>' +
+
+      '<div class="gh-graph__row">' +
+        nodeHTML('conv') +
+      '</div>' +
+
+      '<div class="gh-branches">' +
+        '<div class="gh-branch"><div class="gh-connector gh-connector--v"></div>' + nodeHTML('sql') + '</div>' +
+        '<div class="gh-branch"><div class="gh-connector gh-connector--v"></div>' + nodeHTML('cursor') + '</div>' +
+        '<div class="gh-branch"><div class="gh-connector gh-connector--v"></div>' + nodeHTML('font') + '</div>' +
+      '</div>' +
+
+      '<div class="gh-connector gh-connector--v"></div>' +
+
+      '<div class="gh-graph__row">' +
+        nodeHTML('vis') +
+      '</div>' +
+
+      '<p class="gh-graph__hint">' + t('map.hint') + '</p>' +
+    '</div>';
+
+  body.querySelectorAll('.gh-node__check').forEach(el => {
+    el.innerHTML = ICONS.check;
+  });
 }
 
 function renderContact(body) {
@@ -249,12 +218,7 @@ function renderContact(body) {
   wrap.addEventListener('click', e => {
     const btn = e.target.closest('[data-copy]');
     if (!btn) return;
-    const text = btn.dataset.copy;
-    navigator.clipboard.writeText(text).then(() => {
-      const old = btn.textContent;
-      btn.textContent = t('contact.copied');
-      setTimeout(() => { btn.textContent = old; }, 1200);
-    });
+    copyText(btn.dataset.copy, btn, t('contact.copied'));
   });
 
   body.innerHTML = '';
@@ -287,12 +251,7 @@ function renderDonate(body) {
   wrap.addEventListener('click', e => {
     const btn = e.target.closest('[data-copy]');
     if (!btn) return;
-    const text = btn.dataset.copy;
-    navigator.clipboard.writeText(text).then(() => {
-      const old = btn.textContent;
-      btn.textContent = t('donate.copied');
-      setTimeout(() => { btn.textContent = old; }, 1200);
-    });
+    copyText(btn.dataset.copy, btn, t('donate.copied'));
   });
 
   body.innerHTML = '';
@@ -303,13 +262,44 @@ function renderDonate(body) {
 }
 
 function renderComments(body) {
+  const STARRED_KEY = 'starred_repo';
+  let starred = false;
+  try { starred = localStorage.getItem(STARRED_KEY) === '1'; } catch (e) {}
+
   body.innerHTML =
+    '<div class="comments__star' + (starred ? ' is-starred' : '') + '" id="comments-star">' +
+      '<div class="comments__star-icon"></div>' +
+      '<div class="comments__star-text">' +
+        '<strong>' + t('comments.starTitle') + '</strong>' +
+        '<span>' + t('comments.starText') + '</span>' +
+      '</div>' +
+      '<a class="pill" id="comments-star-btn" href="https://github.com/lucovisa/Lucovisa" target="_blank" rel="noopener"></a>' +
+    '</div>' +
     '<div class="comments__auth" id="comments-auth">' +
       '<button class="pill" id="comments-login">' + t('comments.login') + '</button>' +
       '<a class="pill pill--ghost" href="https://github.com/signup" target="_blank" rel="noopener">' + t('comments.create') + '</a>' +
       '<p class="comments__hint">' + t('comments.hint') + '</p>' +
     '</div>' +
     '<div class="giscus" id="giscus-container"></div>';
+
+  const starIconEl = body.querySelector('.comments__star-icon');
+  if (starIconEl) starIconEl.innerHTML = starred ? ICONS.star : ICONS.starOutline;
+
+  const starBtn = body.querySelector('#comments-star-btn');
+  if (starBtn) starBtn.textContent = starred ? t('comments.starred') : t('comments.star');
+
+  if (!starred) {
+    if (starBtn) starBtn.addEventListener('click', () => {
+      try { localStorage.setItem(STARRED_KEY, '1'); } catch (e) {}
+      const wrap = body.querySelector('#comments-star');
+      if (wrap) wrap.classList.add('is-starred');
+      if (starIconEl) starIconEl.innerHTML = ICONS.star;
+      if (starBtn) starBtn.textContent = t('comments.starred');
+      toast(t('toast.copied') ? t('comments.starred') : '');
+    });
+  } else {
+    if (starBtn) starBtn.style.pointerEvents = 'none';
+  }
 
   const btn = body.querySelector('#comments-login');
   if (btn) btn.addEventListener('click', () => loadGiscusIn(body));
@@ -358,55 +348,63 @@ function renderHacker(body) {
     term.innerHTML = '';
     const canvas = document.createElement('canvas');
     canvas.className = 'game-canvas';
-    canvas.width = 480;
-    canvas.height = 320;
     term.appendChild(canvas);
     const hint = document.createElement('div');
     hint.className = 'game-hint';
     hint.textContent = type === 'snake' ? t('hacker.snakeHint') : t('hacker.tetrisHint');
     term.appendChild(hint);
 
+    let restart = () => {};
+    const gameOver = () => {
+      const go = document.createElement('div');
+      go.className = 'game-over';
+      go.textContent = t('hacker.gameOver');
+      term.appendChild(go);
+    };
+
     const stop = () => {
       window.removeEventListener('keydown', onKey);
       clearInterval(loop);
-      term.innerHTML = '';
       busy = false;
-      printLine(t('hacker.gameOver'), 'terminal__prompt');
+      term.innerHTML = '';
       printInput();
     };
 
     let onKey = () => {};
     let loop;
 
-    if (type === 'snake') loop = startSnake(canvas, stop, k => { onKey = k; });
-    else loop = startTetris(canvas, stop, k => { onKey = k; });
+    if (type === 'snake') {
+      loop = startSnake(canvas, stop, gameOver, k => { onKey = k; }, r => { restart = r; });
+    } else {
+      loop = startTetris(canvas, stop, gameOver, k => { onKey = k; }, r => { restart = r; });
+    }
   };
 
   const handle = (cmd) => {
     if (busy) return;
-    const c = cmd.toLowerCase();
+    const c = cmd.toLowerCase().trim();
 
     if (c === '') { printInput(); return; }
     if (c === 'clear') { term.innerHTML = ''; printInput(); return; }
-    if (c === 'exit') { closeWindowByApp('hacker'); return; }
 
-    if (c === 'help') {
+    if (c === 'npm' || c === 'help') {
       t('hacker.helpLines').forEach(l => printLine(l));
       printInput(); return;
     }
 
-    if (c === 'projects') {
-      printLine(t('hacker.projectsTitle'));
-      PROJECTS.forEach(p => printLine('  - ' + p.title + '  ' + p.site));
-      printLine('  - Cat Digger (pre-alpha)');
-      printInput(); return;
-    }
-
-    if (c === 'about') {
-      printLine(t('about.text1'));
-      printLine(t('about.level') + ': ' + t('about.levelValue'));
-      printLine(t('about.native') + ': ' + t('about.nativeValue'));
-      printLine(t('about.also') + ': ' + t('about.alsoValue'));
+    if (c.startsWith('exit')) {
+      const parts = c.split(/\s+/);
+      if (parts.length < 2) {
+        printLine('Usage: exit <app>');
+        printInput(); return;
+      }
+      const appId = parts[1];
+      if (typeof closeWindowByApp === 'function' && APPS[appId]) {
+        closeWindowByApp(appId);
+        printLine(t('hacker.exited') + appId);
+      } else {
+        printLine(t('hacker.exitNotFound') + appId);
+      }
       printInput(); return;
     }
 
@@ -417,27 +415,38 @@ function renderHacker(body) {
   };
 
   printLine(t('hacker.welcome'), 'terminal__prompt');
-  printLine(t('hacker.helpHint'));
+  printLine(t('hacker.hint'));
   printLine('');
   printInput();
 }
 
-function startSnake(canvas, onStop, setOnKey) {
+function startSnake(canvas, onStop, onGameOver, setOnKey, setRestart) {
   const ctx = canvas.getContext('2d');
   const cell = 16;
-  const cols = canvas.width / cell;
-  const rows = canvas.height / cell;
+  const cols = Math.floor(canvas.clientWidth / cell) || 30;
+  const rows = 20;
+  canvas.width = cols * cell;
+  canvas.height = rows * cell;
 
-  let snake = [{x: 5, y: 5}];
-  let dir = {x: 1, y: 0};
-  let food = {x: 10, y: 10};
-  let alive = true;
+  let snake, dir, food, alive, score, loop;
 
-  const place = () => { food = { x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows) }; };
-  place();
+  const reset = () => {
+    snake = [{x: 5, y: 5}];
+    dir = {x: 1, y: 0};
+    food = {x: 10, y: 10};
+    alive = true;
+    score = 0;
+    place();
+  };
+
+  const place = () => {
+    food = { x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows) };
+  };
 
   const onKey = e => {
     if (e.key === 'q' || e.key === 'Q') { alive = false; onStop(); return; }
+    if ((e.key === 'r' || e.key === 'R') && !alive) { reset(); return; }
+    if (!alive) return;
     const k = e.key;
     if (k === 'ArrowUp' && dir.y === 0) dir = {x: 0, y: -1};
     else if (k === 'ArrowDown' && dir.y === 0) dir = {x: 0, y: 1};
@@ -447,29 +456,51 @@ function startSnake(canvas, onStop, setOnKey) {
   setOnKey(onKey);
   window.addEventListener('keydown', onKey);
 
-  return setInterval(() => {
-    if (!alive) return;
-    const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
-    if (head.x < 0 || head.y < 0 || head.x >= cols || head.y >= rows ||
-        snake.some(s => s.x === head.x && s.y === head.y)) {
+  const draw = () => {
+    ctx.fillStyle = '#0a0f15';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#66C0F4';
+    ctx.fillRect(food.x * cell, food.y * cell, cell - 1, cell - 1);
+
+    ctx.fillStyle = '#7CFC98';
+    snake.forEach(s => ctx.fillRect(s.x * cell, s.y * cell, cell - 1, cell - 1));
+
+    ctx.fillStyle = '#7CFC98';
+    ctx.font = '12px monospace';
+    ctx.fillText(t('hacker.score') + score, 6, 14);
+  };
+
+  reset();
+  draw();
+
+  loop = setInterval(() => {
+    if (!alive) { draw(); return; }
+    let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+    if (head.x < 0) head.x = cols - 1;
+    if (head.x >= cols) head.x = 0;
+    if (head.y < 0) head.y = rows - 1;
+    if (head.y >= rows) head.y = 0;
+
+    if (snake.some(s => s.x === head.x && s.y === head.y)) {
       alive = false;
-      onStop();
+      draw();
+      onGameOver();
       return;
     }
     snake.unshift(head);
-    if (head.x === food.x && head.y === food.y) place();
+    if (head.x === food.x && head.y === food.y) { score++; place(); }
     else snake.pop();
 
-    ctx.fillStyle = '#0a0f15';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#66C0F4';
-    ctx.fillRect(food.x * cell, food.y * cell, cell - 1, cell - 1);
-    ctx.fillStyle = '#7CFC98';
-    snake.forEach(s => ctx.fillRect(s.x * cell, s.y * cell, cell - 1, cell - 1));
+    draw();
   }, 110);
+
+  setRestart(reset);
+  return loop;
 }
 
-function startTetris(canvas, onStop, setOnKey) {
+function startTetris(canvas, onStop, onGameOver, setOnKey, setRestart) {
   const ctx = canvas.getContext('2d');
   const cell = 20;
   const cols = 10;
@@ -487,9 +518,7 @@ function startTetris(canvas, onStop, setOnKey) {
     [[1,1,0],[0,1,1]]
   ];
 
-  let grid = Array.from({length: rows}, () => Array(cols).fill(0));
-  let piece, px, py;
-  let alive = true;
+  let grid, piece, px, py, alive, score, loop;
 
   const collide = (p, x, y) => {
     for (let r = 0; r < p.length; r++)
@@ -506,7 +535,10 @@ function startTetris(canvas, onStop, setOnKey) {
     piece = SHAPES[Math.floor(Math.random() * SHAPES.length)].map(r => r.slice());
     px = Math.floor((cols - piece[0].length) / 2);
     py = 0;
-    if (collide(piece, px, py)) { alive = false; onStop(); }
+    if (collide(piece, px, py)) {
+      alive = false;
+      onGameOver();
+    }
   };
 
   const merge = () => {
@@ -525,24 +557,41 @@ function startTetris(canvas, onStop, setOnKey) {
     merge();
     grid = grid.filter(row => !row.every(v => v));
     while (grid.length < rows) grid.unshift(Array(cols).fill(0));
+    score += 10;
     spawn();
   };
 
   const draw = () => {
     ctx.fillStyle = '#0a0f15';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     ctx.fillStyle = '#2F80ED';
     grid.forEach((row, r) => row.forEach((v, c) => {
       if (v) ctx.fillRect(c * cell, r * cell, cell - 1, cell - 1);
     }));
+
     ctx.fillStyle = '#66C0F4';
-    piece.forEach((row, r) => row.forEach((v, c) => {
+    if (piece) piece.forEach((row, r) => row.forEach((v, c) => {
       if (v) ctx.fillRect((px + c) * cell, (py + r) * cell, cell - 1, cell - 1);
     }));
+
+    ctx.fillStyle = '#7CFC98';
+    ctx.font = '12px monospace';
+    ctx.fillText(t('hacker.score') + score, 6, 14);
+  };
+
+  const reset = () => {
+    grid = Array.from({length: rows}, () => Array(cols).fill(0));
+    score = 0;
+    alive = true;
+    spawn();
+    draw();
   };
 
   const onKey = e => {
     if (e.key === 'q' || e.key === 'Q') { alive = false; onStop(); return; }
+    if ((e.key === 'r' || e.key === 'R') && !alive) { reset(); return; }
+    if (!alive) return;
     if (e.key === 'ArrowLeft' && !collide(piece, px - 1, py)) px--;
     else if (e.key === 'ArrowRight' && !collide(piece, px + 1, py)) px++;
     else if (e.key === 'ArrowDown') drop();
@@ -552,12 +601,14 @@ function startTetris(canvas, onStop, setOnKey) {
   setOnKey(onKey);
   window.addEventListener('keydown', onKey);
 
-  spawn();
-  draw();
+  reset();
 
-  return setInterval(() => {
+  loop = setInterval(() => {
     if (!alive) return;
     drop();
     draw();
   }, 480);
+
+  setRestart(reset);
+  return loop;
 }

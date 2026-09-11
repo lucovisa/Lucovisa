@@ -9,7 +9,6 @@
 
   applyTheme(savedTheme);
   applyLang(savedLang);
-
   renderIcons(document);
 
   document.querySelectorAll('.lang-toggle [data-lang]').forEach(btn => {
@@ -33,6 +32,161 @@
   const clock = document.getElementById('clock');
   if (clock) clock.addEventListener('click', () => location.reload());
 
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body');
+  const modalOk = document.getElementById('modal-ok');
+  const modalCancel = document.getElementById('modal-cancel');
+  const modalClose = document.getElementById('modal-close');
+  const modalEl = document.getElementById('modal');
+
+  let modalResolve = null;
+  let modalMode = 'info';
+
+  function openModal(opts) {
+    return new Promise(resolve => {
+      modalResolve = resolve;
+      modalMode = opts.mode || 'info';
+      modalTitle.textContent = opts.title || t('modal.info');
+
+      modalBody.innerHTML = '';
+
+      if (opts.message) {
+        const p = document.createElement('p');
+        p.className = 'modal__text';
+        p.textContent = opts.message;
+        modalBody.appendChild(p);
+      }
+
+      if (opts.mode === 'prompt') {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'modal__input';
+        input.placeholder = opts.placeholder || '';
+        input.value = opts.value || '';
+        modalBody.appendChild(input);
+        setTimeout(() => { input.focus(); input.select(); }, 50);
+        modalBody._input = input;
+      }
+
+      modalCancel.style.display = (opts.mode === 'prompt' || opts.mode === 'confirm') ? '' : 'none';
+      modalOk.textContent = opts.okText || t('modal.ok');
+
+      modalOverlay.classList.add('is-open');
+      makeModalDraggable();
+    });
+  }
+
+  function closeModal(result) {
+    modalOverlay.classList.remove('is-open');
+    if (modalResolve) {
+      const r = modalResolve;
+      modalResolve = null;
+      r(result);
+    }
+  }
+
+  modalOk.addEventListener('click', () => {
+    if (modalMode === 'prompt') {
+      const input = modalBody._input;
+      closeModal(input ? input.value : '');
+    } else if (modalMode === 'confirm') {
+      closeModal(true);
+    } else {
+      closeModal(true);
+    }
+  });
+
+  modalCancel.addEventListener('click', () => closeModal(modalMode === 'prompt' ? null : false));
+  modalClose.addEventListener('click', () => closeModal(modalMode === 'prompt' ? null : false));
+
+  modalOverlay.addEventListener('click', e => {
+    if (e.target === modalOverlay) closeModal(modalMode === 'prompt' ? null : false);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!modalOverlay.classList.contains('is-open')) return;
+    if (e.key === 'Escape') closeModal(modalMode === 'prompt' ? null : false);
+    if (e.key === 'Enter') {
+      if (modalMode === 'prompt') {
+        const input = modalBody._input;
+        closeModal(input ? input.value : '');
+      } else {
+        closeModal(true);
+      }
+    }
+  });
+
+  function makeModalDraggable() {
+    const handle = modalEl.querySelector('[data-drag-modal]');
+    if (!handle || handle._bound) return;
+    handle._bound = true;
+
+    let startX = 0, startY = 0, origX = 0, origY = 0, dragging = false;
+
+    handle.addEventListener('pointerdown', e => {
+      if (e.target.closest('button')) return;
+      dragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = modalEl.getBoundingClientRect();
+      origX = rect.left;
+      origY = rect.top;
+      handle.setPointerCapture(e.pointerId);
+    });
+
+    handle.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      modalEl.style.position = 'fixed';
+      modalEl.style.left = Math.max(0, Math.min(window.innerWidth - 100, origX + dx)) + 'px';
+      modalEl.style.top  = Math.max(0, Math.min(window.innerHeight - 80, origY + dy)) + 'px';
+      modalEl.style.transform = 'none';
+      modalEl.style.margin = '0';
+    });
+
+    handle.addEventListener('pointerup', e => {
+      dragging = false;
+      try { handle.releasePointerCapture(e.pointerId); } catch (err) {}
+    });
+  }
+
+  window.showModal = openModal;
+  window.showAlert = (msg, title) => openModal({ mode: 'info', message: msg, title: title || t('modal.info') });
+  window.showError = (msg) => openModal({ mode: 'info', message: msg, title: t('modal.error') });
+  window.showConfirm = (msg, title) => openModal({ mode: 'confirm', message: msg, title: title || t('modal.confirm') });
+  window.showPrompt = (title, placeholder, value) => openModal({ mode: 'prompt', title, placeholder, value });
+  window.t = t;
+
+  window.toast = function (msg) {
+    const layer = document.getElementById('toast-layer');
+    if (!layer || !msg) return;
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    layer.appendChild(el);
+    setTimeout(() => {
+      el.classList.add('toast--out');
+      setTimeout(() => el.remove(), 300);
+    }, 2200);
+  };
+
+  window.copyText = function (text, btn, okText) {
+    if (!navigator.clipboard) {
+      toast(t('toast.copyFailed'));
+      return;
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      toast(t('toast.copied'));
+      if (btn) {
+        const old = btn.textContent;
+        btn.textContent = okText || t('contact.copied');
+        setTimeout(() => { btn.textContent = old; }, 1200);
+      }
+    }).catch(() => toast(t('toast.copyFailed')));
+  };
+
   const startBtn = document.getElementById('start-btn');
   const startMenu = document.getElementById('start-menu');
   if (startBtn && startMenu) {
@@ -41,15 +195,20 @@
       startMenu.classList.toggle('is-open');
     });
     document.addEventListener('click', e => {
-      if (!startMenu.contains(e.target) && e.target !== startBtn) {
+      if (!startMenu.contains(e.target) && e.target !== startBtn && !startBtn.contains(e.target)) {
         startMenu.classList.remove('is-open');
       }
     });
   }
 
-  const DEFAULT_NAME_KEY = 'username';
+  const USERNAME_KEY = 'username';
+  const AVATAR_KEY = 'avatar';
   const usernameEl = document.getElementById('start-username');
   const editBtn = document.getElementById('edit-username');
+  const avatarBtn = document.getElementById('start-menu-avatar');
+  const avatarImg = document.getElementById('start-menu-avatar-img');
+  const avatarFile = document.getElementById('avatar-file');
+  const taskbarAvatar = document.getElementById('start-avatar');
 
   function detectDefaultName() {
     const ua = navigator.userAgent;
@@ -73,7 +232,7 @@
 
   function getUsername() {
     try {
-      const saved = localStorage.getItem(DEFAULT_NAME_KEY);
+      const saved = localStorage.getItem(USERNAME_KEY);
       if (saved) return saved;
     } catch (e) {}
     return detectDefaultName();
@@ -82,26 +241,86 @@
   function setUsername(name) {
     if (!name || !name.trim()) return;
     const clean = name.trim().slice(0, 32);
-    try { localStorage.setItem(DEFAULT_NAME_KEY, clean); } catch (e) {}
+    try { localStorage.setItem(USERNAME_KEY, clean); } catch (e) {}
     if (usernameEl) usernameEl.textContent = clean;
+    toast(t('toast.nameSaved'));
   }
 
   function updateUsernameUI() {
     if (usernameEl) usernameEl.textContent = getUsername();
   }
 
+  function getAvatar() {
+    try {
+      return localStorage.getItem(AVATAR_KEY);
+    } catch (e) { return null; }
+  }
+
+  function setAvatar(dataUrl) {
+    try { localStorage.setItem(AVATAR_KEY, dataUrl); } catch (e) {}
+    if (avatarImg) avatarImg.src = dataUrl;
+    if (taskbarAvatar) taskbarAvatar.src = dataUrl;
+  }
+
+  function updateAvatarUI() {
+    const saved = getAvatar();
+    if (saved) {
+      if (avatarImg) avatarImg.src = saved;
+      if (taskbarAvatar) taskbarAvatar.src = saved;
+    }
+  }
+
   updateUsernameUI();
+  updateAvatarUI();
 
   if (editBtn) {
-    editBtn.addEventListener('click', e => {
+    editBtn.addEventListener('click', async e => {
       e.stopPropagation();
       const current = getUsername();
-      const name = prompt(t('name.ask'), current);
-      if (name !== null) setUsername(name);
+      const name = await showPrompt(t('name.ask'), t('name.placeholder'), current);
+      if (name !== null && name.trim()) setUsername(name);
     });
   }
 
-  document.querySelectorAll('.btn, .pill, .toggle__btn, .app-icon, .taskbar__start, .taskbar__app, .start-menu__item').forEach(el => {
+  if (avatarBtn && avatarFile) {
+    avatarBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      avatarFile.click();
+    });
+
+    avatarFile.addEventListener('change', e => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showError(t('toast.avatarFailed'));
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          const size = 128;
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const ratio = Math.min(img.width / size, img.height / size);
+          const w = img.width / ratio;
+          const h = img.height / ratio;
+          ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+          const data = canvas.toDataURL('image/png');
+          setAvatar(data);
+          toast(t('toast.avatarSaved'));
+        };
+        img.onerror = () => showError(t('toast.avatarFailed'));
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+      avatarFile.value = '';
+    });
+  }
+
+  document.querySelectorAll('.btn, .pill, .toggle__btn, .app-icon, .taskbar__start, .taskbar__app, .start-menu__item, .start-menu__edit, .start-menu__avatar').forEach(el => {
     el.addEventListener('pointerdown', e => {
       const rect = el.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height);
@@ -179,10 +398,11 @@
 
   function closeWindowByApp(appId) {
     const w = openWindows[appId];
-    if (!w) return;
+    if (!w) return false;
     w.el.remove();
     delete openWindows[appId];
     updateTaskbar();
+    return true;
   }
 
   function bringToFront(el) {

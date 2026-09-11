@@ -26,7 +26,6 @@ Developer focused on automation, web tools and game development.
 ## Projects
 
 All current projects are listed at https://lucovisa.github.io/Lucovisa/
-
 See the Portfolio app for more details.
 
 ---
