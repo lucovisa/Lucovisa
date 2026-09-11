@@ -3,6 +3,10 @@ const PROJECTS = [
     id: 'lucConverter',
     title: 'LucConverter',
     desc: { en: 'Files, units, currencies, links, media - all in one converter.', ru: 'Файлы, единицы, валюты, ссылки, медиа - всё в одном конвертере.' },
+    details: {
+      en: 'Free and anonymous site. Your data does not go to third parties or to servers. Many features available: File Converter, Currency Converter, Unit Converter, MediaShop, Photoshop, Link generation, 3D model viewer, calculator, text editor with built-in compiler and 30+ more tools.',
+      ru: 'Бесплатный и анонимный сайт. Ваши данные не уходят третьим лицам и не уходят на сервера. Доступно много функций: Конвертер файлов, Конвертер Валют, Конвертер Единиц, MediaShop, Photoshop, Link generation, просмотр 3D моделей, калькулятор, текстовый редактор с компилятором внутри и ещё +30 инструментов.'
+    },
     github: 'https://github.com/lucovisa/LucConverter',
     site: 'https://lucovisa.github.io/LucConverter/',
     gold: true
@@ -11,6 +15,10 @@ const PROJECTS = [
     id: 'sqlInImage',
     title: 'SQL-in-image',
     desc: { en: 'Hide code in pictures and extract it back.', ru: 'Прячем код в картинках и извлекаем обратно.' },
+    details: {
+      en: 'Tool for hiding text or code inside images and extracting it back.',
+      ru: 'Инструмент для сокрытия текста или кода внутри изображений и извлечения обратно.'
+    },
     github: 'https://github.com/lucovisa/SQL-in-image',
     site: 'https://lucovisa.github.io/SQL-in-image/'
   },
@@ -18,6 +26,10 @@ const PROJECTS = [
     id: 'lucCursor',
     title: 'LucCursor',
     desc: { en: 'Draw your own custom cursors.', ru: 'Рисуй свои кастомные курсоры.' },
+    details: {
+      en: 'Site for drawing your own custom cursor with a reference. Exactly the same as LucFont, but for cursors.',
+      ru: 'Сайт для рисования своего кастомного курсора с референсом. Точно такой же как LucFont, но про курсор.'
+    },
     github: 'https://github.com/lucovisa/LucCursor',
     site: 'https://lucovisa.github.io/LucCursor/'
   },
@@ -25,6 +37,10 @@ const PROJECTS = [
     id: 'lucFont',
     title: 'LucFont',
     desc: { en: 'Draw your own fonts, character by character.', ru: 'Рисуй свои шрифты, символ за символом.' },
+    details: {
+      en: 'Site for drawing your own custom font with a reference.',
+      ru: 'Сайт для рисования своего кастомного шрифта с референсом.'
+    },
     github: 'https://github.com/lucovisa/LucFont',
     site: 'https://lucovisa.github.io/LucFont/'
   },
@@ -32,6 +48,10 @@ const PROJECTS = [
     id: 'ipCheck',
     title: 'IP-check',
     desc: { en: 'IP and connection speed checker.', ru: 'Проверка IP и скорости соединения.' },
+    details: {
+      en: 'My first project for checking all information available in an IP with request history and internet speed test.',
+      ru: 'Мой первый проект для проверки всей информации, которая есть в айпи, с историей запросов и проверкой скорости интернета.'
+    },
     github: 'https://github.com/lucovisa/IP-check',
     site: 'https://lucovisa.github.io/IP-check/'
   }
@@ -40,15 +60,33 @@ const PROJECTS = [
 const CAT_DIGGER = {
   title: 'Cat Digger',
   desc: { en: 'Game in pre-alpha development.', ru: 'Игра в стадии преальфа-разработки.' },
+  details: {
+    en: 'Game currently in development (pre-alpha). Developed by an indie developer alone on Godot Engine 4. Will be released on Steam.',
+    ru: 'Игра, которая находится в разработке (пре-альфа). Разрабатывается инди-разработчиком в одиночку на Godot Engine 4. Будет выходить в Steam.'
+  },
   gold: true
 };
 
 const LUC_VISA = {
   title: 'Lucovisa',
   desc: { en: 'About the developer and all projects.', ru: 'О разработчике и все проекты.' },
+  details: {
+    en: 'My visit card site with information about me and my projects for employers or just interested people.',
+    ru: 'Мой сайт-визитка с информацией обо мне и моих проектах для работодателя или просто заинтересованных людей.'
+  },
   github: 'https://github.com/lucovisa/Lucovisa',
-  site: 'https://lucovisa.github.io/Lucovisa/'
+  site: 'https://lucovisa.github.io/Lucovisa/',
+  isSelf: true
 };
+
+const JOKES = [
+  'joke.1',
+  'joke.2',
+  'joke.3',
+  'joke.4',
+  'joke.5',
+  'joke.6'
+];
 
 const CONTACTS = [
   { id: 'x',     label: 'contact.x',     value: '@Lukovica467771',                url: 'https://x.com/Lukovica467771/' },
@@ -63,36 +101,452 @@ const DONATE_WALLETS = [
 ];
 
 const APPS = {
-  portfolio: { title: 'Portfolio',  icon: 'folder',   width: 680, height: 640, render: renderPortfolio },
-  about:     { title: 'About me',   icon: 'info',     width: 560, height: 540, render: renderAbout },
-  hacker:    { title: 'hacker.exe', icon: 'terminal', width: 680, height: 500, render: renderHacker },
-  map:       { title: 'Map',        icon: 'web',      width: 760, height: 600, render: renderMap },
-  contact:   { title: 'Contact',    icon: 'mail',     width: 560, height: 420, render: renderContact },
-  comments:  { title: 'Comments',   icon: 'comment',  width: 640, height: 520, render: renderComments },
-  donate:    { title: 'Donate',     icon: 'heart',    width: 560, height: 480, render: renderDonate }
+  portfolio:       { title: 'Portfolio',       icon: 'folder',   width: 720, height: 660, render: renderPortfolio },
+  about:           { title: 'About me',        icon: 'info',     width: 560, height: 580, render: renderAbout },
+  hacker:          { title: 'hacker.exe',      icon: 'terminal', width: 680, height: 500, render: renderHacker },
+  map:             { title: 'Map',             icon: 'web',      width: 800, height: 620, render: renderMap },
+  contact:         { title: 'Contact',         icon: 'mail',     width: 560, height: 420, render: renderContact },
+  comments:        { title: 'Comments',        icon: 'comment',  width: 640, height: 520, render: renderComments },
+  donate:          { title: 'Donate',          icon: 'heart',    width: 560, height: 480, render: renderDonate },
+  trash:           { title: 'Trash',           icon: 'trash',    width: 520, height: 400, render: renderTrash },
+  personalization: { title: 'Personalization', icon: 'settings', width: 640, height: 620, render: renderPersonalization }
 };
 
 function lang() { return document.documentElement.lang || 'en'; }
+
+function renderTrash(body) {
+  body.innerHTML =
+    '<div class="trash-app">' +
+      '<div class="trash-app__header">' +
+        '<span class="app-icon__svg trash-app__icon" data-svg="trash"></span>' +
+        '<div>' +
+          '<h2>' + t('trash.title') + '</h2>' +
+          '<p>' + t('trash.nothingHere') + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<div class="trash-app__files">' +
+        '<button class="trash-file" data-file="error">' +
+          '<span class="app-icon__svg trash-file__icon" data-svg="fileError"></span>' +
+          '<span class="trash-file__name">' + t('trash.errorFile') + '</span>' +
+        '</button>' +
+        '<button class="trash-file" data-file="bug">' +
+          '<span class="app-icon__svg trash-file__icon" data-svg="fileBug"></span>' +
+          '<span class="trash-file__name">' + t('trash.bugFile') + '</span>' +
+        '</button>' +
+      '</div>' +
+      '<p class="trash-app__hint">' + t('trash.empty') + '</p>' +
+    '</div>';
+
+  renderIcons(body);
+
+  body.querySelectorAll('.trash-file').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.file;
+      const lines = type === 'error' ? t('trash.errorContent') : t('trash.bugContent');
+      const line = Array.isArray(lines) ? lines[Math.floor(Math.random() * lines.length)] : lines;
+      if (typeof toast === 'function') toast(line);
+    });
+  });
+}
+
+function renderPersonalization(body) {
+  const tabs = ['profile', 'wallpaper', 'theme', 'language', 'achievements', 'reset', 'exportImport'];
+  let activeTab = 'profile';
+
+  body.innerHTML =
+    '<div class="pers-app">' +
+      '<div class="pers-app__tabs" id="pers-tabs"></div>' +
+      '<div class="pers-app__content" id="pers-content"></div>' +
+    '</div>';
+
+  const tabsEl = body.querySelector('#pers-tabs');
+  const contentEl = body.querySelector('#pers-content');
+
+  function renderTabs() {
+    tabsEl.innerHTML = '';
+    tabs.forEach(key => {
+      const btn = document.createElement('button');
+      btn.className = 'pers-app__tab' + (activeTab === key ? ' is-active' : '');
+      btn.textContent = t('personalization.' + key);
+      btn.addEventListener('click', () => {
+        activeTab = key;
+        renderTabs();
+        renderContent();
+      });
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  function renderContent() {
+    contentEl.innerHTML = '';
+    if (activeTab === 'profile') renderPersProfile(contentEl);
+    else if (activeTab === 'wallpaper') renderPersWallpaper(contentEl);
+    else if (activeTab === 'theme') renderPersTheme(contentEl);
+    else if (activeTab === 'language') renderPersLanguage(contentEl);
+    else if (activeTab === 'achievements') renderPersAchievements(contentEl);
+    else if (activeTab === 'reset') renderPersReset(contentEl);
+    else if (activeTab === 'exportImport') renderPersExportImport(contentEl);
+  }
+
+  renderTabs();
+  renderContent();
+}
+
+function renderPersProfile(el) {
+  const currentAvatar = (function () {
+    try { return localStorage.getItem('avatar'); } catch (e) { return null; }
+  })();
+
+  const currentName = (function () {
+    try { return localStorage.getItem('username'); } catch (e) { return null; }
+  })();
+
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.profile') + '</h3>' +
+      '<div class="pers-row">' +
+        '<div class="pers-label">' + t('personalization.avatar') + '</div>' +
+        '<button class="pers-avatar" id="pers-avatar-btn">' +
+          '<img src="' + (currentAvatar || 'icon.png') + '" alt="" id="pers-avatar-img" />' +
+        '</button>' +
+        '<p class="pers-hint">' + t('personalization.avatarHint') + '</p>' +
+      '</div>' +
+      '<div class="pers-row">' +
+        '<div class="pers-label">' + t('personalization.nickname') + '</div>' +
+        '<input type="text" class="modal__input" id="pers-name" placeholder="' + t('personalization.nicknamePlaceholder') + '" value="' + (currentName || '') + '" />' +
+      '</div>' +
+      '<button class="pill" id="pers-save">' + t('modal.ok') + '</button>' +
+    '</div>';
+
+  const avatarBtn = el.querySelector('#pers-avatar-btn');
+  const nameInp = el.querySelector('#pers-name');
+  const saveBtn = el.querySelector('#pers-save');
+
+  avatarBtn.addEventListener('click', () => {
+    const fileInput = document.getElementById('avatar-file');
+    if (fileInput) fileInput.click();
+  });
+
+  saveBtn.addEventListener('click', () => {
+    const name = nameInp.value.trim();
+    if (name && typeof setUsername === 'function') setUsername(name);
+  });
+}
+
+function renderPersWallpaper(el) {
+  const currentWp = (function () {
+    try { return localStorage.getItem('wallpaper'); } catch (e) { return null; }
+  })();
+
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.wallpaper') + '</h3>' +
+      '<div class="pers-wallpaper-preview" id="pers-wp-preview">' +
+        (currentWp ? '<img src="' + currentWp + '" alt="" />' : '<div class="pers-wallpaper-empty">' + t('personalization.wallpaperHint') + '</div>') +
+      '</div>' +
+      '<p class="pers-hint">' + t('personalization.wallpaperHint') + '</p>' +
+      '<div class="pers-actions">' +
+        '<button class="pill" id="pers-wp-upload">' + t('personalization.wallpaperUpload') + '</button>' +
+        '<button class="pill pill--ghost" id="pers-wp-reset">' + t('personalization.wallpaperReset') + '</button>' +
+      '</div>' +
+    '</div>';
+
+  const uploadBtn = el.querySelector('#pers-wp-upload');
+  const resetBtn = el.querySelector('#pers-wp-reset');
+  const preview = el.querySelector('#pers-wp-preview');
+
+  uploadBtn.addEventListener('click', () => {
+    const fileInput = document.getElementById('wallpaper-file');
+    if (fileInput) fileInput.click();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (typeof resetWallpaper === 'function') resetWallpaper();
+    preview.innerHTML = '<div class="pers-wallpaper-empty">' + t('personalization.wallpaperHint') + '</div>';
+  });
+}
+
+function renderPersTheme(el) {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.theme') + '</h3>' +
+      '<div class="pers-options">' +
+        '<button class="pers-option' + (currentTheme === 'dark' ? ' is-active' : '') + '" data-theme="dark">' +
+          '<span class="app-icon__svg" data-svg="moon"></span>' +
+          '<span>' + t('personalization.themeDark') + '</span>' +
+        '</button>' +
+        '<button class="pers-option' + (currentTheme === 'light' ? ' is-active' : '') + '" data-theme="light">' +
+          '<span class="app-icon__svg" data-svg="sun"></span>' +
+          '<span>' + t('personalization.themeLight') + '</span>' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+
+  renderIcons(el);
+
+  el.querySelectorAll('[data-theme]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (typeof applyTheme === 'function') applyTheme(btn.dataset.theme);
+      el.querySelectorAll('.pers-option').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+}
+
+function renderPersLanguage(el) {
+  const currentLang = document.documentElement.lang || 'en';
+
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.language') + '</h3>' +
+      '<div class="pers-options">' +
+        '<button class="pers-option' + (currentLang === 'en' ? ' is-active' : '') + '" data-lang="en">' +
+          '<span>English</span>' +
+        '</button>' +
+        '<button class="pers-option' + (currentLang === 'ru' ? ' is-active' : '') + '" data-lang="ru">' +
+          '<span>Русский</span>' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+
+  el.querySelectorAll('[data-lang]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (typeof applyLang === 'function') applyLang(btn.dataset.lang);
+      el.querySelectorAll('.pers-option').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+}
+
+function renderPersAchievements(el) {
+  const posKey = 'achievement_position';
+  let currentPos = 'bottom-right';
+  try { currentPos = localStorage.getItem(posKey) || 'bottom-right'; } catch (e) {}
+
+  const positions = [
+    { id: 'top-left',      label: 'personalization.achievementTopLeft' },
+    { id: 'top-right',     label: 'personalization.achievementTopRight' },
+    { id: 'bottom-left',   label: 'personalization.achievementBottomLeft' },
+    { id: 'bottom-right',  label: 'personalization.achievementBottomRight' }
+  ];
+
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.achievements') + '</h3>' +
+      '<div class="pers-label">' + t('personalization.achievementPosition') + '</div>' +
+      '<div class="pers-options pers-options--grid">' +
+        positions.map(p =>
+          '<button class="pers-option' + (currentPos === p.id ? ' is-active' : '') + '" data-pos="' + p.id + '">' +
+            '<span>' + t(p.label) + '</span>' +
+          '</button>'
+        ).join('') +
+      '</div>' +
+    '</div>';
+
+  el.querySelectorAll('[data-pos]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pos = btn.dataset.pos;
+      try { localStorage.setItem(posKey, pos); } catch (e) {}
+      el.querySelectorAll('.pers-option').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      if (typeof updateAchievementPosition === 'function') updateAchievementPosition(pos);
+    });
+  });
+}
+
+function renderPersReset(el) {
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.reset') + '</h3>' +
+      '<div class="pers-actions pers-actions--column">' +
+        '<button class="pill pill--ghost" data-reset="profile">' + t('personalization.resetProfile') + '</button>' +
+        '<button class="pill pill--ghost" data-reset="wallpaper">' + t('personalization.resetWallpaper') + '</button>' +
+        '<button class="pill pill--ghost" data-reset="desktop">' + t('personalization.resetDesktop') + '</button>' +
+        '<button class="pill pill--ghost" data-reset="shortcuts">' + t('personalization.resetShortcuts') + '</button>' +
+        '<button class="pill pill--danger" data-reset="all">' + t('personalization.resetAll') + '</button>' +
+      '</div>' +
+    '</div>';
+
+  el.querySelectorAll('[data-reset]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const type = btn.dataset.reset;
+      const confirmMsg = type === 'all' ? t('personalization.resetAll') + '?' : t('modal.confirm') + '?';
+      const ok = await showConfirm(confirmMsg);
+      if (!ok) return;
+
+      if (type === 'profile' && typeof resetProfile === 'function') {
+        resetProfile();
+        toast(t('toast.profileReset'));
+      } else if (type === 'wallpaper' && typeof resetWallpaper === 'function') {
+        resetWallpaper();
+      } else if (type === 'desktop' && typeof resetDesktop === 'function') {
+        resetDesktop();
+      } else if (type === 'shortcuts' && typeof clearShortcuts === 'function') {
+        clearShortcuts();
+        toast(t('toast.shortcutsReset'));
+      } else if (type === 'all') {
+        try {
+          localStorage.removeItem('username');
+          localStorage.removeItem('avatar');
+          localStorage.removeItem('wallpaper');
+          localStorage.removeItem('theme');
+          localStorage.removeItem('lang');
+          localStorage.removeItem('desktop_positions');
+          localStorage.removeItem('custom_shortcuts');
+          localStorage.removeItem('starred_repo');
+          localStorage.removeItem('achievement_position');
+        } catch (e) {}
+        toast(t('toast.allReset'));
+        setTimeout(() => location.reload(), 800);
+      }
+    });
+  });
+}
+
+function renderPersExportImport(el) {
+  el.innerHTML =
+    '<div class="pers-section">' +
+      '<h3>' + t('personalization.exportImport') + '</h3>' +
+      '<div class="pers-actions pers-actions--column">' +
+        '<button class="pill" id="pers-export">' + t('personalization.export') + '</button>' +
+        '<button class="pill pill--ghost" id="pers-import">' + t('personalization.import') + '</button>' +
+        '<input type="file" id="pers-import-file" accept="application/json" hidden />' +
+      '</div>' +
+    '</div>';
+
+  const exportBtn = el.querySelector('#pers-export');
+  const importBtn = el.querySelector('#pers-import');
+  const importFile = el.querySelector('#pers-import-file');
+
+  exportBtn.addEventListener('click', () => {
+    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position'];
+    const data = { version: 1, date: new Date().toISOString() };
+    keys.forEach(k => {
+      try {
+        const v = localStorage.getItem(k);
+        if (v !== null) data[k] = v;
+      } catch (e) {}
+    });
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'lucovisa-settings-' + Date.now() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(t('personalization.exported'));
+  });
+
+  importBtn.addEventListener('click', () => importFile.click());
+
+  importFile.addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        Object.keys(data).forEach(k => {
+          if (k === 'version' || k === 'date') return;
+          try { localStorage.setItem(k, data[k]); } catch (err) {}
+        });
+        toast(t('personalization.imported'));
+        setTimeout(() => location.reload(), 800);
+      } catch (err) {
+        toast(t('personalization.importFailed'));
+      }
+    };
+    reader.readAsText(file);
+    importFile.value = '';
+  });
+}
 
 function projectCard(p, opts) {
   opts = opts || {};
   const l = lang();
   const el = document.createElement(opts.link ? 'a' : 'div');
   el.className = 'pyramid__card' + (p.gold ? ' pyramid__card--gold' : '');
-  if (opts.link && p.site) {
+  if (opts.link && p.site && !p.isSelf) {
     el.href = p.site;
     el.target = '_blank';
     el.rel = 'noopener';
+  } else if (opts.link && p.site && p.isSelf) {
+    el.href = 'javascript:void(0)';
   }
   el.innerHTML =
     '<h3>' + p.title + '</h3>' +
     '<p>' + (p.desc[l] || p.desc.en) + '</p>' +
     '<div class="pyramid__actions">' +
       (p.github ? '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>' : '') +
-      (p.site ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
+      (p.site && !p.isSelf ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
+      (p.details ? '<button class="pill pill--details" data-details="' + p.id + '">' + t('portfolio.details') + '</button>' : '') +
     '</div>';
+
   el.querySelectorAll('.pill').forEach(a => a.addEventListener('click', e => e.stopPropagation()));
+
+  if (p.isSelf) {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      handleSelfClick(el);
+    });
+  }
+
+  const detailsBtn = el.querySelector('[data-details]');
+  if (detailsBtn) {
+    detailsBtn.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      openDetails(p);
+    });
+  }
+
   return el;
+}
+
+let selfClickCount = 0;
+
+function handleSelfClick(el) {
+  selfClickCount++;
+  if (selfClickCount >= 24) {
+    toast(t('joke.24'));
+    selfClickCount = 0;
+    return;
+  }
+  const idx = (selfClickCount - 1) % JOKES.length;
+  toast(t(JOKES[idx]));
+}
+
+function openDetails(p) {
+  if (typeof openApp !== 'function') return;
+  const detailsId = 'details_' + p.id;
+
+  if (typeof closeWindowByApp === 'function') closeWindowByApp(detailsId);
+
+  const appDef = {
+    title: p.title + ' - ' + t('app.details'),
+    icon: p.gold ? 'star' : 'info',
+    width: 520,
+    height: 420,
+    render: function (body) {
+      const l = lang();
+      body.innerHTML =
+        '<div class="app-details">' +
+          '<h2>' + p.title + '</h2>' +
+          '<p>' + (p.details[l] || p.details.en) + '</p>' +
+          '<div class="app-details__actions">' +
+            (p.github ? '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>' : '') +
+            (p.site && !p.isSelf ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
+          '</div>' +
+        '</div>';
+    }
+  };
+
+  APPS[detailsId] = appDef;
+  openApp(detailsId);
 }
 
 function renderPortfolio(body) {
@@ -135,6 +589,8 @@ function renderAbout(body) {
     '<div class="app-about">' +
       '<h2>' + t('about.title') + '</h2>' +
       '<p>' + t('about.text1') + '</p>' +
+      '<p><strong>' + t('about.experience') + ':</strong> ' + t('about.experienceValue') + '</p>' +
+      '<p><strong>' + t('about.timezone') + ':</strong> ' + t('about.timezoneValue') + '</p>' +
       '<p><strong>' + t('about.level') + ':</strong> ' + t('about.levelValue') + '</p>' +
       '<p><strong>' + t('about.native') + ':</strong> ' + t('about.nativeValue') + '<br>' +
          '<strong>' + t('about.also') + ':</strong> ' + t('about.alsoValue') + '</p>' +
@@ -153,8 +609,6 @@ function renderAbout(body) {
 }
 
 function renderMap(body) {
-  const l = lang();
-
   body.innerHTML =
     '<div class="map-app">' +
       '<h2 class="map-app__title">' + t('map.title') + '</h2>' +
@@ -170,22 +624,22 @@ function buildMapGraph(container) {
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
   const nodes = [
-    { id: 'conv',   label: 'LucConverter',  x: 380, y: 60,  w: 180, h: 44 },
-    { id: 'cat',    label: 'Cat Digger',    x: 600, y: 60,  w: 160, h: 44 },
-    { id: 'vis',    label: 'Lucovisa',      x: 380, y: 170, w: 180, h: 44 },
-    { id: 'sql',    label: 'SQL-in-image',  x: 160, y: 280, w: 170, h: 44 },
-    { id: 'cursor', label: 'LucCursor',     x: 380, y: 280, w: 170, h: 44 },
-    { id: 'font',   label: 'LucFont',       x: 600, y: 280, w: 170, h: 44 },
-    { id: 'ip',     label: 'IP-check',      x: 380, y: 400, w: 170, h: 44 }
+    { id: 'vis',    label: 'Lucovisa',      x: 400, y: 250, w: 170, h: 50, center: true },
+    { id: 'conv',   label: 'LucConverter',  x: 400, y: 80,  w: 170, h: 44 },
+    { id: 'sql',    label: 'SQL-in-image',  x: 150, y: 160, w: 160, h: 44 },
+    { id: 'cursor', label: 'LucCursor',     x: 650, y: 160, w: 150, h: 44 },
+    { id: 'font',   label: 'LucFont',       x: 150, y: 340, w: 150, h: 44 },
+    { id: 'cat',    label: 'Cat Digger',    x: 650, y: 340, w: 150, h: 44 },
+    { id: 'ip',     label: 'IP-check',      x: 400, y: 420, w: 150, h: 44 }
   ];
 
   const edges = [
-    { from: 'conv', to: 'cat' },
-    { from: 'conv', to: 'vis' },
-    { from: 'vis',  to: 'sql' },
-    { from: 'vis',  to: 'cursor' },
-    { from: 'vis',  to: 'font' },
-    { from: 'vis',  to: 'ip' }
+    { from: 'vis', to: 'conv' },
+    { from: 'vis', to: 'sql' },
+    { from: 'vis', to: 'cursor' },
+    { from: 'vis', to: 'font' },
+    { from: 'vis', to: 'cat' },
+    { from: 'vis', to: 'ip' }
   ];
 
   const svg = document.createElementNS(SVG_NS, 'svg');
@@ -208,15 +662,13 @@ function buildMapGraph(container) {
     return path;
   });
 
-  const nodeEls = {};
-
   nodes.forEach(n => {
     const g = document.createElementNS(SVG_NS, 'g');
-    g.setAttribute('class', 'map-node-g');
+    g.setAttribute('class', 'map-node-g' + (n.center ? ' map-node-g--center' : ''));
     g.setAttribute('transform', 'translate(' + (n.x - n.w / 2) + ',' + (n.y - n.h / 2) + ')');
 
     const rect = document.createElementNS(SVG_NS, 'rect');
-    rect.setAttribute('class', 'map-node-rect');
+    rect.setAttribute('class', 'map-node-rect' + (n.center ? ' map-node-rect--center' : ''));
     rect.setAttribute('width', n.w);
     rect.setAttribute('height', n.h);
     rect.setAttribute('rx', '8');
@@ -244,9 +696,8 @@ function buildMapGraph(container) {
     g.appendChild(text);
 
     gNodes.appendChild(g);
-    nodeEls[n.id] = g;
 
-    makeNodeDraggable(g, n, nodeEls, edgeEls, edges, nodes);
+    makeNodeDraggable(g, n, nodes);
   });
 
   function redrawEdges() {
@@ -255,27 +706,18 @@ function buildMapGraph(container) {
       const b = nodes.find(n => n.id === e.to);
       if (!a || !b) return;
 
-      const ax = a.x;
-      const ay = a.y + a.h / 2;
-      const bx = b.x;
-      const by = b.y - b.h / 2;
-
-      const midY = (ay + by) / 2;
-      const d = 'M ' + ax + ' ' + ay +
-                ' V ' + midY +
-                ' H ' + bx +
-                ' V ' + by;
+      const d = 'M ' + a.x + ' ' + a.y + ' L ' + b.x + ' ' + b.y;
       edgeEls[i].setAttribute('d', d);
     });
   }
 
+  window._mapRedraw = redrawEdges;
+
   container.appendChild(svg);
   redrawEdges();
-
-  window._mapRedraw = redrawEdges;
 }
 
-function makeNodeDraggable(g, node, nodeEls, edgeEls, edges, nodes) {
+function makeNodeDraggable(g, node, allNodes) {
   let startX = 0, startY = 0, origX = 0, origY = 0, dragging = false;
 
   g.addEventListener('pointerdown', e => {
@@ -432,8 +874,10 @@ function renderHacker(body) {
   const term = body.querySelector('#terminal');
   let busy = false;
   let currentInput = null;
+  let history = [];
+  let historyIndex = -1;
 
-  const COMMANDS = ['help', 'clear', 'snake', 'tetris', 'exit', 'reset', 'profile'];
+  const COMMANDS = ['help', 'clear', 'snake', 'tetris', 'matrix', 'guess', 'cat', 'whoami', 'ls', 'theme', 'lang', 'reset', 'exit'];
 
   const printLine = (text, cls) => {
     const line = document.createElement('div');
@@ -448,7 +892,7 @@ function renderHacker(body) {
     line.className = 'terminal__line';
     line.style.display = 'flex';
     line.style.gap = '6px';
-    line.innerHTML = '<span class="terminal__prompt">$</span>';
+    line.innerHTML = '<span class="terminal__prompt">npm $</span>';
     const input = document.createElement('input');
     input.className = 'terminal__input';
     input.type = 'text';
@@ -481,14 +925,41 @@ function renderHacker(body) {
         }
         return;
       }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (history.length === 0) return;
+        if (historyIndex === -1) historyIndex = history.length;
+        historyIndex = Math.max(0, historyIndex - 1);
+        input.value = history[historyIndex] || '';
+        return;
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIndex === -1) return;
+        historyIndex = Math.min(history.length, historyIndex + 1);
+        input.value = history[historyIndex] || '';
+        return;
+      }
       if (e.key !== 'Enter') return;
       const cmd = input.value.trim();
+      if (cmd) {
+        history.push(cmd);
+        if (history.length > 50) history.shift();
+      }
+      historyIndex = -1;
       input.disabled = true;
-      line.querySelector('.terminal__prompt').textContent = '$ ' + cmd;
+      line.querySelector('.terminal__prompt').textContent = 'npm $ ' + cmd;
       input.remove();
       currentInput = null;
       handle(cmd);
     });
+  };
+
+  const setupGameKeys = (onKey, loopRef) => {
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      clearInterval(loopRef.loop);
+    };
   };
 
   const runGame = (type) => {
@@ -518,23 +989,201 @@ function renderHacker(body) {
       if (go) go.remove();
     };
 
+    const loopRef = { loop: null };
+
     const stop = () => {
       window.removeEventListener('keydown', onKey);
-      clearInterval(loop);
+      clearInterval(loopRef.loop);
       busy = false;
       currentInput = null;
       term.innerHTML = '';
+      printLine(t('hacker.hint'), 'terminal__prompt');
       printInput();
     };
 
     let onKey = () => {};
-    let loop;
 
     if (type === 'snake') {
-      loop = startSnake(canvas, stop, gameOver, resetGameOver, k => { onKey = k; });
+      loopRef.loop = startSnake(canvas, stop, gameOver, resetGameOver, k => { onKey = k; });
     } else {
-      loop = startTetris(canvas, stop, gameOver, resetGameOver, k => { onKey = k; });
+      loopRef.loop = startTetris(canvas, stop, gameOver, resetGameOver, k => { onKey = k; });
     }
+  };
+
+  const runMatrix = () => {
+    busy = true;
+    term.innerHTML = '';
+    const canvas = document.createElement('canvas');
+    canvas.className = 'game-canvas';
+    canvas.width = 480;
+    canvas.height = 320;
+    term.appendChild(canvas);
+    const hint = document.createElement('div');
+    hint.className = 'game-hint';
+    hint.textContent = t('hacker.matrixHint');
+    term.appendChild(hint);
+
+    const ctx = canvas.getContext('2d');
+    const cols = Math.floor(canvas.width / 14);
+    const drops = Array(cols).fill(1);
+    const chars = '01';
+
+    const onKey = e => {
+      const k = e.key.toLowerCase();
+      if (k === 'q' || k === 'й') {
+        window.removeEventListener('keydown', onKey);
+        clearInterval(loop);
+        busy = false;
+        currentInput = null;
+        term.innerHTML = '';
+        printLine(t('hacker.hint'), 'terminal__prompt');
+        printInput();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+
+    const loop = setInterval(() => {
+      ctx.fillStyle = 'rgba(10, 15, 21, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#7CFC98';
+      ctx.font = '14px monospace';
+      drops.forEach((y, i) => {
+        const ch = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(ch, i * 14, y * 14);
+        if (y * 14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      });
+    }, 50);
+  };
+
+  const runGuess = () => {
+    const secret = Math.floor(Math.random() * 100) + 1;
+    let attempts = 0;
+    busy = true;
+
+    printLine(t('hacker.guessHint'), 'terminal__prompt');
+
+    const guessInput = () => {
+      const line = document.createElement('div');
+      line.className = 'terminal__line';
+      line.style.display = 'flex';
+      line.style.gap = '6px';
+      line.innerHTML = '<span class="terminal__prompt">&gt;</span>';
+      const input = document.createElement('input');
+      input.className = 'terminal__input';
+      input.type = 'number';
+      input.min = '1';
+      input.max = '100';
+      line.appendChild(input);
+      term.appendChild(line);
+      input.focus();
+      term.scrollTop = term.scrollHeight;
+
+      input.addEventListener('keydown', e => {
+        if (e.key !== 'Enter') return;
+        const val = parseInt(input.value, 10);
+        input.disabled = true;
+        line.querySelector('.terminal__prompt').textContent = '> ' + input.value;
+        input.remove();
+
+        if (isNaN(val)) {
+          printLine(t('hacker.guessInvalid'));
+          guessInput();
+          return;
+        }
+        attempts++;
+        if (val === secret) {
+          printLine(t('hacker.guessWin') + attempts + t('hacker.guessAttempts'));
+          busy = false;
+          printLine(t('hacker.hint'), 'terminal__prompt');
+          printInput();
+        } else if (val < secret) {
+          printLine(t('hacker.guessHigher'));
+          guessInput();
+        } else {
+          printLine(t('hacker.guessLower'));
+          guessInput();
+        }
+      });
+    };
+
+    guessInput();
+  };
+
+  const runCat = () => {
+    busy = true;
+    term.innerHTML = '';
+
+    const pre = document.createElement('pre');
+    pre.className = 'ascii-cat';
+    term.appendChild(pre);
+
+    const frames = [
+      [
+        '        ~                     ',
+        '       /|\\                    ',
+        '      / | \\                   ',
+        '     /  |  \\    ,--.          ',
+        '    /   |   \\  ( o o )        ',
+        '   /    |    \\  \\ -- /  /\\_/\\',
+        '        |       \\    /  ( -.-)',
+        '        |        \\  /   /  ^ \\',
+        '       /|        \\/   ( (   ) )',
+        '      / |               \\  -  /',
+        '     /  |             /\\  \\___/',
+        '        |            /  \\      ',
+        '        |           /    \\     ',
+        '     ---+---       /      \\    ',
+        '        |                       ',
+        '  ~~~~~ fish ~(~<               '
+      ],
+      [
+        '                              ',
+        '        ~                     ',
+        '       /|\\                    ',
+        '      / | \\                   ',
+        '     /  |  \\    ,--.          ',
+        '    /   |   \\  ( o o )        ',
+        '   /    |    \\  \\ -- /  /\\_/\\',
+        '        |       \\    /  ( -.-)',
+        '        |        \\  /   /  ^ \\',
+        '       /|        \\/   ( (   ) )',
+        '      / |               \\  -  /',
+        '     /  |             /\\  \\___/',
+        '        |            /  \\      ',
+        '        |           /    \\     ',
+        '     ---+---       /      \\    ',
+        '  ~~~~ fish ~(~<                '
+      ]
+    ];
+
+    let frame = 0;
+    const render = () => {
+      pre.textContent = frames[frame].join('\n');
+      frame = (frame + 1) % frames.length;
+    };
+    render();
+
+    const hint = document.createElement('div');
+    hint.className = 'game-hint';
+    hint.textContent = t('hacker.catHint');
+    term.appendChild(hint);
+
+    const onKey = e => {
+      const k = e.key.toLowerCase();
+      if (k === 'q' || k === 'й') {
+        window.removeEventListener('keydown', onKey);
+        clearInterval(loop);
+        busy = false;
+        currentInput = null;
+        term.innerHTML = '';
+        printLine(t('hacker.hint'), 'terminal__prompt');
+        printInput();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+
+    const loop = setInterval(render, 500);
   };
 
   const handle = (cmd) => {
@@ -544,8 +1193,66 @@ function renderHacker(body) {
     if (c === '') { printInput(); return; }
     if (c === 'clear') { term.innerHTML = ''; printInput(); return; }
 
-    if (c === 'help' || c === 'npm') {
+    if (c === 'help') {
       t('hacker.helpLines').forEach(l => printLine(l));
+      printInput(); return;
+    }
+
+    if (c === 'whoami') {
+      const name = (function () {
+        try { return localStorage.getItem('username'); } catch (e) { return null; }
+      })();
+      const detected = name || (function () {
+        const ua = navigator.userAgent;
+        if (/Chrome/i.test(ua)) return 'Chrome User';
+        if (/Firefox/i.test(ua)) return 'Firefox User';
+        if (/Safari/i.test(ua)) return 'Safari User';
+        return 'User';
+      })();
+      printLine(t('hacker.userIs') + detected);
+      printInput(); return;
+    }
+
+    if (c === 'ls') {
+      printLine(t('hacker.appsList'));
+      Object.keys(APPS).forEach(id => {
+        if (id.startsWith('details_')) return;
+        printLine('  ' + id + '.exe');
+      });
+      printInput(); return;
+    }
+
+    if (c.startsWith('theme ')) {
+      const theme = c.split(/\s+/)[1];
+      if (theme === 'dark' || theme === 'light') {
+        if (typeof applyTheme === 'function') applyTheme(theme);
+        printLine(t('hacker.themeChanged') + theme);
+      }
+      printInput(); return;
+    }
+
+    if (c.startsWith('lang ')) {
+      const lng = c.split(/\s+/)[1];
+      if (lng === 'en' || lng === 'ru') {
+        if (typeof applyLang === 'function') applyLang(lng);
+        printLine(t('hacker.langChanged') + lng);
+      }
+      printInput(); return;
+    }
+
+    if (c === 'reset theme') {
+      if (typeof resetWallpaper === 'function') {
+        resetWallpaper();
+        printLine(t('hacker.themeReset'));
+      }
+      printInput(); return;
+    }
+
+    if (c === 'reset desktop') {
+      if (typeof resetDesktop === 'function') {
+        resetDesktop();
+        printLine(t('hacker.desktopReset'));
+      }
       printInput(); return;
     }
 
@@ -553,8 +1260,6 @@ function renderHacker(body) {
       if (typeof resetProfile === 'function') {
         resetProfile();
         printLine(t('hacker.profileReset'));
-      } else {
-        printLine(t('hacker.profileResetFail'));
       }
       printInput(); return;
     }
@@ -577,8 +1282,11 @@ function renderHacker(body) {
     }
 
     if (c === 'snake' || c === 'tetris') { runGame(c); return; }
+    if (c === 'matrix') { runMatrix(); return; }
+    if (c === 'guess') { runGuess(); return; }
+    if (c === 'cat') { runCat(); return; }
 
-    printLine(t('hacker.unknown') + cmd);
+    printLine(t('hacker.unknown') + cmd + t('hacker.tryHelp'));
     printInput();
   };
 

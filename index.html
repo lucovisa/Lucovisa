@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="format-detection" content="telephone=no" />
 
-<title>Lucovisa Visit card</title>
+<title>Lucovisa Visit Card</title>
 <meta name="description" content="This is my visit card site for viewing my projects - frontend, game dev and web tools by Lucovisa." />
 <meta name="keywords" content="луковица, lucovisa, github, гитхаб, программист, визитная карточка, разработка игр, game dev, frontend, web development, SEO, портфолио, portfolio" />
 <meta name="author" content="Lucovisa" />
@@ -17,8 +17,8 @@
 <meta name="color-scheme" content="dark light" />
 
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="Lucovisa Visit card" />
-<meta property="og:title" content="Lucovisa Visit card" />
+<meta property="og:site_name" content="Lucovisa Visit Card" />
+<meta property="og:title" content="Lucovisa Visit Card" />
 <meta property="og:description" content="This is my visit card site for viewing my projects - frontend, game dev and web tools by Lucovisa." />
 <meta property="og:image" content="https://lucovisa.github.io/Lucovisa/preview.png" />
 <meta property="og:image:width" content="1200" />
@@ -26,7 +26,7 @@
 <meta property="og:url" content="https://lucovisa.github.io/Lucovisa/" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Lucovisa Visit card" />
+<meta name="twitter:title" content="Lucovisa Visit Card" />
 <meta name="twitter:description" content="This is my visit card site for viewing my projects." />
 <meta name="twitter:image" content="https://lucovisa.github.io/Lucovisa/preview.png" />
 
@@ -41,39 +41,49 @@
 
   <div class="desktop__icons" id="desktop-icons">
 
-    <button class="app-icon" data-app="portfolio">
+    <button class="app-icon" data-app="portfolio" data-icon="portfolio">
       <span class="app-icon__svg" data-svg="folder"></span>
       <span data-i18n="app.portfolio">Portfolio</span>
     </button>
 
-    <button class="app-icon" data-app="about">
+    <button class="app-icon" data-app="about" data-icon="about">
       <span class="app-icon__svg" data-svg="info"></span>
       <span data-i18n="app.about">About me</span>
     </button>
 
-    <button class="app-icon" data-app="hacker">
+    <button class="app-icon" data-app="hacker" data-icon="hacker">
       <span class="app-icon__svg" data-svg="terminal"></span>
       <span>hacker.exe</span>
     </button>
 
-    <button class="app-icon" data-app="map">
+    <button class="app-icon" data-app="map" data-icon="map">
       <span class="app-icon__svg" data-svg="web"></span>
       <span data-i18n="app.map">Map</span>
     </button>
 
-    <button class="app-icon" data-app="contact">
+    <button class="app-icon" data-app="contact" data-icon="contact">
       <span class="app-icon__svg" data-svg="mail"></span>
       <span data-i18n="app.contact">Contact</span>
     </button>
 
-    <button class="app-icon" data-app="comments">
+    <button class="app-icon" data-app="comments" data-icon="comments">
       <span class="app-icon__svg" data-svg="comment"></span>
       <span data-i18n="app.comments">Comments</span>
     </button>
 
-    <button class="app-icon" data-app="donate">
+    <button class="app-icon" data-app="donate" data-icon="donate">
       <span class="app-icon__svg" data-svg="heart"></span>
       <span data-i18n="app.donate">Donate</span>
+    </button>
+
+    <button class="app-icon" data-app="trash" data-icon="trash" data-drop="trash">
+      <span class="app-icon__svg" data-svg="trash"></span>
+      <span data-i18n="app.trash">Trash</span>
+    </button>
+
+    <button class="app-icon" data-app="personalization" data-icon="personalization">
+      <span class="app-icon__svg" data-svg="settings"></span>
+      <span data-i18n="app.personalization">Personalization</span>
     </button>
 
   </div>
@@ -93,8 +103,8 @@
         <button class="toggle__btn" data-lang="ru">RU</button>
       </div>
       <div class="toggle theme-toggle" role="group" aria-label="Theme">
-        <button class="toggle__btn" data-theme="light" aria-label="Light">☀</button>
-        <button class="toggle__btn" data-theme="dark" aria-label="Dark">🌙</button>
+        <button class="toggle__btn" data-theme="light" aria-label="Light"><span class="app-icon__svg app-icon__svg--sm" data-svg="sun"></span></button>
+        <button class="toggle__btn" data-theme="dark" aria-label="Dark"><span class="app-icon__svg app-icon__svg--sm" data-svg="moon"></span></button>
       </div>
       <button class="taskbar__clock" id="clock" title="Reload">--:--:--</button>
     </div>
@@ -112,6 +122,7 @@
       <button class="start-menu__edit" id="edit-username" title="Change name">✏️</button>
     </div>
     <input type="file" id="avatar-file" accept="image/*" hidden />
+    <input type="file" id="wallpaper-file" accept="image/*" hidden />
     <button class="start-menu__item" data-app="portfolio">
       <span class="app-icon__svg app-icon__svg--sm" data-svg="folder"></span>
       <span data-i18n="app.portfolio">Portfolio</span>
@@ -139,6 +150,34 @@
     <button class="start-menu__item" data-app="donate">
       <span class="app-icon__svg app-icon__svg--sm" data-svg="heart"></span>
       <span data-i18n="app.donate">Donate</span>
+    </button>
+    <button class="start-menu__item" data-app="trash">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="trash"></span>
+      <span data-i18n="app.trash">Trash</span>
+    </button>
+    <button class="start-menu__item" data-app="personalization">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="settings"></span>
+      <span data-i18n="app.personalization">Personalization</span>
+    </button>
+    <button class="start-menu__item" id="wallpaper-btn">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="wallpaper"></span>
+      <span data-i18n="taskbar.wallpaper">Set wallpaper</span>
+    </button>
+  </div>
+
+  <div class="context-menu" id="context-menu">
+    <button class="context-menu__item" data-action="refresh">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="refresh"></span>
+      <span data-i18n="context.refresh">Refresh</span>
+    </button>
+    <div class="context-menu__sep"></div>
+    <button class="context-menu__item" data-action="shortcut">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="shortcut"></span>
+      <span data-i18n="context.createShortcut">Create shortcut</span>
+    </button>
+    <button class="context-menu__item" data-action="personalization">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="settings"></span>
+      <span data-i18n="context.personalization">Personalization</span>
     </button>
   </div>
 
@@ -183,6 +222,8 @@
 <script src="js/icons.js"></script>
 <script src="js/apps.js"></script>
 <script src="js/giscus.js"></script>
+<script src="js/shortcuts.js"></script>
+<script src="js/cursor.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

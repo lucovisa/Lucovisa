@@ -203,12 +203,18 @@
 
   const USERNAME_KEY = 'username';
   const AVATAR_KEY = 'avatar';
+  const WALLPAPER_KEY = 'wallpaper';
+  const DESKTOP_POS_KEY = 'desktop_positions';
+
   const usernameEl = document.getElementById('start-username');
   const editBtn = document.getElementById('edit-username');
   const avatarBtn = document.getElementById('start-menu-avatar');
   const avatarImg = document.getElementById('start-menu-avatar-img');
   const avatarFile = document.getElementById('avatar-file');
   const taskbarAvatar = document.getElementById('start-avatar');
+  const wallpaperBtn = document.getElementById('wallpaper-btn');
+  const wallpaperFile = document.getElementById('wallpaper-file');
+  const desktopEl = document.getElementById('desktop');
 
   function detectDefaultName() {
     const ua = navigator.userAgent;
@@ -251,9 +257,7 @@
   }
 
   function getAvatar() {
-    try {
-      return localStorage.getItem(AVATAR_KEY);
-    } catch (e) { return null; }
+    try { return localStorage.getItem(AVATAR_KEY); } catch (e) { return null; }
   }
 
   function setAvatar(dataUrl) {
@@ -280,10 +284,47 @@
     if (taskbarAvatar) taskbarAvatar.src = 'icon.png';
   }
 
+  function getWallpaper() {
+    try { return localStorage.getItem(WALLPAPER_KEY); } catch (e) { return null; }
+  }
+
+  function setWallpaper(dataUrl) {
+    try { localStorage.setItem(WALLPAPER_KEY, dataUrl); } catch (e) {}
+    if (desktopEl) {
+      desktopEl.style.backgroundImage = 'url(' + dataUrl + ')';
+      desktopEl.style.backgroundSize = 'cover';
+      desktopEl.style.backgroundPosition = 'center';
+    }
+  }
+
+  function updateWallpaperUI() {
+    const saved = getWallpaper();
+    if (saved && desktopEl) {
+      desktopEl.style.backgroundImage = 'url(' + saved + ')';
+      desktopEl.style.backgroundSize = 'cover';
+      desktopEl.style.backgroundPosition = 'center';
+    }
+  }
+
+  function resetWallpaper() {
+    try { localStorage.removeItem(WALLPAPER_KEY); } catch (e) {}
+    if (desktopEl) {
+      desktopEl.style.backgroundImage = '';
+      desktopEl.style.backgroundSize = '';
+      desktopEl.style.backgroundPosition = '';
+    }
+    toast(t('toast.wallpaperReset'));
+  }
+
   window.resetProfile = resetProfile;
+  window.resetWallpaper = resetWallpaper;
+  window.setWallpaper = setWallpaper;
+  window.setAvatar = setAvatar;
+  window.setUsername = setUsername;
 
   updateUsernameUI();
   updateAvatarUI();
+  updateWallpaperUI();
 
   if (editBtn) {
     editBtn.addEventListener('click', async e => {
@@ -323,6 +364,8 @@
           const data = canvas.toDataURL('image/png');
           setAvatar(data);
           toast(t('toast.avatarSaved'));
+          const persImg = document.getElementById('pers-avatar-img');
+          if (persImg) persImg.src = data;
         };
         img.onerror = () => showError(t('toast.avatarFailed'));
         img.src = ev.target.result;
@@ -332,7 +375,236 @@
     });
   }
 
-  document.querySelectorAll('.btn, .pill, .toggle__btn, .app-icon, .taskbar__start, .taskbar__app, .start-menu__item, .start-menu__edit, .start-menu__avatar').forEach(el => {
+  if (wallpaperBtn && wallpaperFile) {
+    wallpaperBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      wallpaperFile.click();
+      if (startMenu) startMenu.classList.remove('is-open');
+    });
+
+    wallpaperFile.addEventListener('change', e => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showError(t('toast.wallpaperFailed'));
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          const maxW = 1920;
+          const scale = Math.min(1, maxW / img.width);
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const data = canvas.toDataURL('image/jpeg', 0.85);
+          setWallpaper(data);
+          toast(t('toast.wallpaperSaved'));
+          const preview = document.getElementById('pers-wp-preview');
+          if (preview) preview.innerHTML = '<img src="' + data + '" alt="" />';
+        };
+        img.onerror = () => showError(t('toast.wallpaperFailed'));
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+      wallpaperFile.value = '';
+    });
+  }
+
+  const desktopIcons = document.getElementById('desktop-icons');
+
+  function saveDesktopPositions() {
+    if (!desktopIcons) return;
+    const positions = {};
+    desktopIcons.querySelectorAll('.app-icon').forEach(el => {
+      const id = el.dataset.icon;
+      if (!id) return;
+      positions[id] = {
+        left: parseInt(el.style.left) || 0,
+        top: parseInt(el.style.top) || 0
+      };
+    });
+    try { localStorage.setItem(DESKTOP_POS_KEY, JSON.stringify(positions)); } catch (e) {}
+  }
+
+  function loadDesktopPositions() {
+    if (!desktopIcons) return;
+    let positions = {};
+    try {
+      const raw = localStorage.getItem(DESKTOP_POS_KEY);
+      if (raw) positions = JSON.parse(raw);
+    } catch (e) {}
+
+    desktopIcons.querySelectorAll('.app-icon').forEach(el => {
+      const id = el.dataset.icon;
+      if (!id || !positions[id]) return;
+      el.style.position = 'absolute';
+      el.style.left = positions[id].left + 'px';
+      el.style.top = positions[id].top + 'px';
+    });
+  }
+
+  function makeIconDraggable(el) {
+    let startX = 0, startY = 0, origX = 0, origY = 0, dragging = false, moved = false;
+
+    el.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = el.getBoundingClientRect();
+      const parentRect = desktopIcons.getBoundingClientRect();
+      origX = rect.left - parentRect.left;
+      origY = rect.top - parentRect.top;
+      el.style.position = 'absolute';
+      el.style.left = origX + 'px';
+      el.style.top = origY + 'px';
+      el.style.zIndex = 999;
+      el.setPointerCapture(e.pointerId);
+    });
+
+    el.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+      const newLeft = Math.max(0, Math.min(window.innerWidth - 100, origX + dx));
+      const newTop = Math.max(0, Math.min(window.innerHeight - 100, origY + dy));
+      el.style.left = newLeft + 'px';
+      el.style.top = newTop + 'px';
+
+      const trashEl = document.querySelector('.app-icon[data-drop="trash"]');
+      if (trashEl) {
+        const trashRect = trashEl.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const overlap = !(elRect.right < trashRect.left || elRect.left > trashRect.right ||
+                          elRect.bottom < trashRect.top || elRect.top > trashRect.bottom);
+        if (overlap && el.dataset.drop !== 'trash') {
+          trashEl.classList.add('is-drop-target');
+        } else {
+          trashEl.classList.remove('is-drop-target');
+        }
+      }
+    });
+
+    el.addEventListener('pointerup', async e => {
+      if (!dragging) return;
+      dragging = false;
+      el.style.zIndex = '';
+      try { el.releasePointerCapture(e.pointerId); } catch (err) {}
+
+      const trashEl = document.querySelector('.app-icon[data-drop="trash"]');
+      if (trashEl) {
+        trashEl.classList.remove('is-drop-target');
+        const trashRect = trashEl.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const overlap = !(elRect.right < trashRect.left || elRect.left > trashRect.right ||
+                          elRect.bottom < trashRect.top || elRect.top > trashRect.bottom);
+        if (overlap && el.dataset.drop !== 'trash') {
+          const ok = await showModal({
+            mode: 'confirm',
+            title: t('trash.moveConfirm'),
+            message: t('trash.moveConfirmText'),
+            okText: t('trash.moveYes')
+          });
+
+          const yesBtn = document.getElementById('modal-ok');
+          const noBtn = document.getElementById('modal-cancel');
+
+          if (yesBtn) yesBtn.style.display = 'none';
+          if (noBtn) noBtn.textContent = t('trash.moveNo');
+        }
+      }
+
+      if (moved) {
+        saveDesktopPositions();
+        el.dataset.dragged = '1';
+        setTimeout(() => { delete el.dataset.dragged; }, 100);
+      }
+    });
+
+    el.addEventListener('click', e => {
+      if (el.dataset.dragged === '1') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+  }
+
+  function resetDesktop() {
+    if (!desktopIcons) return;
+    try { localStorage.removeItem(DESKTOP_POS_KEY); } catch (e) {}
+    desktopIcons.querySelectorAll('.app-icon').forEach(el => {
+      el.style.position = '';
+      el.style.left = '';
+      el.style.top = '';
+    });
+    toast(t('toast.desktopReset'));
+  }
+
+  window.resetDesktop = resetDesktop;
+  window.saveDesktopPositions = saveDesktopPositions;
+  window.loadDesktopPositions = loadDesktopPositions;
+  window.makeIconDraggable = makeIconDraggable;
+
+  loadDesktopPositions();
+  if (desktopIcons) {
+    desktopIcons.querySelectorAll('.app-icon').forEach(makeIconDraggable);
+  }
+
+  const contextMenu = document.getElementById('context-menu');
+
+  function hideContextMenu() {
+    if (contextMenu) contextMenu.classList.remove('is-open');
+  }
+
+  function showContextMenu(x, y) {
+    if (!contextMenu) return;
+    contextMenu.classList.add('is-open');
+    contextMenu.style.left = Math.min(x, window.innerWidth - 220) + 'px';
+    contextMenu.style.top = Math.min(y, window.innerHeight - 180) + 'px';
+  }
+
+  document.addEventListener('contextmenu', e => {
+    const target = e.target;
+    if (target.closest('.window')) return;
+    if (target.closest('.modal')) return;
+    if (target.closest('.start-menu')) return;
+    if (target.closest('.taskbar')) return;
+    if (target.closest('.context-menu')) return;
+    if (target.closest('.app-icon[data-shortcut]')) return;
+    e.preventDefault();
+    showContextMenu(e.clientX, e.clientY);
+  });
+
+  document.addEventListener('click', e => {
+    if (contextMenu && !contextMenu.contains(e.target)) hideContextMenu();
+  });
+
+  if (contextMenu) {
+    contextMenu.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const action = btn.dataset.action;
+        hideContextMenu();
+
+        if (action === 'refresh') {
+          location.reload();
+        } else if (action === 'shortcut') {
+          if (typeof handleCreateShortcut === 'function') handleCreateShortcut();
+        } else if (action === 'personalization') {
+          openApp('personalization');
+        }
+      });
+    });
+  }
+
+  document.querySelectorAll('.btn, .pill, .toggle__btn, .taskbar__start, .taskbar__app, .start-menu__item, .start-menu__edit, .start-menu__avatar, .pers-app__tab, .pers-option').forEach(el => {
     el.addEventListener('pointerdown', e => {
       const rect = el.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height);
@@ -368,7 +640,7 @@
     if (iconEl && ICONS[app.icon]) iconEl.innerHTML = ICONS[app.icon];
 
     const titleEl = node.querySelector('.window__title');
-    titleEl.textContent = app.title;
+    titleEl.textContent = getAppTitle(appId, app);
 
     const offset = Object.keys(openWindows).length * 20;
     const wWidth = Math.min(app.width, window.innerWidth - 40);
@@ -408,6 +680,18 @@
     makeDraggable(node);
     bringToFront(node);
     updateTaskbar();
+  }
+
+  function getAppTitle(appId, app) {
+    const key = 'app.' + appId;
+    const translated = t(key);
+    if (translated && translated !== key) return translated;
+    if (appId.startsWith('details_')) {
+      const base = appId.replace('details_', '');
+      const baseTitle = t('app.' + base);
+      return (baseTitle !== 'app.' + base ? baseTitle : base) + ' - ' + t('app.details');
+    }
+    return app.title;
   }
 
   function closeWindowByApp(appId) {
@@ -472,7 +756,7 @@
       const btn = document.createElement('button');
       btn.className = 'taskbar__app';
       btn.dataset.app = id;
-      btn.innerHTML = '<span class="window__icon window__icon--sm"></span><span>' + app.title + '</span>';
+      btn.innerHTML = '<span class="window__icon window__icon--sm"></span><span>' + getAppTitle(id, app) + '</span>';
       if (ICONS[app.icon]) btn.querySelector('.window__icon').innerHTML = ICONS[app.icon];
 
       btn.addEventListener('click', () => {
@@ -500,7 +784,7 @@
       const app = APPS[id];
       if (!app) return;
       const titleEl = w.el.querySelector('.window__title');
-      if (titleEl) titleEl.textContent = app.title;
+      if (titleEl) titleEl.textContent = getAppTitle(id, app);
       app.render(w.body);
     });
     updateTaskbar();
