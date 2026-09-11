@@ -19,14 +19,14 @@ const I18N = {
     "app.personalization": "Personalization",
     "app.achievements": "Achievements",
     "app.calendar": "Calendar",
-    "app.details": "Details",
+    "app.arcade": "Arcade",
+    "app.work": "Work",
 
     "portfolio.github": "GitHub",
     "portfolio.site": "Site",
-    "portfolio.seeMore": "See the Portfolio app in site for more details",
+    "portfolio.details": "Details",
 
     "context.refresh": "Refresh",
-    "context.changeWallpaper": "Change wallpaper",
     "context.createShortcut": "Create shortcut",
     "context.personalization": "Personalization",
 
@@ -41,6 +41,28 @@ const I18N = {
     "system.shutdownConfirm": "Are you sure you want to shut down?",
     "system.restartConfirm": "Restart the system?",
     "system.goodbye": "Goodbye!",
+
+    "boot.loading": "Loading LUCOS...",
+    "boot.welcome": "Welcome, ",
+
+    "arcade.title": "Arcade",
+    "arcade.snake3d": "Snake 3D",
+    "arcade.tetris": "Tetris",
+    "arcade.solitaire": "Solitaire",
+    "arcade.minesweeper": "Minesweeper",
+    "arcade.clicker": "Clicker Cat",
+    "arcade.back": "Back to menu",
+    "arcade.score": "Score",
+    "arcade.gameOver": "Game Over",
+    "arcade.pressR": "Press R to restart",
+    "arcade.pressQ": "Press Q to exit",
+    "arcade.win": "You win!",
+    "arcade.lose": "You lose!",
+    "arcade.clickCat": "Click the cat!",
+    "arcade.clicks": "Clicks",
+    "arcade.flagMode": "Flag mode",
+    "arcade.mines": "Mines",
+    "arcade.time": "Time",
 
     "shortcut.title": "Create shortcut",
     "shortcut.name": "Shortcut name",
@@ -171,16 +193,26 @@ const I18N = {
 
     "calendar.title": "Calendar",
     "calendar.today": "Today",
+    "calendar.daysUntil": "Days until this date",
+    "calendar.daysPassed": "Days passed since this date",
+    "calendar.event": "Event",
     "calendar.months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     "calendar.days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+
+    "calendar.event.lucConverter": "LucConverter released",
+    "calendar.event.lucCursor": "LucCursor released",
+    "calendar.event.ipCheck": "IP-check released",
+    "calendar.event.sqlInImage": "SQL-in-image released",
+    "calendar.event.lucFont": "LucFont released",
+    "calendar.event.lucovisa": "Lucovisa released",
+    "calendar.event.catDigger": "Cat Digger started development",
+    "calendar.event.lucHoroscope": "LucHoroscope bot released",
 
     "hacker.hint": "write 'help' to see commands",
     "hacker.helpLines": [
       "Available commands:",
       "  help             - show this help",
       "  clear            - clear terminal",
-      "  snake            - play Snake",
-      "  tetris           - play Tetris",
       "  matrix           - digital rain",
       "  guess            - guess the number",
       "  cat              - animated cat",
@@ -191,12 +223,11 @@ const I18N = {
       "  reset theme      - reset wallpaper",
       "  reset desktop    - reset desktop icons",
       "  reset profile    - reset username and avatar",
+      "  restart          - restart the site",
       "  exit <app>       - close an app window"
     ],
     "hacker.unknown": "Unknown command: ",
     "hacker.tryHelp": ". Try 'help' for a list of available commands.",
-    "hacker.snakeHint": "Arrows / WASD to move. R - restart. Q - quit.",
-    "hacker.tetrisHint": "Arrows / WASD to move, Up - rotate. R - restart. Q - quit.",
     "hacker.matrixHint": "Press Q to exit.",
     "hacker.guessHint": "I guessed a number from 1 to 100. Try to guess it!",
     "hacker.guessHigher": "Higher!",
@@ -205,8 +236,6 @@ const I18N = {
     "hacker.guessAttempts": " attempts!",
     "hacker.guessInvalid": "Please enter a number.",
     "hacker.catHint": "Press Q to exit.",
-    "hacker.gameOver": "GAME OVER - R to restart, Q to quit",
-    "hacker.score": "Score: ",
     "hacker.exited": "Closed app: ",
     "hacker.exitNotFound": "App not open: ",
     "hacker.usage": "Usage: exit <app>",
@@ -248,7 +277,7 @@ const I18N = {
 
     "joke.1": "Seriously?",
     "joke.2": "This is the same site",
-    "joke.3": "If you want to refresh - click the clock",
+    "joke.3": "To refresh - click Restart in the Start menu",
     "joke.4": "This is not funny",
     "joke.5": "What do you want?",
     "joke.6": "THIS IS THE SAME SITE",
@@ -259,7 +288,6 @@ const I18N = {
     "achievements.unlocked": "Unlocked",
     "achievements.locked": "Locked",
     "achievements.hidden": "Hidden achievement",
-    "achievements.hiddenLeft": "Hidden left",
     "achievements.new": "Achievement unlocked!",
 
     "ach.first_app.title": "First Steps",
@@ -277,10 +305,30 @@ const I18N = {
 
     "ach.style.title": "Exclusive",
     "ach.style.desc": "Set custom nickname, avatar and wallpaper",
-    "ach.style.comment": "You are original, well done"
+    "ach.style.comment": "You are original, well done",
+
+    "ach.snake1000.title": "Snake Master",
+    "ach.snake1000.desc": "Score 1000 in Snake 3D",
+    "ach.snake1000.comment": "Are you a snake or a human?",
+
+    "ach.tetris10000.title": "Tetris God",
+    "ach.tetris10000.desc": "Score 10000 in Tetris",
+    "ach.tetris10000.comment": "T-spin master",
+
+    "ach.clicker1000000.title": "Clicker Lord",
+    "ach.clicker1000000.desc": "Click the cat 1,000,000 times",
+    "ach.clicker1000000.comment": "You have no life, but we love you",
+
+    "ach.minesweeper.title": "Minesweeper",
+    "ach.minesweeper.desc": "Win Minesweeper",
+    "ach.minesweeper.comment": "Not today, boom!",
+
+    "ach.solitaire.title": "Solitaire",
+    "ach.solitaire.desc": "Win Solitaire",
+    "ach.solitaire.comment": "Klondike champion"
   },
   ru: {
-    "page.title": "Lucovisa",
+    "page.title": "Lucovisa - Визитная Карточка",
     "page.description": "Сайт-визитка Lucovisa: фронтенд, разработка игр и веб-инструменты.",
 
     "taskbar.start": "Пуск",
@@ -299,14 +347,14 @@ const I18N = {
     "app.personalization": "Персонализация",
     "app.achievements": "Достижения",
     "app.calendar": "Календарь",
-    "app.details": "Подробнее",
+    "app.arcade": "Аркада",
+    "app.work": "Работа",
 
     "portfolio.github": "GitHub",
     "portfolio.site": "Сайт",
-    "portfolio.seeMore": "Подробности в приложении Портфолио на сайте",
+    "portfolio.details": "Подробнее",
 
     "context.refresh": "Обновить",
-    "context.changeWallpaper": "Сменить обои",
     "context.createShortcut": "Создать ярлык",
     "context.personalization": "Персонализация",
 
@@ -321,6 +369,28 @@ const I18N = {
     "system.shutdownConfirm": "Вы уверены, что хотите выключить?",
     "system.restartConfirm": "Перезагрузить систему?",
     "system.goodbye": "До встречи!",
+
+    "boot.loading": "Загрузка LUCOS...",
+    "boot.welcome": "Добро пожаловать, ",
+
+    "arcade.title": "Аркада",
+    "arcade.snake3d": "Змейка 3D",
+    "arcade.tetris": "Тетрис",
+    "arcade.solitaire": "Косынка",
+    "arcade.minesweeper": "Сапёр",
+    "arcade.clicker": "Кликер-Кот",
+    "arcade.back": "Назад в меню",
+    "arcade.score": "Счёт",
+    "arcade.gameOver": "Игра окончена",
+    "arcade.pressR": "R - рестарт",
+    "arcade.pressQ": "Q - выход",
+    "arcade.win": "Ты победил!",
+    "arcade.lose": "Ты проиграл!",
+    "arcade.clickCat": "Кликай по коту!",
+    "arcade.clicks": "Клики",
+    "arcade.flagMode": "Режим флажка",
+    "arcade.mines": "Мины",
+    "arcade.time": "Время",
 
     "shortcut.title": "Создать ярлык",
     "shortcut.name": "Имя ярлыка",
@@ -451,16 +521,26 @@ const I18N = {
 
     "calendar.title": "Календарь",
     "calendar.today": "Сегодня",
+    "calendar.daysUntil": "Дней до этой даты",
+    "calendar.daysPassed": "Дней с этой даты",
+    "calendar.event": "Событие",
     "calendar.months": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
     "calendar.days": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+
+    "calendar.event.lucConverter": "Релиз LucConverter",
+    "calendar.event.lucCursor": "Релиз LucCursor",
+    "calendar.event.ipCheck": "Релиз IP-check",
+    "calendar.event.sqlInImage": "Релиз SQL-in-image",
+    "calendar.event.lucFont": "Релиз LucFont",
+    "calendar.event.lucovisa": "Релиз Lucovisa",
+    "calendar.event.catDigger": "Начало разработки Cat Digger",
+    "calendar.event.lucHoroscope": "Релиз LucHoroscope bot",
 
     "hacker.hint": "напиши 'help' чтобы увидеть команды",
     "hacker.helpLines": [
       "Доступные команды:",
       "  help             - показать справку",
       "  clear            - очистить терминал",
-      "  snake            - играть в Змейку",
-      "  tetris           - играть в Тетрис",
       "  matrix           - цифровой дождь",
       "  guess            - угадай число",
       "  cat              - анимированный кот",
@@ -471,12 +551,11 @@ const I18N = {
       "  reset theme      - сбросить обои",
       "  reset desktop    - сбросить иконки рабочего стола",
       "  reset profile    - сбросить имя и аватар",
+      "  restart          - перезагрузить сайт",
       "  exit <app>       - закрыть окно приложения"
     ],
     "hacker.unknown": "Неизвестная команда: ",
     "hacker.tryHelp": ". Попробуй 'help' для списка доступных команд.",
-    "hacker.snakeHint": "Стрелки / WASD - движение. R - рестарт. Q - выход.",
-    "hacker.tetrisHint": "Стрелки / WASD - движение, Вверх - поворот. R - рестарт. Q - выход.",
     "hacker.matrixHint": "Нажми Q чтобы выйти.",
     "hacker.guessHint": "Я загадал число от 1 до 100. Попробуй угадать!",
     "hacker.guessHigher": "Больше!",
@@ -485,8 +564,6 @@ const I18N = {
     "hacker.guessAttempts": " попыток!",
     "hacker.guessInvalid": "Введи число.",
     "hacker.catHint": "Нажми Q чтобы выйти.",
-    "hacker.gameOver": "GAME OVER - R - рестарт, Q - выход",
-    "hacker.score": "Счёт: ",
     "hacker.exited": "Закрыто приложение: ",
     "hacker.exitNotFound": "Приложение не открыто: ",
     "hacker.usage": "Использование: exit <app>",
@@ -528,7 +605,7 @@ const I18N = {
 
     "joke.1": "Ты серьезно?",
     "joke.2": "Это этот же сайт",
-    "joke.3": "Если хочешь обновить - нажми на часы",
+    "joke.3": "Для обновления нажми в Пуске на Перезагрузить",
     "joke.4": "Это не смешно",
     "joke.5": "Что ты хочешь?",
     "joke.6": "ЭТО ЭТОТ ЖЕ САЙТ",
@@ -539,7 +616,6 @@ const I18N = {
     "achievements.unlocked": "Открыто",
     "achievements.locked": "Закрыто",
     "achievements.hidden": "Скрытое достижение",
-    "achievements.hiddenLeft": "Скрытых осталось",
     "achievements.new": "Достижение открыто!",
 
     "ach.first_app.title": "First Steps",
@@ -557,7 +633,27 @@ const I18N = {
 
     "ach.style.title": "Эксклюзивный",
     "ach.style.desc": "Сделай кастомный ник, аватар и обои",
-    "ach.style.comment": "Ты оригинальный, молодец"
+    "ach.style.comment": "Ты оригинальный, молодец",
+
+    "ach.snake1000.title": "Мастер Змейки",
+    "ach.snake1000.desc": "Набери 1000 очков в Змейке 3D",
+    "ach.snake1000.comment": "Ты змей или человек?",
+
+    "ach.tetris10000.title": "Бог Тетриса",
+    "ach.tetris10000.desc": "Набери 10000 очков в Тетрисе",
+    "ach.tetris10000.comment": "Мастер T-спинов",
+
+    "ach.clicker1000000.title": "Лорд Кликер",
+    "ach.clicker1000000.desc": "Кликни по коту 1 000 000 раз",
+    "ach.clicker1000000.comment": "У тебя нет жизни, но мы тебя любим",
+
+    "ach.minesweeper.title": "Сапёр",
+    "ach.minesweeper.desc": "Победи в Сапёре",
+    "ach.minesweeper.comment": "Не сегодня, бум!",
+
+    "ach.solitaire.title": "Косынка",
+    "ach.solitaire.desc": "Победи в Косынке",
+    "ach.solitaire.comment": "Чемпион Клондайка"
   }
 };
 

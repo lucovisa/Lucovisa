@@ -79,14 +79,7 @@ const LUC_VISA = {
   isSelf: true
 };
 
-const JOKES = [
-  'joke.1',
-  'joke.2',
-  'joke.3',
-  'joke.4',
-  'joke.5',
-  'joke.6'
-];
+const JOKES = ['joke.1', 'joke.2', 'joke.3', 'joke.4', 'joke.5', 'joke.6'];
 
 const CONTACTS = [
   { id: 'x',     label: 'contact.x',     value: '@Lukovica467771',                url: 'https://x.com/Lukovica467771/' },
@@ -110,20 +103,24 @@ const APPS = {
   donate:          { title: 'Donate',          icon: 'heart',    width: 560, height: 480, render: renderDonate },
   trash:           { title: 'Trash',           icon: 'trash',    width: 520, height: 400, render: renderTrash },
   personalization: { title: 'Personalization', icon: 'settings', width: 640, height: 640, render: renderPersonalization },
-  achievements:    { title: 'Achievements',    icon: 'trophy',   width: 620, height: 520, render: renderAchievements },
-  calendar:        { title: 'Calendar',        icon: 'calendar', width: 480, height: 480, render: renderCalendar }
+  achievements:    { title: 'Achievements',    icon: 'trophy',   width: 620, height: 540, render: renderAchievements },
+  calendar:        { title: 'Calendar',        icon: 'calendar', width: 520, height: 520, render: renderCalendar },
+  arcade:          { title: 'Arcade',          icon: 'joystick', width: 720, height: 620, render: renderArcadeWrapper },
+  work:            { title: 'Work',            icon: 'trophy',   width: 620, height: 560, render: renderWork }
 };
 
 function lang() { return document.documentElement.lang || 'en'; }
+
+function renderArcadeWrapper(body) {
+  if (typeof renderArcade === 'function') renderArcade(body);
+}
 
 function renderTrash(body) {
   body.innerHTML =
     '<div class="trash-app">' +
       '<div class="trash-app__header">' +
         '<span class="app-icon__svg trash-app__icon" data-svg="trash"></span>' +
-        '<div>' +
-          '<h2>' + t('trash.title') + '</h2>' +
-        '</div>' +
+        '<div><h2>' + t('trash.title') + '</h2></div>' +
       '</div>' +
       '<div class="trash-app__files">' +
         '<button class="trash-file" data-file="error">' +
@@ -194,13 +191,8 @@ function renderPersonalization(body) {
 }
 
 function renderPersProfile(el) {
-  const currentAvatar = (function () {
-    try { return localStorage.getItem('avatar'); } catch (e) { return null; }
-  })();
-
-  const currentName = (function () {
-    try { return localStorage.getItem('username'); } catch (e) { return null; }
-  })();
+  const currentAvatar = (function () { try { return localStorage.getItem('avatar'); } catch (e) { return null; } })();
+  const currentName = (function () { try { return localStorage.getItem('username'); } catch (e) { return null; } })();
 
   el.innerHTML =
     '<div class="pers-section">' +
@@ -219,25 +211,19 @@ function renderPersProfile(el) {
       '<button class="pill" id="pers-save">' + t('modal.ok') + '</button>' +
     '</div>';
 
-  const avatarBtn = el.querySelector('#pers-avatar-btn');
-  const nameInp = el.querySelector('#pers-name');
-  const saveBtn = el.querySelector('#pers-save');
-
-  avatarBtn.addEventListener('click', () => {
-    const fileInput = document.getElementById('avatar-file');
-    if (fileInput) fileInput.click();
+  el.querySelector('#pers-avatar-btn').addEventListener('click', () => {
+    const fi = document.getElementById('avatar-file');
+    if (fi) fi.click();
   });
 
-  saveBtn.addEventListener('click', () => {
-    const name = nameInp.value.trim();
+  el.querySelector('#pers-save').addEventListener('click', () => {
+    const name = el.querySelector('#pers-name').value.trim();
     if (name && typeof setUsername === 'function') setUsername(name);
   });
 }
 
 function renderPersWallpaper(el) {
-  const currentWp = (function () {
-    try { return localStorage.getItem('wallpaper'); } catch (e) { return null; }
-  })();
+  const currentWp = (function () { try { return localStorage.getItem('wallpaper'); } catch (e) { return null; } })();
 
   el.innerHTML =
     '<div class="pers-section">' +
@@ -252,18 +238,14 @@ function renderPersWallpaper(el) {
       '</div>' +
     '</div>';
 
-  const uploadBtn = el.querySelector('#pers-wp-upload');
-  const resetBtn = el.querySelector('#pers-wp-reset');
-  const preview = el.querySelector('#pers-wp-preview');
-
-  uploadBtn.addEventListener('click', () => {
-    const fileInput = document.getElementById('wallpaper-file');
-    if (fileInput) fileInput.click();
+  el.querySelector('#pers-wp-upload').addEventListener('click', () => {
+    const fi = document.getElementById('wallpaper-file');
+    if (fi) fi.click();
   });
 
-  resetBtn.addEventListener('click', () => {
+  el.querySelector('#pers-wp-reset').addEventListener('click', () => {
     if (typeof resetWallpaper === 'function') resetWallpaper();
-    preview.innerHTML = '<div class="pers-wallpaper-empty">' + t('personalization.wallpaperHint') + '</div>';
+    el.querySelector('#pers-wp-preview').innerHTML = '<div class="pers-wallpaper-empty">' + t('personalization.wallpaperHint') + '</div>';
   });
 }
 
@@ -303,12 +285,8 @@ function renderPersLanguage(el) {
     '<div class="pers-section">' +
       '<h3>' + t('personalization.language') + '</h3>' +
       '<div class="pers-options">' +
-        '<button class="pers-option' + (currentLang === 'en' ? ' is-active' : '') + '" data-lang="en">' +
-          '<span>English</span>' +
-        '</button>' +
-        '<button class="pers-option' + (currentLang === 'ru' ? ' is-active' : '') + '" data-lang="ru">' +
-          '<span>Русский</span>' +
-        '</button>' +
+        '<button class="pers-option' + (currentLang === 'en' ? ' is-active' : '') + '" data-lang="en"><span>English</span></button>' +
+        '<button class="pers-option' + (currentLang === 'ru' ? ' is-active' : '') + '" data-lang="ru"><span>Русский</span></button>' +
       '</div>' +
     '</div>';
 
@@ -365,9 +343,7 @@ function renderPersAchievements(el) {
       '<div class="pers-label">' + t('personalization.achievementPosition') + '</div>' +
       '<div class="pers-options pers-options--grid">' +
         positions.map(p =>
-          '<button class="pers-option' + (currentPos === p.id ? ' is-active' : '') + '" data-pos="' + p.id + '">' +
-            '<span>' + t(p.label) + '</span>' +
-          '</button>'
+          '<button class="pers-option' + (currentPos === p.id ? ' is-active' : '') + '" data-pos="' + p.id + '"><span>' + t(p.label) + '</span></button>'
         ).join('') +
       '</div>' +
     '</div>';
@@ -413,19 +389,7 @@ function renderPersReset(el) {
         clearShortcuts();
         toast(t('toast.shortcutsReset'));
       } else if (type === 'all') {
-        try {
-          localStorage.removeItem('username');
-          localStorage.removeItem('avatar');
-          localStorage.removeItem('wallpaper');
-          localStorage.removeItem('theme');
-          localStorage.removeItem('lang');
-          localStorage.removeItem('desktop_positions');
-          localStorage.removeItem('custom_shortcuts');
-          localStorage.removeItem('starred_repo');
-          localStorage.removeItem('achievement_position');
-          localStorage.removeItem('achievements_unlocked');
-          localStorage.removeItem('icon_size');
-        } catch (e) {}
+        try { localStorage.clear(); } catch (e) {}
         toast(t('toast.allReset'));
         setTimeout(() => location.reload(), 800);
       }
@@ -449,7 +413,7 @@ function renderPersExportImport(el) {
   const importFile = el.querySelector('#pers-import-file');
 
   exportBtn.addEventListener('click', () => {
-    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size'];
+    const keys = ['username', 'avatar', 'wallpaper', 'theme', 'lang', 'desktop_positions', 'custom_shortcuts', 'starred_repo', 'achievement_position', 'achievements_unlocked', 'icon_size', 'clicker_count'];
     const data = { version: 1, date: new Date().toISOString() };
     keys.forEach(k => {
       try {
@@ -497,7 +461,6 @@ function renderAchievements(body) {
   const list = (typeof getAchievements === 'function') ? getAchievements() : [];
   const total = list.length;
   const unlocked = list.filter(a => a.unlocked).length;
-  const hiddenLeft = (typeof countAchievementsHiddenLeft === 'function') ? countAchievementsHiddenLeft() : 0;
   const percent = total > 0 ? Math.round((unlocked / total) * 100) : 0;
 
   let html =
@@ -507,7 +470,6 @@ function renderAchievements(body) {
         '<div class="achievements-app__info">' +
           '<h2>' + t('achievements.title') + '</h2>' +
           '<p>' + t('achievements.progress') + ': ' + unlocked + ' / ' + total + ' (' + percent + '%)</p>' +
-          (hiddenLeft > 0 ? '<p class="achievements-app__hidden">' + t('achievements.hiddenLeft') + ': ' + hiddenLeft + '</p>' : '') +
         '</div>' +
       '</div>' +
       '<div class="achievements-app__bar"><div class="achievements-app__bar-fill" style="width: ' + percent + '%"></div></div>' +
@@ -546,6 +508,45 @@ function renderCalendar(body) {
   const months = t('calendar.months');
   const days = t('calendar.days');
 
+  function getEventsForDate(y, m, d) {
+    const result = [];
+    WORK_EVENTS.forEach(ev => {
+      const [ey, em, ed] = ev.date.split('-').map(n => parseInt(n, 10));
+      if (ey === y && em - 1 === m && ed === d) result.push(ev);
+    });
+    return result;
+  }
+
+  function showDayInfo(y, m, d) {
+    const events = getEventsForDate(y, m, d);
+    const target = new Date(y, m, d);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diff = Math.round((target - today) / (1000 * 60 * 60 * 24));
+
+    let html = '<div class="cal-dayinfo">';
+    html += '<div class="cal-dayinfo__date">' + d + ' ' + months[m] + ' ' + y + '</div>';
+
+    if (diff === 0) html += '<div class="cal-dayinfo__diff">' + t('calendar.today') + '</div>';
+    else if (diff > 0) html += '<div class="cal-dayinfo__diff">' + t('calendar.daysUntil') + ': ' + diff + '</div>';
+    else html += '<div class="cal-dayinfo__diff">' + t('calendar.daysPassed') + ': ' + Math.abs(diff) + '</div>';
+
+    if (events.length > 0) {
+      html += '<div class="cal-dayinfo__events">';
+      events.forEach(ev => {
+        html += '<div class="cal-dayinfo__event">' +
+          '<div class="cal-dayinfo__event-title">' + t(ev.key) + '</div>' +
+          (ev.url ? '<a class="pill" href="' + ev.url + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
+        '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
+
+    showHtml(html, t('calendar.title'));
+  }
+
   function render() {
     const firstDay = new Date(viewYear, viewMonth, 1);
     const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
@@ -559,7 +560,11 @@ function renderCalendar(body) {
     }
     for (let d = 1; d <= daysInMonth; d++) {
       const isToday = (d === now.getDate() && viewMonth === now.getMonth() && viewYear === now.getFullYear());
-      grid += '<div class="cal-day' + (isToday ? ' cal-day--today' : '') + '">' + d + '</div>';
+      const hasEvent = getEventsForDate(viewYear, viewMonth, d).length > 0;
+      grid += '<div class="cal-day' +
+        (isToday ? ' cal-day--today' : '') +
+        (hasEvent ? ' cal-day--event' : '') +
+        '" data-day="' + d + '">' + d + '</div>';
     }
 
     body.innerHTML =
@@ -593,9 +598,86 @@ function renderCalendar(body) {
       viewMonth = now.getMonth();
       render();
     });
+
+    body.querySelectorAll('.cal-day[data-day]').forEach(cell => {
+      cell.addEventListener('click', () => {
+        const d = parseInt(cell.dataset.day);
+        showDayInfo(viewYear, viewMonth, d);
+      });
+    });
   }
 
   render();
+}
+
+function renderWork(body) {
+  const l = lang();
+
+  let html =
+    '<div class="work-app">' +
+      '<div class="work-app__header">' +
+        '<span class="app-icon__svg work-app__icon" data-svg="trophy"></span>' +
+        '<div>' +
+          '<h2>' + t('app.work') + '</h2>' +
+          '<p>' + WORK_EVENTS.length + ' ' + (l === 'ru' ? 'событий' : 'events') + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<div class="work-timeline">';
+
+  const sorted = WORK_EVENTS.slice().sort((a, b) => b.date.localeCompare(a.date));
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  sorted.forEach(ev => {
+    const [y, m, d] = ev.date.split('-').map(n => parseInt(n, 10));
+    const evDate = new Date(y, m - 1, d);
+    const diffDays = Math.round((today - evDate) / (1000 * 60 * 60 * 24));
+
+    let relText = '';
+    if (diffDays === 0) relText = l === 'ru' ? 'сегодня' : 'today';
+    else if (diffDays > 0) relText = (l === 'ru' ? 'прошло ' : '') + diffDays + (l === 'ru' ? ' дн.' : ' days ago');
+    else relText = (l === 'ru' ? 'через ' : 'in ') + Math.abs(diffDays) + (l === 'ru' ? ' дн.' : ' days');
+
+    html +=
+      '<div class="work-item">' +
+        '<div class="work-item__dot"></div>' +
+        '<div class="work-item__body">' +
+          '<div class="work-item__date">' + d + '.' + String(m).padStart(2, '0') + '.' + y + ' · ' + relText + '</div>' +
+          '<div class="work-item__title">' + t(ev.key) + '</div>' +
+          (ev.url ? '<a class="work-item__link" href="' + ev.url + '" target="_blank" rel="noopener">' + ev.url + '</a>' : '') +
+        '</div>' +
+      '</div>';
+  });
+
+  html += '</div>';
+
+  html +=
+    '<div class="work-tech">' +
+      '<h3>' + (l === 'ru' ? 'Технологии' : 'Tech stack') + '</h3>' +
+      '<div class="work-tech__grid">' +
+        '<span class="work-tech__item">JavaScript</span>' +
+        '<span class="work-tech__item">C++</span>' +
+        '<span class="work-tech__item">C#</span>' +
+        '<span class="work-tech__item">Python</span>' +
+        '<span class="work-tech__item">C</span>' +
+        '<span class="work-tech__item">Godot</span>' +
+        '<span class="work-tech__item">Git</span>' +
+        '<span class="work-tech__item">HTML</span>' +
+        '<span class="work-tech__item">CSS</span>' +
+        '<span class="work-tech__item">SEO</span>' +
+      '</div>' +
+    '</div>';
+
+  html +=
+    '<div class="work-reviews">' +
+      '<h3>' + (l === 'ru' ? 'Отзывы' : 'Reviews') + '</h3>' +
+      '<p class="work-reviews__empty">' + (l === 'ru' ? 'Пока нет отзывов' : 'No reviews yet') + '</p>' +
+    '</div>';
+
+  html += '</div>';
+
+  body.innerHTML = html;
+  renderIcons(body);
 }
 
 function projectCard(p, opts) {
@@ -603,20 +685,23 @@ function projectCard(p, opts) {
   const l = lang();
   const el = document.createElement('div');
   el.className = 'pyramid__card' + (p.gold ? ' pyramid__card--gold' : '');
-  if (p.isSelf) {
-    el.classList.add('pyramid__card--self');
-  }
+  if (p.isSelf) el.classList.add('pyramid__card--self');
+
+  let actionsHtml = '';
+  if (p.github) actionsHtml += '<a class="pill pill--ghost card-action" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>';
+  if (p.site && !p.isSelf) actionsHtml += '<a class="pill card-action" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>';
 
   el.innerHTML =
     '<h3>' + p.title + '</h3>' +
-    '<p>' + (p.desc[l] || p.desc.en) + '</p>';
+    '<p>' + (p.desc[l] || p.desc.en) + '</p>' +
+    (actionsHtml ? '<div class="pyramid__actions">' + actionsHtml + '</div>' : '');
 
   el.addEventListener('click', e => {
-    if (e.target.closest('a')) return;
+    if (e.target.closest('.card-action')) return;
     if (p.isSelf) {
       handleSelfClick(el);
-    } else if (p.site) {
-      window.open(p.site, '_blank', 'noopener');
+    } else {
+      showProjectInfo(p);
     }
   });
 
@@ -635,6 +720,20 @@ function handleSelfClick(el) {
   }
   const idx = (selfClickCount - 1) % JOKES.length;
   toast(t(JOKES[idx]));
+}
+
+function showProjectInfo(p) {
+  const l = lang();
+  let html = '<div class="project-info">' +
+    '<h3>' + p.title + '</h3>' +
+    '<p>' + ((p.details && (p.details[l] || p.details.en)) || (p.desc[l] || p.desc.en)) + '</p>' +
+    '<div class="project-info__actions">' +
+      (p.github ? '<a class="pill pill--ghost" href="' + p.github + '" target="_blank" rel="noopener">' + t('portfolio.github') + '</a>' : '') +
+      (p.site && !p.isSelf ? '<a class="pill" href="' + p.site + '" target="_blank" rel="noopener">' + t('portfolio.site') + '</a>' : '') +
+    '</div>' +
+  '</div>';
+
+  showHtml(html, p.title);
 }
 
 function renderPortfolio(body) {
@@ -768,6 +867,10 @@ function buildMapGraph(container) {
     text.setAttribute('x', n.w / 2);
     text.setAttribute('y', n.h / 2 + 5);
     text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('fill', '#E5EDF5');
+    text.setAttribute('font-family', 'Segoe UI, Tahoma, sans-serif');
+    text.setAttribute('font-size', '13');
+    text.setAttribute('font-weight', '600');
     text.textContent = n.label;
 
     g.appendChild(rect);
@@ -895,9 +998,6 @@ function renderDonate(body) {
     copyText(btn.dataset.copy, btn, t('donate.copied'));
   });
 
-  const heart = document.createElement('div');
-  heart.style.display = 'none';
-
   body.innerHTML = '';
   body.appendChild(wrap);
 
@@ -958,7 +1058,7 @@ function renderHacker(body) {
   let history = [];
   let historyIndex = -1;
 
-  const COMMANDS = ['help', 'clear', 'snake', 'tetris', 'matrix', 'guess', 'cat', 'whoami', 'ls', 'theme', 'lang', 'reset', 'exit'];
+  const COMMANDS = ['help', 'clear', 'matrix', 'guess', 'cat', 'whoami', 'ls', 'theme', 'lang', 'reset', 'restart', 'exit'];
 
   const printLine = (text, cls) => {
     const line = document.createElement('div');
@@ -970,10 +1070,8 @@ function renderHacker(body) {
 
   const printInput = () => {
     const line = document.createElement('div');
-    line.className = 'terminal__line';
-    line.style.display = 'flex';
-    line.style.gap = '6px';
-    line.innerHTML = '<span class="terminal__prompt">npm $</span>';
+    line.className = 'terminal__line terminal__line--input';
+    line.innerHTML = '<span class="terminal__prompt">npm  $</span>';
     const input = document.createElement('input');
     input.className = 'terminal__input';
     input.type = 'text';
@@ -996,9 +1094,8 @@ function renderHacker(body) {
           return;
         }
         const match = COMMANDS.filter(c => c.startsWith(val));
-        if (match.length === 1) {
-          input.value = match[0] + ' ';
-        } else if (match.length > 1) {
+        if (match.length === 1) input.value = match[0] + ' ';
+        else if (match.length > 1) {
           printLine('');
           match.forEach(c => printLine('  ' + c));
           printInput();
@@ -1029,59 +1126,11 @@ function renderHacker(body) {
       }
       historyIndex = -1;
       input.disabled = true;
-      line.querySelector('.terminal__prompt').textContent = 'npm $ ' + cmd;
+      line.querySelector('.terminal__prompt').textContent = 'npm  $ ' + cmd;
       input.remove();
       currentInput = null;
       handle(cmd);
     });
-  };
-
-  const runGame = (type) => {
-    busy = true;
-    term.innerHTML = '';
-    const canvas = document.createElement('canvas');
-    canvas.className = 'game-canvas';
-    term.appendChild(canvas);
-    const hint = document.createElement('div');
-    hint.className = 'game-hint';
-    hint.textContent = type === 'snake' ? t('hacker.snakeHint') : t('hacker.tetrisHint');
-    term.appendChild(hint);
-
-    let gameOverShown = false;
-    const gameOver = () => {
-      if (gameOverShown) return;
-      gameOverShown = true;
-      const go = document.createElement('div');
-      go.className = 'game-over';
-      go.textContent = t('hacker.gameOver');
-      term.appendChild(go);
-    };
-
-    const resetGameOver = () => {
-      gameOverShown = false;
-      const go = term.querySelector('.game-over');
-      if (go) go.remove();
-    };
-
-    const loopRef = { loop: null };
-
-    const stop = () => {
-      window.removeEventListener('keydown', onKey);
-      clearInterval(loopRef.loop);
-      busy = false;
-      currentInput = null;
-      term.innerHTML = '';
-      printLine(t('hacker.hint'), 'terminal__prompt');
-      printInput();
-    };
-
-    let onKey = () => {};
-
-    if (type === 'snake') {
-      loopRef.loop = startSnake(canvas, stop, gameOver, resetGameOver, k => { onKey = k; });
-    } else {
-      loopRef.loop = startTetris(canvas, stop, gameOver, resetGameOver, k => { onKey = k; });
-    }
   };
 
   const runMatrix = () => {
@@ -1139,9 +1188,7 @@ function renderHacker(body) {
 
     const guessInput = () => {
       const line = document.createElement('div');
-      line.className = 'terminal__line';
-      line.style.display = 'flex';
-      line.style.gap = '6px';
+      line.className = 'terminal__line terminal__line--input';
       line.innerHTML = '<span class="terminal__prompt">&gt;</span>';
       const input = document.createElement('input');
       input.className = 'terminal__input';
@@ -1188,59 +1235,72 @@ function renderHacker(body) {
     busy = true;
     term.innerHTML = '';
 
+    const stage = document.createElement('div');
+    stage.className = 'cat-stage';
+    term.appendChild(stage);
+
     const pre = document.createElement('pre');
     pre.className = 'ascii-cat';
-    term.appendChild(pre);
+    stage.appendChild(pre);
 
-    const frame1 = [
-      '        ~                     ',
-      '       /|\\                    ',
-      '      / | \\                   ',
-      '     /  |  \\    ,--.          ',
-      '    /   |   \\  ( o o )        ',
-      '   /    |    \\  \\ -- /  /\\_/\\',
-      '        |       \\    /  ( -.-)',
-      '        |        \\  /   /  ^ \\',
-      '       /|        \\/   ( (   ) )',
-      '      / |               \\  -  /',
-      '     /  |             /\\  \\___/',
-      '        |            /  \\      ',
-      '        |           /    \\     ',
-      '     ---+---       /      \\    ',
-      '        |                       ',
-      '                <><             '
-    ];
-
-    const frame2 = [
-      '                              ',
-      '        ~                     ',
-      '       /|\\                    ',
-      '      / | \\                   ',
-      '     /  |  \\    ,--.          ',
-      '    /   |   \\  ( o o )        ',
-      '   /    |    \\  \\ -- /  /\\_/\\',
-      '        |       \\    /  ( -.-)',
-      '        |        \\  /   /  ^ \\',
-      '       /|        \\/   ( (   ) )',
-      '      / |               \\  -  /',
-      '     /  |             /\\  \\___/',
-      '        |            /  \\      ',
-      '        |           /    \\     ',
-      '     ---+---       /      \\    ',
-      '              <><              '
-    ];
-
-    let frame = 0;
-    const render = () => {
-      pre.textContent = (frame === 0 ? frame1 : frame2).join('\n');
-      frame = (frame + 1) % 2;
-    };
-    render();
+    const fish = document.createElement('div');
+    fish.className = 'cat-fish';
+    fish.textContent = '<><';
+    stage.appendChild(fish);
 
     const hint = document.createElement('div');
     hint.className = 'game-hint';
     hint.textContent = t('hacker.catHint');
     term.appendChild(hint);
+
+    let pos = 0;
+    let dir = 1;
+    const maxPos = 60;
+
+    const framesRight = [
+      [
+        ' /\\_/\\   ',
+        '( o.o )  ',
+        ' > ^ <   ',
+        ' /   \\   '
+      ],
+      [
+        ' /\\_/\\   ',
+        '( o.o )  ',
+        ' > ^ <   ',
+        '  / \\    '
+      ]
+    ];
+
+    const framesLeft = [
+      [
+        '   /\\_/\\ ',
+        '  ( o.o )',
+        '   > ^ < ',
+        '   /   \\ '
+      ],
+      [
+        '   /\\_/\\ ',
+        '  ( o.o )',
+        '   > ^ < ',
+        '    / \\  '
+      ]
+    ];
+
+    let frameIdx = 0;
+    const render = () => {
+      const frames = dir === 1 ? framesRight : framesLeft;
+      pre.textContent = frames[frameIdx].join('\n');
+      frameIdx = (frameIdx + 1) % frames.length;
+
+      pos += dir;
+      if (pos >= maxPos) dir = -1;
+      if (pos <= 0) dir = 1;
+
+      fish.style.left = (pos * 4) + 'px';
+      fish.textContent = dir === 1 ? '<><' : '><>';
+    };
+    render();
 
     const onKey = e => {
       const k = e.key.toLowerCase();
@@ -1256,7 +1316,7 @@ function renderHacker(body) {
     };
     window.addEventListener('keydown', onKey);
 
-    const loop = setInterval(render, 500);
+    const loop = setInterval(render, 400);
   };
 
   const handle = (cmd) => {
@@ -1337,6 +1397,11 @@ function renderHacker(body) {
       printInput(); return;
     }
 
+    if (c === 'restart') {
+      location.reload();
+      return;
+    }
+
     if (c.startsWith('exit')) {
       const parts = c.split(/\s+/);
       if (parts.length < 2) {
@@ -1354,7 +1419,6 @@ function renderHacker(body) {
       printInput(); return;
     }
 
-    if (c === 'snake' || c === 'tetris') { runGame(c); return; }
     if (c === 'matrix') { runMatrix(); return; }
     if (c === 'guess') { runGuess(); return; }
     if (c === 'cat') { runCat(); return; }
@@ -1372,201 +1436,4 @@ function renderHacker(body) {
   printLine(t('hacker.hint'), 'terminal__prompt');
   printInput();
   setTimeout(() => { if (currentInput) currentInput.focus(); }, 100);
-}
-
-function startSnake(canvas, onStop, onGameOver, onResetGameOver, setOnKey) {
-  const ctx = canvas.getContext('2d');
-  const cell = 16;
-  const cols = 30;
-  const rows = 20;
-  canvas.width = cols * cell;
-  canvas.height = rows * cell;
-
-  let snake, dir, food, alive, score, loop;
-
-  const place = () => {
-    food = { x: Math.floor(Math.random() * cols), y: Math.floor(Math.random() * rows) };
-  };
-
-  const reset = () => {
-    snake = [{x: 5, y: 5}];
-    dir = {x: 1, y: 0};
-    alive = true;
-    score = 0;
-    place();
-    onResetGameOver();
-    draw();
-  };
-
-  const draw = () => {
-    ctx.fillStyle = '#0a0f15';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = '#66C0F4';
-    ctx.fillRect(food.x * cell, food.y * cell, cell - 1, cell - 1);
-
-    ctx.fillStyle = '#7CFC98';
-    snake.forEach(s => ctx.fillRect(s.x * cell, s.y * cell, cell - 1, cell - 1));
-
-    ctx.fillStyle = '#7CFC98';
-    ctx.font = '12px monospace';
-    ctx.fillText(t('hacker.score') + score, 6, 14);
-  };
-
-  const onKey = e => {
-    const k = e.key.toLowerCase();
-
-    if (k === 'q' || e.key === 'Q' || k === 'й') { alive = false; onStop(); return; }
-    if (k === 'r' || e.key === 'R' || k === 'к') { reset(); return; }
-    if (!alive) return;
-
-    if ((e.key === 'ArrowUp' || k === 'w' || k === 'ц') && dir.y === 0) dir = {x: 0, y: -1};
-    else if ((e.key === 'ArrowDown' || k === 's' || k === 'ы') && dir.y === 0) dir = {x: 0, y: 1};
-    else if ((e.key === 'ArrowLeft' || k === 'a' || k === 'ф') && dir.x === 0) dir = {x: -1, y: 0};
-    else if ((e.key === 'ArrowRight' || k === 'd' || k === 'в') && dir.x === 0) dir = {x: 1, y: 0};
-  };
-  setOnKey(onKey);
-  window.addEventListener('keydown', onKey);
-
-  reset();
-
-  loop = setInterval(() => {
-    if (!alive) return;
-    let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
-
-    if (head.x < 0) head.x = cols - 1;
-    if (head.x >= cols) head.x = 0;
-    if (head.y < 0) head.y = rows - 1;
-    if (head.y >= rows) head.y = 0;
-
-    if (snake.some(s => s.x === head.x && s.y === head.y)) {
-      alive = false;
-      draw();
-      onGameOver();
-      return;
-    }
-    snake.unshift(head);
-    if (head.x === food.x && head.y === food.y) { score++; place(); }
-    else snake.pop();
-
-    draw();
-  }, 110);
-
-  return loop;
-}
-
-function startTetris(canvas, onStop, onGameOver, onResetGameOver, setOnKey) {
-  const ctx = canvas.getContext('2d');
-  const cell = 20;
-  const cols = 10;
-  const rows = 16;
-  canvas.width = cols * cell;
-  canvas.height = rows * cell;
-
-  const SHAPES = [
-    [[1,1,1,1]],
-    [[1,1],[1,1]],
-    [[1,1,1],[0,1,0]],
-    [[1,0,0],[1,1,1]],
-    [[0,0,1],[1,1,1]],
-    [[0,1,1],[1,1,0]],
-    [[1,1,0],[0,1,1]]
-  ];
-
-  let grid, piece, px, py, alive, score, loop;
-
-  const collide = (p, x, y) => {
-    for (let r = 0; r < p.length; r++)
-      for (let c = 0; c < p[r].length; c++) {
-        if (!p[r][c]) continue;
-        const nx = x + c, ny = y + r;
-        if (nx < 0 || nx >= cols || ny >= rows) return true;
-        if (ny >= 0 && grid[ny][nx]) return true;
-      }
-    return false;
-  };
-
-  const spawn = () => {
-    piece = SHAPES[Math.floor(Math.random() * SHAPES.length)].map(r => r.slice());
-    px = Math.floor((cols - piece[0].length) / 2);
-    py = 0;
-    if (collide(piece, px, py)) {
-      alive = false;
-      onGameOver();
-    }
-  };
-
-  const merge = () => {
-    piece.forEach((row, r) => row.forEach((v, c) => {
-      if (v && py + r >= 0) grid[py + r][px + c] = 1;
-    }));
-  };
-
-  const rotate = () => {
-    const rotated = piece[0].map((_, i) => piece.map(row => row[i]).reverse());
-    if (!collide(rotated, px, py)) piece = rotated;
-  };
-
-  const drop = () => {
-    if (!collide(piece, px, py + 1)) { py++; return; }
-    merge();
-    grid = grid.filter(row => !row.every(v => v));
-    while (grid.length < rows) grid.unshift(Array(cols).fill(0));
-    score += 10;
-    spawn();
-  };
-
-  const draw = () => {
-    ctx.fillStyle = '#0a0f15';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = '#2F80ED';
-    grid.forEach((row, r) => row.forEach((v, c) => {
-      if (v) ctx.fillRect(c * cell, r * cell, cell - 1, cell - 1);
-    }));
-
-    ctx.fillStyle = '#66C0F4';
-    if (piece) piece.forEach((row, r) => row.forEach((v, c) => {
-      if (v) ctx.fillRect((px + c) * cell, (py + r) * cell, cell - 1, cell - 1);
-    }));
-
-    ctx.fillStyle = '#7CFC98';
-    ctx.font = '12px monospace';
-    ctx.fillText(t('hacker.score') + score, 6, 14);
-  };
-
-  const reset = () => {
-    grid = Array.from({length: rows}, () => Array(cols).fill(0));
-    score = 0;
-    alive = true;
-    onResetGameOver();
-    spawn();
-    draw();
-  };
-
-  const onKey = e => {
-    const k = e.key.toLowerCase();
-
-    if (k === 'q' || e.key === 'Q' || k === 'й') { alive = false; onStop(); return; }
-    if (k === 'r' || e.key === 'R' || k === 'к') { reset(); return; }
-    if (!alive) return;
-
-    if (e.key === 'ArrowLeft' || k === 'a' || k === 'ф') { if (!collide(piece, px - 1, py)) px--; }
-    else if (e.key === 'ArrowRight' || k === 'd' || k === 'в') { if (!collide(piece, px + 1, py)) px++; }
-    else if (e.key === 'ArrowDown' || k === 's' || k === 'ы') drop();
-    else if (e.key === 'ArrowUp' || k === 'w' || k === 'ц') rotate();
-    draw();
-  };
-  setOnKey(onKey);
-  window.addEventListener('keydown', onKey);
-
-  reset();
-
-  loop = setInterval(() => {
-    if (!alive) return;
-    drop();
-    draw();
-  }, 480);
-
-  return loop;
 }

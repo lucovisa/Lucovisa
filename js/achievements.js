@@ -1,35 +1,15 @@
 (function () {
   const STORAGE_KEY = 'achievements_unlocked';
   const ACHIEVEMENTS = [
-    {
-      id: 'first_app',
-      titleKey: 'ach.first_app.title',
-      descKey: 'ach.first_app.desc',
-      commentKey: 'ach.first_app.comment',
-      icon: 'info'
-    },
-    {
-      id: 'donate',
-      titleKey: 'ach.donate.title',
-      descKey: 'ach.donate.desc',
-      commentKey: 'ach.donate.comment',
-      icon: 'heart'
-    },
-    {
-      id: 'secret',
-      titleKey: 'ach.secret.title',
-      descKey: 'ach.secret.desc',
-      commentKey: 'ach.secret.comment',
-      icon: 'star',
-      hidden: true
-    },
-    {
-      id: 'style',
-      titleKey: 'ach.style.title',
-      descKey: 'ach.style.desc',
-      commentKey: 'ach.style.comment',
-      icon: 'settings'
-    }
+    { id: 'first_app',         titleKey: 'ach.first_app.title',         descKey: 'ach.first_app.desc',         commentKey: 'ach.first_app.comment',         icon: 'info' },
+    { id: 'donate',            titleKey: 'ach.donate.title',            descKey: 'ach.donate.desc',            commentKey: 'ach.donate.comment',            icon: 'heart' },
+    { id: 'secret',            titleKey: 'ach.secret.title',            descKey: 'ach.secret.desc',            commentKey: 'ach.secret.comment',            icon: 'star', hidden: true },
+    { id: 'style',             titleKey: 'ach.style.title',             descKey: 'ach.style.desc',             commentKey: 'ach.style.comment',             icon: 'settings' },
+    { id: 'snake1000',         titleKey: 'ach.snake1000.title',         descKey: 'ach.snake1000.desc',         commentKey: 'ach.snake1000.comment',         icon: 'joystick' },
+    { id: 'tetris10000',       titleKey: 'ach.tetris10000.title',       descKey: 'ach.tetris10000.desc',       commentKey: 'ach.tetris10000.comment',       icon: 'joystick' },
+    { id: 'clicker1000000',    titleKey: 'ach.clicker1000000.title',    descKey: 'ach.clicker1000000.desc',    commentKey: 'ach.clicker1000000.comment',    icon: 'joystick' },
+    { id: 'minesweeper',       titleKey: 'ach.minesweeper.title',       descKey: 'ach.minesweeper.desc',       commentKey: 'ach.minesweeper.comment',       icon: 'joystick' },
+    { id: 'solitaire',         titleKey: 'ach.solitaire.title',         descKey: 'ach.solitaire.desc',         commentKey: 'ach.solitaire.comment',         icon: 'joystick' }
   ];
 
   function getUnlocked() {
@@ -46,8 +26,7 @@
   }
 
   function isUnlocked(id) {
-    const u = getUnlocked();
-    return !!u[id];
+    return !!getUnlocked()[id];
   }
 
   function countUnlocked() {
@@ -61,9 +40,8 @@
   }
 
   function getPosition() {
-    try {
-      return localStorage.getItem('achievement_position') || 'bottom-right';
-    } catch (e) { return 'bottom-right'; }
+    try { return localStorage.getItem('achievement_position') || 'bottom-right'; }
+    catch (e) { return 'bottom-right'; }
   }
 
   function showAchievementToast(ach) {
@@ -108,6 +86,14 @@
     }, 4500);
   }
 
+  function refreshOpenAchievementsWindow() {
+    const win = document.querySelector('.window[data-app="achievements"]');
+    if (!win) return;
+    const body = win.querySelector('.window__body');
+    if (!body) return;
+    if (typeof renderAchievements === 'function') renderAchievements(body);
+  }
+
   function unlock(id) {
     const u = getUnlocked();
     if (u[id]) return false;
@@ -120,36 +106,28 @@
 
     showAchievementToast(ach);
 
-    if (typeof rerenderOpenWindows === 'function') {
-      setTimeout(() => rerenderOpenWindows(), 100);
-    }
+    setTimeout(() => refreshOpenAchievementsWindow(), 120);
 
     return true;
   }
 
   function checkStyleAchievement() {
-    const usernameKey = 'username';
-    const avatarKey = 'avatar';
-    const wallpaperKey = 'wallpaper';
-
     let hasName = false;
     let hasAvatar = false;
     let hasWallpaper = false;
 
     try {
-      const name = localStorage.getItem(usernameKey);
+      const name = localStorage.getItem('username');
       if (name && name.trim()) hasName = true;
 
-      const av = localStorage.getItem(avatarKey);
+      const av = localStorage.getItem('avatar');
       if (av && av.length > 0) hasAvatar = true;
 
-      const wp = localStorage.getItem(wallpaperKey);
+      const wp = localStorage.getItem('wallpaper');
       if (wp && wp.length > 0) hasWallpaper = true;
     } catch (e) {}
 
-    if (hasName && hasAvatar && hasWallpaper) {
-      unlock('style');
-    }
+    if (hasName && hasAvatar && hasWallpaper) unlock('style');
   }
 
   function getList() {
@@ -173,4 +151,5 @@
   window.countAchievementsUnlocked = countUnlocked;
   window.countAchievementsHiddenLeft = countHiddenLeft;
   window.checkStyleAchievement = checkStyleAchievement;
+  window.refreshOpenAchievementsWindow = refreshOpenAchievementsWindow;
 })();

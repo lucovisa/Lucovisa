@@ -91,6 +91,16 @@
       <span data-i18n="app.achievements">Achievements</span>
     </button>
 
+    <button class="app-icon" data-app="arcade" data-icon="arcade">
+      <span class="app-icon__svg" data-svg="joystick"></span>
+      <span data-i18n="app.arcade">Arcade</span>
+    </button>
+
+    <button class="app-icon" data-app="work" data-icon="work">
+      <span class="app-icon__svg" data-svg="trophy"></span>
+      <span data-i18n="app.work">Work</span>
+    </button>
+
   </div>
 
   <div class="windows-layer" id="windows-layer"></div>
@@ -168,6 +178,14 @@
       <span class="app-icon__svg app-icon__svg--sm" data-svg="trophy"></span>
       <span data-i18n="app.achievements">Achievements</span>
     </button>
+    <button class="start-menu__item" data-app="arcade">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="joystick"></span>
+      <span data-i18n="app.arcade">Arcade</span>
+    </button>
+    <button class="start-menu__item" data-app="work">
+      <span class="app-icon__svg app-icon__svg--sm" data-svg="trophy"></span>
+      <span data-i18n="app.work">Work</span>
+    </button>
     <button class="start-menu__item" data-app="calendar">
       <span class="app-icon__svg app-icon__svg--sm" data-svg="calendar"></span>
       <span data-i18n="app.calendar">Calendar</span>
@@ -195,10 +213,6 @@
     <button class="context-menu__item" data-action="refresh">
       <span class="app-icon__svg app-icon__svg--sm" data-svg="refresh"></span>
       <span data-i18n="context.refresh">Refresh</span>
-    </button>
-    <button class="context-menu__item" data-action="changeWallpaper">
-      <span class="app-icon__svg app-icon__svg--sm" data-svg="wallpaper"></span>
-      <span data-i18n="context.changeWallpaper">Change wallpaper</span>
     </button>
     <div class="context-menu__sep"></div>
     <button class="context-menu__item" data-action="shortcut">
@@ -228,6 +242,15 @@
     </div>
   </div>
 
+  <div class="boot-screen" id="boot-screen">
+    <div class="boot-screen__inner">
+      <div class="boot-screen__logo">LUCOS</div>
+      <div class="boot-screen__text">Loading LUCOS...</div>
+      <div class="boot-screen__bar"><div class="boot-screen__fill" id="boot-fill"></div></div>
+      <div class="boot-screen__welcome" id="boot-welcome"></div>
+    </div>
+  </div>
+
   <div class="achievement-layer" id="achievement-layer"></div>
 
   <div class="toast-layer" id="toast-layer"></div>
@@ -252,6 +275,8 @@
 <script src="js/i18n.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/icons.js"></script>
+<script src="js/dates.js"></script>
+<script src="js/arcade.js"></script>
 <script src="js/apps.js"></script>
 <script src="js/achievements.js"></script>
 <script src="js/giscus.js"></script>

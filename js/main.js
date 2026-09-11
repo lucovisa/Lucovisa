@@ -11,6 +11,41 @@
   applyLang(savedLang);
   renderIcons(document);
 
+  function runBoot() {
+    const boot = document.getElementById('boot-screen');
+    if (!boot) return;
+    let shown = false;
+    try { shown = localStorage.getItem('boot_shown') === '1'; } catch (e) {}
+    if (shown) {
+      boot.remove();
+      return;
+    }
+    document.body.style.overflow = 'hidden';
+    let progress = 0;
+    const fill = document.getElementById('boot-fill');
+    const welcome = document.getElementById('boot-welcome');
+    const tick = setInterval(() => {
+      progress += Math.random() * 18 + 4;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(tick);
+        const name = (function () {
+          try { return localStorage.getItem('username') || 'User'; } catch (e) { return 'User'; }
+        })();
+        if (welcome) welcome.textContent = t('boot.welcome') + name + '!';
+        setTimeout(() => {
+          boot.classList.add('boot-screen--out');
+          document.body.style.overflow = '';
+          try { localStorage.setItem('boot_shown', '1'); } catch (e) {}
+          setTimeout(() => boot.remove(), 600);
+        }, 900);
+      }
+      if (fill) fill.style.width = progress + '%';
+    }, 180);
+  }
+
+  runBoot();
+
   document.querySelectorAll('.lang-toggle [data-lang]').forEach(btn => {
     btn.addEventListener('click', () => applyLang(btn.dataset.lang));
   });
@@ -24,8 +59,6 @@
     if (!el) return;
     const d = new Date();
     const p = n => String(n).padStart(2, '0');
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const lang = document.documentElement.lang || 'en';
     let dateStr;
     if (lang === 'ru') {
@@ -33,7 +66,9 @@
       const ruMonths = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
       dateStr = ruDays[d.getDay()] + ', ' + d.getDate() + ' ' + ruMonths[d.getMonth()];
     } else {
-      dateStr = days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + d.getDate();
+      const enDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const enMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      dateStr = enDays[d.getDay()] + ', ' + enMonths[d.getMonth()] + ' ' + d.getDate();
     }
     el.textContent = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()) + ' · ' + dateStr;
   }
@@ -64,7 +99,9 @@
 
       modalBody.innerHTML = '';
 
-      if (opts.message) {
+      if (opts.html) {
+        modalBody.innerHTML = opts.html;
+      } else if (opts.message) {
         const p = document.createElement('p');
         p.className = 'modal__text';
         p.textContent = opts.message;
@@ -87,6 +124,7 @@
 
       modalOverlay.classList.add('is-open');
       makeModalDraggable();
+      renderIcons(modalBody);
     });
   }
 
@@ -168,6 +206,7 @@
   window.showError = (msg) => openModal({ mode: 'info', message: msg, title: t('modal.error') });
   window.showConfirm = (msg, title) => openModal({ mode: 'confirm', message: msg, title: title || t('modal.confirm') });
   window.showPrompt = (title, placeholder, value) => openModal({ mode: 'prompt', title, placeholder, value });
+  window.showHtml = (html, title, okText) => openModal({ mode: 'info', html: html, title: title || t('modal.info'), okText: okText });
   window.t = t;
 
   window.toast = function (msg) {
@@ -448,9 +487,9 @@
 
   function getGridMetrics() {
     const size = getIconSize();
-    if (size === 'small')  return { cellW: 82,  cellH: 82,  iconSize: 32 };
-    if (size === 'large')  return { cellW: 118, cellH: 122, iconSize: 64 };
-    return { cellW: 100, cellH: 106, iconSize: 44 };
+    if (size === 'small')  return { cellW: 82,  cellH: 82 };
+    if (size === 'large')  return { cellW: 118, cellH: 122 };
+    return { cellW: 100, cellH: 106 };
   }
 
   function relayoutIcons() {
@@ -463,23 +502,26 @@
     })();
 
     const { cellW, cellH } = getGridMetrics();
-    const paddingTop = 16;
-    const paddingLeft = 16;
+    const padTop = 16;
+    const padLeft = 16;
+    const containerH = desktopIcons.clientHeight - padTop;
+    const maxRows = Math.max(1, Math.floor(containerH / cellH));
 
     const allIcons = Array.from(desktopIcons.querySelectorAll('.app-icon'));
     allIcons.forEach((el, index) => {
       const id = el.dataset.icon || el.dataset.shortcut || ('icon_' + index);
       let pos = saved[id];
-      if (!pos) {
-        const col = 0;
-        const row = index;
-        pos = { col: col, row: row };
+      let col, row;
+      if (pos) {
+        col = pos.col !== undefined ? pos.col : 0;
+        row = pos.row !== undefined ? pos.row : index;
+      } else {
+        col = Math.floor(index / maxRows);
+        row = index % maxRows;
       }
-      const col = pos.col !== undefined ? pos.col : 0;
-      const row = pos.row !== undefined ? pos.row : index;
       el.style.position = 'absolute';
-      el.style.left = (paddingLeft + col * cellW) + 'px';
-      el.style.top  = (paddingTop + row * cellH) + 'px';
+      el.style.left = (padLeft + col * cellW) + 'px';
+      el.style.top  = (padTop + row * cellH) + 'px';
       el.dataset.gridCol = col;
       el.dataset.gridRow = row;
     });
@@ -510,7 +552,7 @@
     const { cellW, cellH } = getGridMetrics();
 
     el.addEventListener('pointerdown', e => {
-      if (e.button !== 0) return;
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
       dragging = true;
       moved = false;
       startX = e.clientX;
@@ -525,7 +567,7 @@
       if (!dragging) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
       el.style.left = Math.max(0, origX + dx) + 'px';
       el.style.top = Math.max(0, origY + dy) + 'px';
 
@@ -559,7 +601,7 @@
       }
 
       if (droppedOnTrash) {
-        const ok = await showModal({
+        showModal({
           mode: 'confirm',
           title: t('trash.moveConfirm'),
           message: t('trash.moveConfirmText'),
@@ -611,6 +653,10 @@
     desktopIcons.querySelectorAll('.app-icon').forEach(makeIconDraggable);
   }
 
+  window.addEventListener('resize', () => {
+    relayoutIcons();
+  });
+
   const contextMenu = document.getElementById('context-menu');
 
   function hideContextMenu() {
@@ -621,7 +667,7 @@
     if (!contextMenu) return;
     contextMenu.classList.add('is-open');
     contextMenu.style.left = Math.min(x, window.innerWidth - 220) + 'px';
-    contextMenu.style.top = Math.min(y, window.innerHeight - 220) + 'px';
+    contextMenu.style.top = Math.min(y, window.innerHeight - 180) + 'px';
   }
 
   document.addEventListener('contextmenu', e => {
@@ -642,14 +688,12 @@
 
   if (contextMenu) {
     contextMenu.querySelectorAll('[data-action]').forEach(btn => {
-      btn.addEventListener('click', async () => {
+      btn.addEventListener('click', () => {
         const action = btn.dataset.action;
         hideContextMenu();
 
         if (action === 'refresh') {
           location.reload();
-        } else if (action === 'changeWallpaper') {
-          if (wallpaperFile) wallpaperFile.click();
         } else if (action === 'shortcut') {
           if (typeof handleCreateShortcut === 'function') handleCreateShortcut();
         } else if (action === 'personalization') {
@@ -704,7 +748,7 @@
     });
   }
 
-  document.querySelectorAll('.btn, .pill, .toggle__btn, .taskbar__start, .taskbar__app, .start-menu__item, .start-menu__edit, .start-menu__avatar, .pers-app__tab, .pers-option').forEach(el => {
+  document.querySelectorAll('.btn, .pill, .toggle__btn, .taskbar__start, .taskbar__app, .start-menu__item, .start-menu__edit, .start-menu__avatar, .pers-app__tab, .pers-option, .arcade__item').forEach(el => {
     el.addEventListener('pointerdown', e => {
       const rect = el.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height);
@@ -886,6 +930,7 @@
       if (!app) return;
       const titleEl = w.el.querySelector('.window__title');
       if (titleEl) titleEl.textContent = getAppTitle(id, app);
+      app.render(w.body);
     });
     updateTaskbar();
   };
